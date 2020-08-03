@@ -1,0 +1,23 @@
+{
+  "@context": {
+    "DFC": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+    "@base": "http://maPlateforme"
+  },
+  "DFC:Entreprise":{
+    "@id":"/entreprise/maPetiteEntreprise",
+    "DFC:manages":[
+      {
+        "DFC:references":{
+          "@id":"/defineProduct/item1",
+          "name":"product 1"
+        }
+      },
+      {
+        "DFC:references":{
+          "@id":"/defineProduct/item2",
+          "name":"product 2"
+        }
+      }
+    ]
+  }
+}

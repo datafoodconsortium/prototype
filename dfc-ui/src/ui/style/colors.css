@@ -1,0 +1,23 @@
+.blue {
+  background-color: var(--color-blue);
+  color: white;
+}
+
+.green {
+  background-color: var(--color-green);
+}
+
+.orange {
+  background-color: var(--color-orange);
+}
+
+.dfc {
+  background-color: var(--color-dfc);
+}
+
+
+body {
+  --color-orange: #e49c46;
+  --color-blue : #006E82;
+  --color-green : #53B389;
+}

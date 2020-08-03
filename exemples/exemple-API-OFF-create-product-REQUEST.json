@@ -1,0 +1,10 @@
+{
+  "@context": {
+    "DFC": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+  },
+  "@type":"DFC:SuppliedProduct",
+  "DFC:description":"Aillet botte 1 pièce",
+  "DFC:suppliedBy":{
+    "DFC:<OFF-packager-code>":"<packager-code>"
+  }
+}

@@ -1,0 +1,44 @@
+[{
+  "@context": {
+    "DFC": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+    "@base": "http://maPlateformeNationale"
+  },
+  "@id": "/entreprise/maPetiteEntreprise",
+  "@type": "DFC:Entreprise",
+  "DFC:supplies": [{
+      "@id": "/suppliedProduct/item1",
+      "DFC:hasUnit": {
+        "@id": "/unit/unit"
+      },
+      "DFC:quantity": "1",
+      "DFC:description": "Aillet botte 1 pièce"
+    },
+    {
+      "@id": "/suppliedProduct/item2",
+      "DFC:hasUnit": {
+        "@id": "/unit/kg"
+      },
+      "DFC:quantity": "1",
+      "DFC:description": "Blette 1 kg"
+    }
+  ]
+}, {
+  "@context": {
+    "dcterms": "http://purl.org/dc/terms/",
+    "ldp": "http://www.w3.org/ns/ldp#",
+  },
+  "@id": "/entreprise/maPetiteEntreprise/supplies",
+  "@type": "ldp:DirectContainer",
+  "dcterms:title": "supplies of maPetiteEntreprise",
+  "ldp:contains": [{
+    "@id": "/suppliedProduct/item1"
+  }, {
+    "@id": "/suppliedProduct/item2"
+  }],
+  "ldp:hasMemberRelation": {
+    "@id": "DFC:supplies"
+  },
+  "ldp:membershipResource": {
+    "@id": "/entreprise/maPetiteEntreprise"
+  }
+}]

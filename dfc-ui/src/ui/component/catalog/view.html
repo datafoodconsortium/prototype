@@ -1,0 +1,26 @@
+<div class="panelContainer" class="containerV">
+  <h1>Catalogue</h1>
+  <div id="catalogList">
+  </div>
+</div>
+<style>
+  #catalogList{
+    border-style:solid;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    grid-template-rows: 40px repeat(auto-fill,30px);
+    overflow-y : auto;
+    height : 500px;
+  }
+
+  .header{
+    color : white;
+    background-color: black;
+    position : sticky;
+    top : 0;
+  }
+  .cell{
+    height: 30px;
+  }
+
+</style>

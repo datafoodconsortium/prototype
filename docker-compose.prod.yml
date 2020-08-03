@@ -1,0 +1,75 @@
+version: '3.5'
+
+services:
+  dfc-fuseki:
+    image: stain/jena-fuseki
+    container_name: dfc-fuseki
+    volumes:
+      - rdf_data:/fuseki
+      - staging:/staging
+    ports:
+      - "3030:3030"
+    expose:
+      - "3030"
+    networks:
+      - dfc
+    environment:
+      ADMIN_PASSWORD: "admin"
+  dfc-middleware:
+    build:
+      context: ./dfc-semapps
+      dockerfile: Dockerfile
+    container_name: dfc-middleware
+    depends_on:
+      - dfc-fuseki
+    volumes:
+      - ./dfc-semapps:/app
+    networks:
+      - dfc
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+  dfc-app:
+    build:
+      context: ./dfc-app
+      dockerfile: ./Dockerfile.dev
+    container_name: dfc-app
+    environment:
+        - APP_PORT=8080
+        - NODE_ENV=development_docker
+        - CONFIG_URL=$CONFIG_URL
+    volumes:
+      - ./dfc-app/src:/app/src
+    depends_on:
+      - dfc-middleware
+    networks:
+      - dfc
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    command: bash -c "npm start"
+  dfc-ui:
+    build:
+      context: ./dfc-ui
+      dockerfile: ./Dockerfile.dev
+    container_name: dfc-ui
+    environment:
+      - URL_SERVER=http://185.25.192.252:8080/
+    volumes:
+      - ./dfc-ui/src:/app/src
+    networks:
+      - dfc
+    ports:
+      - "80:8090"
+      - "8090:8090"
+    expose:
+      - "8090"
+    command: bash -c "npm start"
+volumes:
+  rdf_data:
+  staging:
+networks:
+  dfc:
+    name: dfc_network

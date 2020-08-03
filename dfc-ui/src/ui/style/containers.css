@@ -1,0 +1,29 @@
+.container-content-centered {
+  justify-content: center;
+  align-items: center;
+}
+
+.containerH {
+  display: flex;
+}
+
+.containerV {
+  display: flex;
+  flex-direction: column;
+}
+
+.grow{
+  flex-grow:1;
+}
+
+.noShrink{
+  flex-shrink:0;
+}
+
+.container-content-centered {
+  justify-content: center;
+}
+
+.space-between {
+  justify-content: space-between !important;
+}

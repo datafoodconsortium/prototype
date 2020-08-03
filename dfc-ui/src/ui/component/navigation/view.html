@@ -1,0 +1,58 @@
+<div id="containerLoaderDiv" class="hide">
+  <img id="loaderImg" src="http://datafoodconsortium.org/img/bwg.png">
+</div>
+<div id="main" class="containerH">
+  <a id="oidcLink" href-source="http://localhost:8080/login/auth" style="display:none"></a>
+  <div class="containerV" style="flex:1">
+    <x-header></x-header>
+    <div class="containerH" style="flex:1">
+      <x-menu id="menu" style="flex-basis:200px; flex-shrink:0;"></x-menu>
+      <div class="box containerV" id="screen" style="flex:1"></div>
+    </div>
+  </div>
+</div>
+<style>
+  #main {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+
+
+  #screen{
+    margin:5px;
+  }
+  #containerLoaderDiv {
+    background-color: rgba(200,200,200,0.6);
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+    justify-content: center;
+    /* flex-direction: column; */
+    align-items: center;
+    display : flex;
+  }
+
+  #loaderImg {
+    animation: bounce 0.5s linear infinite;
+    animation-direction: alternate;
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1.2);
+    }
+  }
+
+</style>

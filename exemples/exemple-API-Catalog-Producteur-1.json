@@ -1,0 +1,27 @@
+{
+  "@context": {
+    "DFC": "https://raw.githack.com/datafoodconsortium/dfc-prototype-V2/master/DFC_FullModel.owl",
+    "@base": "http://maPlateformeNationale"
+  },
+  "DFC:Entreprise":{
+    "@id":"/entreprise/maPetiteEntreprise",
+    "DFC:supplies":[
+      {
+        "@id":"/suppliedProduct/item1",
+        "DFC:hasUnit":{
+          "@id":"/unit/unit"
+        },
+        "DFC:quantity":"1",
+        "DFC:description":"Aillet botte 1 pièce"
+      },
+      {
+        "@id":"/suppliedProduct/item2",
+        "DFC:hasUnit":{
+          "@id":"/unit/kg"
+        },
+        "DFC:quantity":"1",
+        "DFC:description":"Blette 1 kg"
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+FROM node:14-alpine
+
+WORKDIR /app
+
+RUN node -v
+
+RUN apk add --update --no-cache git bash
+
+RUN apk add --update --no-cache autoconf libtool automake alpine-sdk
+
+#install nodemon to dev (support hot realoading) (need specific command in compose)
+RUN npm install nodemon -g
+
+# Install app dependencies
+ADD package.json .
+
+RUN npm cache clean --force && npm install
+
+# needed file to npm build
+ADD webpack.common.js  .
+ADD webpack.dev.js  .
+ADD webpack.prod.js  .
+
+# overide by compose if volume targeted src
+ADD src  ./src
+
+# overide by compose if command set
+CMD npm start
