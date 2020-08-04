@@ -4,6 +4,8 @@ services:
   dfc-fuseki:
     image: stain/jena-fuseki
     container_name: dfc-fuseki
+    environment:
+      - ADMIN_PASSWORD=admin
     volumes:
       - ./data/fuseki:/fuseki
       - ./data/staging:/staging
@@ -13,8 +15,6 @@ services:
       - "3030"
     networks:
       - dfc
-    environment:
-      ADMIN_PASSWORD: "admin"
   dfc-middleware:
     build:
       context: ./dfc-semapps
@@ -22,6 +22,12 @@ services:
     container_name: dfc-middleware
     depends_on:
       - dfc-fuseki
+    environment:
+      - SEMAPPS_SPARQL_ENDPOINT=http://dfc-fuseki:3030/
+      - SEMAPPS_MAIN_DATASET=localData
+      - SEMAPPS_JENA_USER=admin
+      - SEMAPPS_JENA_PASSWORD=admin
+      - SEMAPPS_HOME_URL=http://localhost:3000/
     volumes:
       - ./dfc-semapps:/app
     networks:
