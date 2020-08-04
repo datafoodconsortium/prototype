@@ -2,7 +2,7 @@
 .PHONY: docker-build docker-up build start log stop restart
 
 DOCKER_COMPOSE=docker-compose -f docker-compose.yml
-DOCKER_COMPOSE_PROD=docker-compose -f docker-compose-prod.yaml
+DOCKER_COMPOSE_PROD=docker-compose -f docker-compose-prod.yml
 
 # Docker
 docker-build:

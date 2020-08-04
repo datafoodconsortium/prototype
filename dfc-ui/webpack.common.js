@@ -86,7 +86,7 @@ module.exports = {
       filename: './statistics.html'
     }),
     new webpack.DefinePlugin({
-      'url_server': JSON.stringify(process.env.URL_SERVER)||'http://localhost:8080'
+      'url_server': JSON.stringify(process.env.URL_SERVER)||JSON.stringify('http://localhost:8080')
     })
   ]
 };
