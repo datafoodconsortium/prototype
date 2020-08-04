@@ -27,7 +27,7 @@ services:
       - SEMAPPS_MAIN_DATASET=localData
       - SEMAPPS_JENA_USER=admin
       - SEMAPPS_JENA_PASSWORD=admin
-      - SEMAPPS_HOME_URL=http://localhost:3000/
+      - SEMAPPS_HOME_URL=http://dfc-middleware:3000/
     volumes:
       - ./dfc-semapps:/app
     networks:

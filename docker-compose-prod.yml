@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   dfc-fuseki:
-    image: stain/jena-fuseki
+    image: stain/jena-fuseki:3.10.0
     container_name: dfc-fuseki
     environment:
       ADMIN_PASSWORD: "admin"
