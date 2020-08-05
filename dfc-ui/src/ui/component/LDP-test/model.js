@@ -48,7 +48,7 @@ export default class LDP_test extends GenericElement {
         }
       };
       // // The query engine and its source
-      // const queryEngine = new ComunicaEngine('http://localhost:8080/data/core/entrepriseLDP/5da83c675417a50a1250ee08');
+      // const queryEngine = new ComunicaEngine('${url_server}/data/core/entrepriseLDP/5da83c675417a50a1250ee08');
       // // The object that can create new paths
       // let param = {
       //   context,
