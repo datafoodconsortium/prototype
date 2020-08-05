@@ -137,9 +137,11 @@ export default class Navigation extends GenericElement {
           let text = await response.text();
           // document.getElementById('err').textContent = text + ' redirect to OIDC provider in 1 second';
           setTimeout(() => {
-            let oidcLink = this.shadowRoot.getElementById('oidcLink');
-            oidcLink.setAttribute('href', oidcLink.getAttribute('href-source') + '?app_referer=' + window.location.hash.substr(1));
-            oidcLink.click();
+            // let oidcLink = this.shadowRoot.getElementById('oidcLink');
+            // oidcLink.setAttribute('href', oidcLink.getAttribute('href-source') + '?app_referer=' + window.location.hash.substr(1));
+            // oidcLink.click();
+            window.location=`${url_server}/login/auth?app_referer=${window.location.hash.substr(1)}`
+
           }, 1);
 
         }
