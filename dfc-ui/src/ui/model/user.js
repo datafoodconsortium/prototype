@@ -67,7 +67,7 @@ export default class User extends GenericElement {
   logout(){
     localStorage.removeItem('token');
     console.log(window.location.href);
-    let redirectUrl = `http://localhost:8080/login/auth/logout?redirectUri=${window.location.href}`;
+    let redirectUrl = `${url_server}/login/auth/logout?redirectUri=${window.location.href}`;
     window.location.href = redirectUrl;
     // this.util.ajaxCall("/auth/logout, option")
   }

@@ -115,7 +115,7 @@ export default class Catalog extends GenericElement {
   }
 
   convertImportToSupply(importId, supplyId) {
-    let url = `http://localhost:8080/data/core/import/${importId}/convert/${supplyId==undefined?'':supplyId}`;
+    let url = `${url_server}/data/core/import/${importId}/convert/${supplyId==undefined?'':supplyId}`;
     let option = {
       method: 'POST'
     };
@@ -175,7 +175,7 @@ export default class Catalog extends GenericElement {
   }
 
   loadOneImport(id) {
-    let url = `http://localhost:8080/data/core/import/${id}`;
+    let url = `${url_server}/data/core/import/${id}`;
     this.util.ajaxCall(url).then(data => {
       this.selectedImport = data.body;
       // console.log('loadOneImport', this.selectedImport);
@@ -233,7 +233,7 @@ export default class Catalog extends GenericElement {
   }
 
   loadOneSupply(id) {
-    let url = `http://localhost:8080/data/core/supply/${id}`;
+    let url = `${url_server}/data/core/supply/${id}`;
     this.util.ajaxCall(url).then(data => {
       this.selectedSupply = data.body;
       // console.log('loadOneSupply',this.selectedSupply);
