@@ -75,7 +75,8 @@ class SupplyAndImport {
           }
           WHERE {
             ?s1 ?p1 ?o1 ;
-              rdf:type dfc:Product.
+              rdf:type dfc:Product ;
+              dfc:owner <${user['@id']}> .
             NOT EXISTS {
               ?s1 dfc:hasPivot ?o2.
             	?o2 a dfc:RepresentationPivot.
@@ -203,13 +204,14 @@ class SupplyAndImport {
           }
           WHERE {
             ?s1 ?p1 ?o1;
-                	a dfc:Product;
-                	dfc:hostedBy ?s2;
-            		dfc:hasPivot ?s3.
+                a dfc:Product ;
+                dfc:hostedBy ?s2 ;
+            		dfc:hasPivot ?s3 ;
+                dfc:owner <${user['@id']}> .
             ?s2 ?p2 ?o2;
             		rdfs:label 'DFC'.
             ?s3 ?p3 ?o3;
-                	dfc:represent ?s4.
+                dfc:represent ?s4.
             ?s4 ?p4 ?o4;
                	dfc:hostedBy ?s5.
             ?s5 ?p5 ?o5.
@@ -433,9 +435,13 @@ class SupplyAndImport {
         for (const importToConvert of importsToConvert) {
           inserted.push(await this.convertImportToSupply(importToConvert, undefined, user));
         }
-        // let inserted = importsToConvert.map(async i => {
-        //   await this.convertImportToSupply(i, undefined, user);
+
+        // let promisesConvert = importsToConvert.map(async importToConvert => {
+        //   this.convertImportToSupply(importToConvert, undefined, user);
         // })
+        // let inserted = await Promise.all(promisesConvert);
+
+
         resolve(inserted)
       } catch (e) {
         reject(e);
@@ -471,7 +477,11 @@ class SupplyAndImport {
             '@context': {
               'dfc': 'http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#'
             },
-            '@type': 'dfc:RepresentationPivot'
+            '@type': 'dfc:RepresentationPivot',
+            "dfc:owner": {
+              "@id": user['@id'],
+              "@type": "@id"
+            }
           }
 
           const responsePivot = await fetch('http://dfc-middleware:3000/ldp/pivot', {
@@ -492,6 +502,10 @@ class SupplyAndImport {
             "dfc:hostedBy": {
               "@type": "dfc:platform",
               "rdfs:label": "DFC"
+            },
+            "dfc:owner": {
+              "@id": user['@id'],
+              "@type": "@id"
             },
             "dfc:hasPivot": { "@id": responsePivot.headers.get('location'), "@type": "@id" },
           };

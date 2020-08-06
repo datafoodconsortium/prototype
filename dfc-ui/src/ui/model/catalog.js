@@ -85,7 +85,7 @@ export default class Catalog extends GenericElement {
   }
 
   cleanAll(source) {
-    let url = '/data/core/clean';
+    let url = `${url_server}/data/core/clean`;
     let option = {
       method: 'POST'
     };
@@ -247,7 +247,7 @@ export default class Catalog extends GenericElement {
 
   unlinkSupply(supply, importItem) {
     supply["dfc:hasPivot"]["dfc:represent"] = supply["dfc:hasPivot"]["dfc:represent"].filter(r => r['@id'] != importItem['@id']);
-    let url = '/data/core/supply/';
+    let url = `${url_server}/data/core/supply/`;
     let option = {
       method: 'POST',
       body: JSON.stringify(supply)
