@@ -32,15 +32,15 @@ async function middlware_express_oidc (req,res,next) {
       // console.log('entreprise',entreprise);
 
       try {
-        console.log('token',token);
+        // console.log('token',token);
         let publicKey="-----BEGIN PUBLIC KEY-----"+config.OIDC.lesCommuns.public_key+"-----END PUBLIC KEY-----"
-        console.log('publicKey', publicKey);
+        // console.log('publicKey', publicKey);
         const key = await jose.JWK.asKey(publicKey, 'pem');
         const verifier = jose.JWS.createVerify(key);
-        console.log('BEFORE verify');
+        // console.log('BEFORE verify');
         const verified = await verifier
           .verify(token)
-        console.log('AFTER verify');
+        // console.log('AFTER verify');
         req.oidcPayload=payload;
         let userService = new UserService();
         let user = await userService.connectUser(payload.preferred_username,token);

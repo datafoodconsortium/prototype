@@ -7,12 +7,13 @@ module.exports = {
     cors: {
       origin: '*',
       exposedHeaders: '*'
-    },
-    routes: [...SparqlEndpointRoutes]
+    }
   },
+  dependencies: ['ldp', 'sparqlEndpoint'],
   async started() {
     const routes = [
       ...(await this.broker.call('ldp.getApiRoutes')),
+      ...(await this.broker.call('sparqlEndpoint.getApiRoutes')),
     ];
     routes.forEach(route => this.addRoute(route));
   }

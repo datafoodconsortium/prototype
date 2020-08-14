@@ -431,15 +431,15 @@ class SupplyAndImport {
   convertAllImportToSupply(importsToConvert, user) {
     return new Promise(async (resolve, reject) => {
       try {
-        let inserted = []
-        for (const importToConvert of importsToConvert) {
-          inserted.push(await this.convertImportToSupply(importToConvert, undefined, user));
-        }
+        // let inserted = []
+        // for (const importToConvert of importsToConvert) {
+        //   inserted.push(await this.convertImportToSupply(importToConvert, undefined, user));
+        // }
 
-        // let promisesConvert = importsToConvert.map(async importToConvert => {
-        //   this.convertImportToSupply(importToConvert, undefined, user);
-        // })
-        // let inserted = await Promise.all(promisesConvert);
+        let promisesConvert = importsToConvert.map(async importToConvert => {
+          await this.convertImportToSupply(importToConvert, undefined, user);
+        })
+        let inserted = await Promise.all(promisesConvert);
 
 
         resolve(inserted)
@@ -483,7 +483,6 @@ class SupplyAndImport {
               "@type": "@id"
             }
           }
-
           const responsePivot = await fetch('http://dfc-middleware:3000/ldp/pivot', {
             method: 'POST',
             body: JSON.stringify(body),
@@ -492,6 +491,7 @@ class SupplyAndImport {
               'content-type': 'application/ld+json'
             }
           });
+          // console.log('XXXXXXXXXX PIVOT',responsePivot.headers.get('location'));
 
           const dfcProduct = {
             ...importToConvert,
@@ -509,13 +509,7 @@ class SupplyAndImport {
             },
             "dfc:hasPivot": { "@id": responsePivot.headers.get('location'), "@type": "@id" },
           };
-          // dfcProduct['dfc:hostedBy'] = {
-          //   '@type':'dfc:platform',
-          //   'rdfs:label': 'DFC'
-          // };
-          // dfcProduct['dfc:hasPivot'] = responsePivot.headers.get('location');
 
-          // console.log('dfcProduct', dfcProduct);
 
           const responseProductDFC = await fetch('http://dfc-middleware:3000/ldp/product', {
             method: 'POST',
@@ -543,7 +537,6 @@ class SupplyAndImport {
               'content-type': 'application/ld+json'
             }
           });
-
           const responseProductPlatform = await fetch(importToConvert['@id'], {
             method: 'Patch',
             body: JSON.stringify({
@@ -562,34 +555,10 @@ class SupplyAndImport {
             "dfc:hasPivot": { "@id": responsePivot.headers.get('location')},
             ...importToConvert
           };
-          // console.log( await responseProductPlatform.text());
 
-          // const responseProductPlatformObject = await responseProductPlatform.json()
-          // console.log('out',out)
-          // console.log(response.headers.get('location'));
 
           resolve(out);
 
-          // representationPivotInstance = await representationPivotInstance.save();
-          // importToConvert['dfc:hasPivot'] = representationPivotInstance._id;
-          // await importToConvert.save();
-          // let DFCSupply = {
-          //   "dfc:description": importToConvert["dfc:description"],
-          //   "dfc:suppliedBy": importToConvert["dfc:suppliedBy"],
-          //   "dfc:quantity": importToConvert["dfc:quantity"],
-          //   "dfc:hasUnit": importToConvert["dfc:hasUnit"],
-          //   "dfc:hasPivot": importToConvert["dfc:hasPivot"],
-          //   "dfc:hostedBy": {
-          //     "dfc:name": "DFC"
-          //   },
-          //   user: user._id
-          // }
-          // DFCSupply = await supplyModel.model.create(DFCSupply);
-          // DFCSupply['@id'] = `http://datafoodconsortium.org/${DFCSupply._id}`;
-          // await DFCSupply.save();
-          // representationPivotInstance["dfc:represent"].push(DFCSupply._id);
-          // await representationPivotInstance.save();
-          // resolve(importToConvert);
         } else {
           // let representationPivot = await representationPivotInstance.findById(supply['dfc:hasPivot'])
           // await supply.populate("dfc:hasPivot");
@@ -659,13 +628,6 @@ class SupplyAndImport {
         // console.log(sourceResponseRaw);
         const sourceResponseObject = JSON.parse(sourceResponseRaw);
 
-
-        // console.log('result.body', result.body);
-        // await importModel.model.remove({
-        //   'dfc:hostedBy': {
-        //     'dfc:name': sourceObject.name
-        //   }
-        // });
         let supplies;
         if (sourceObject.version == "1.1") {
           supplies = sourceResponseObject['dfc:Entreprise']['dfc:supplies'];
@@ -700,80 +662,68 @@ class SupplyAndImport {
         }
         // console.log('EXISTING',existing);
 
-        let out = [];
+
         let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
-        for (const s of supplies) {
-          // s['dfc:hostedBy'] = {
-          //   '@type': 'dfc:platform',
-          //   'rdfs:label': sourceObject.name
-          // };
-          // //TODO not exist in Ontology
-          // s['dfc:owner'] = user['@id'];
-          // console.log({
-          //   "@type": "dfc:Product",
-          //   ...s
-          // });
-          const responsePost = await fetch('http://dfc-middleware:3000/ldp/product', {
-            method: 'POST',
-            body: JSON.stringify({
-              ...s,
-              "@context": {
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
-              },
-              "@type": "dfc:Product",
-              "dfc:hostedBy": {
-                '@type': 'dfc:platform',
-                'rdfs:label': sourceObject.name
-              },
-              "dfc:owner": {
-                "@id": user['@id'],
-                "@type": "@id"
-              }
-            }),
-            headers: {
-              'accept': 'application/ld+json',
-              'content-type': 'application/ld+json'
-            }
-          });
-          // console.log(responsePost.headers);
-          const responseGet = await fetch(responsePost.headers.get('location'), {
-            method: 'GET',
-            headers: {
-              'accept': 'application/ld+json'
-            }
-          });
-          out.push(await responseGet.json());
-          // s['@id'] = `${context['@base']}${s['@id']}`
-        }
+        let out=[];
 
+        let promises = supplies.map(s=>this.importSupply(s,user,sourceObject.name,existing));
+        out = await Promise.all(promises);
 
-
-        // let exinsting = await supplyModel.model.find({user:user._id});
-        // let inserted = await supplyModel.model.insertMany(supplies);
-
-
-        // TODO convert if not data exist for this user
-        // console.log("exinsting", exinsting);
-
-        if (existing === false) {
-          out = this.convertAllImportToSupply(out, user);
-        }
-
-        resolve(out)
-
-
-        // request({
-        //   url: source,
-        //   json: true,
-        //   headers: {
-        //     'authorization': 'JWT ' + user.token
-        //   }
-        // }, async (err, result, body) => {
-        //
-        // })
+        // for (const s of supplies) {
+        //   out.push(await this.importSupply(s,user,sourceObject.name,existing));
+        // }
+        resolve(out);
       } catch (e) {
         reject(e);
+      }
+    })
+  }
+
+  importSupply(supply, user, plateformName, convert) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log('X CREATE');
+        const responsePost = await fetch('http://dfc-middleware:3000/ldp/product', {
+          method: 'POST',
+          body: JSON.stringify({
+            ...supply,
+            "@context": {
+              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+              "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+            },
+            "@type": "dfc:Product",
+            "dfc:hostedBy": {
+              '@type': 'dfc:platform',
+              'rdfs:label': plateformName
+            },
+            "dfc:owner": {
+              "@id": user['@id'],
+              "@type": "@id"
+            }
+          }),
+          headers: {
+            'accept': 'application/ld+json',
+            'content-type': 'application/ld+json'
+          }
+        });
+
+        const responseGet = await fetch(responsePost.headers.get('location'), {
+          method: 'GET',
+          headers: {
+            'accept': 'application/ld+json'
+          }
+        });
+        const importedItem=await responseGet.json()
+
+        if (convert === false) {
+          console.log('X CONVERT');
+          await this.convertImportToSupply(importedItem,undefined, user);
+          console.log('X END CONVERT');
+        }
+
+        resolve(responseGet);
+      } catch (e) {
+        reject(e)
       }
     })
   }
