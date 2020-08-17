@@ -20,7 +20,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     redirect_uri: config.OIDC.lesCommuns.redirect_uri
   }); // => Client
   clientGlobal = client;
-  console.log('client',client);
+  // console.log('client',client);
   const params = {
     // ... any authorization params
     // client_id defaults to client.client_id
@@ -39,9 +39,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     // console.log('userinfo', userinfo);
     // console.log('claims', tokenset.claims());
     // console.log('tokenset',tokenset);
-    console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
     userinfo.accesstoken = tokenset.access_token;
-    console.log('WELL log',tokenset.access_token);
           var components = userinfo.accesstoken.split('.');
           // console.log(components);
           // var header = JSON.parse(base64url.decode(components[0]));

@@ -69,14 +69,17 @@ module.exports = function(router) {
   })
 
   router.post('/import/importSource', async (req, res, next) => {
-    console.log('REQUEST',req);
     let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
-      let out = await supplyAndImport.importSource(source, req.user);
-      res.json(out);
-
+      try {
+        let out = await supplyAndImport.importSource(source, req.user);
+        res.json(out);
+      } catch (e) {
+        res.statusCode=409;
+        next(e);
+      }
     }
   })
 

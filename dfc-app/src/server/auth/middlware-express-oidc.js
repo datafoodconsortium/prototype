@@ -10,7 +10,7 @@ async function middlware_express_oidc (req,res,next) {
     res.status(401)
     next(new Error('Missing Bearer Token'));
   }else {
-    console.log(req.headers.authorization);
+    // console.log(req.headers.authorization);
     var token = req.headers.authorization.split(' ')[1];
     if (token==null || token==undefined || token=='null') {
       res.status(401)
@@ -21,11 +21,11 @@ async function middlware_express_oidc (req,res,next) {
       var payload = JSON.parse(base64url.decode(components[1]));
       var signature = components[2];
       var decodedSignature = base64url.decode(components[2])
-      console.log('payload',payload);
-      console.log('header', header);
-      console.log('resource_access', payload.resource_access);
-      console.log('signature', signature);
-      console.log('decoded signature', decodedSignature);
+      // console.log('payload',payload);
+      // console.log('header', header);
+      // console.log('resource_access', payload.resource_access);
+      // console.log('signature', signature);
+      // console.log('decoded signature', decodedSignature);
       // let entrepriseService = new EntrepriseService();
       // console.log('user',user);
       // let entreprise = await entrepriseService.getOneEntreprise(payload['dfc:Entreprise']);

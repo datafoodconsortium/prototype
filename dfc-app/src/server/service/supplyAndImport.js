@@ -611,68 +611,96 @@ class SupplyAndImport {
     return new Promise(async (resolve, reject) => {
       // console.log(user);
       try {
-        // let user = user['dfc:Entreprise'];
-        // console.log('source', source, config.sources);
-        let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
-        // console.log('url', source, sourceObject);
-        const sourceResponse = await fetch(source, {
-          method: 'GET',
-          headers: {
-            'authorization': 'JWT ' + user.token
-          }
-        })
-
-        let sourceResponseRaw = await sourceResponse.text();
-
-        sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
-        // console.log(sourceResponseRaw);
-        const sourceResponseObject = JSON.parse(sourceResponseRaw);
-
-        let supplies;
-        if (sourceObject.version == "1.1") {
-          supplies = sourceResponseObject['dfc:Entreprise']['dfc:supplies'];
-        } else if (sourceObject.version == "1.2") {
-          supplies = sourceResponseObject['dfc:supplies'];
-        }
-
-        const response = await fetch('http://dfc-middleware:3000/sparql', {
-          method: 'POST',
-          body: `
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            CONSTRUCT  {
-              ?s1 ?p1 ?o1 .
+        console.log(user['dfc:importInProgress']);
+        if(user['dfc:importInProgress']==true){
+          reject(new Error("import in progress. Not possible to process an other"))
+        }else {
+          const responseProgressOn = await fetch(user['@id'], {
+            method: 'PATCH',
+            body: JSON.stringify({
+              "@context": {
+                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+              },
+              "dfc:importInProgress":true
+            }),
+            headers: {
+              'accept': 'application/ld+json',
+              'content-type': 'application/ld+json'
             }
-            WHERE {
-               ?s1 ?p1 ?o1;
-                 rdf:type dfc:Product;
-                 dfc:hostedBy ?s2.
-               ?s2 rdfs:label 'DFC'.
-             }
-            `,
-          headers: {
-            'accept': 'application/ld+json'
+          });
+
+
+          let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
+          const sourceResponse = await fetch(source, {
+            method: 'GET',
+            headers: {
+              'authorization': 'JWT ' + user.token
+            }
+          })
+
+          let sourceResponseRaw = await sourceResponse.text();
+
+          sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
+
+          const sourceResponseObject = JSON.parse(sourceResponseRaw);
+
+          let supplies;
+          if (sourceObject.version == "1.1") {
+            supplies = sourceResponseObject['dfc:Entreprise']['dfc:supplies'];
+          } else if (sourceObject.version == "1.2") {
+            supplies = sourceResponseObject['dfc:supplies'];
           }
-        });
-        let everExistDfcProducts = await response.json();
-        let existing = false;
-        if (everExistDfcProducts['@graph'] && everExistDfcProducts['@graph'].length > 0) {
-          existing = true;
+
+          const response = await fetch('http://dfc-middleware:3000/sparql', {
+            method: 'POST',
+            body: `
+              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+              PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+              CONSTRUCT  {
+                ?s1 ?p1 ?o1 .
+              }
+              WHERE {
+                 ?s1 ?p1 ?o1;
+                   rdf:type dfc:Product;
+                   dfc:hostedBy ?s2.
+                 ?s2 rdfs:label 'DFC'.
+               }
+              `,
+            headers: {
+              'accept': 'application/ld+json'
+            }
+          });
+          let everExistDfcProducts = await response.json();
+          let existing = false;
+          if (everExistDfcProducts['@graph'] && everExistDfcProducts['@graph'].length > 0) {
+            existing = true;
+          }
+
+          let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
+          let out=[];
+
+          let promises = supplies.map(s=>this.importSupply(s,user,sourceObject.name,existing));
+          out = await Promise.all(promises);
+
+          const responseProgressOff = await fetch(user['@id'], {
+            method: 'PATCH',
+            body: JSON.stringify({
+              "@context": {
+                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+              },
+              "dfc:importInProgress":false
+            }),
+            headers: {
+              'accept': 'application/ld+json',
+              'content-type': 'application/ld+json'
+            }
+          });
+
+          resolve(out);
         }
-        // console.log('EXISTING',existing);
-
-
-        let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
-        let out=[];
-
-        let promises = supplies.map(s=>this.importSupply(s,user,sourceObject.name,existing));
-        out = await Promise.all(promises);
-
-        // for (const s of supplies) {
-        //   out.push(await this.importSupply(s,user,sourceObject.name,existing));
-        // }
-        resolve(out);
       } catch (e) {
         reject(e);
       }
