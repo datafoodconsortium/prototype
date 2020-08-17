@@ -682,7 +682,6 @@ class SupplyAndImport {
   importSupply(supply, user, plateformName, convert) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('X CREATE');
         const responsePost = await fetch('http://dfc-middleware:3000/ldp/product', {
           method: 'POST',
           body: JSON.stringify({
@@ -716,9 +715,7 @@ class SupplyAndImport {
         const importedItem=await responseGet.json()
 
         if (convert === false) {
-          console.log('X CONVERT');
           await this.convertImportToSupply(importedItem,undefined, user);
-          console.log('X END CONVERT');
         }
 
         resolve(responseGet);
