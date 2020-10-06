@@ -18,7 +18,5 @@ RUN npm cache clean --force && npm install
 # overide by compose if volume targeted src
 ADD src  ./src
 
-ADD ./wait-for-it.sh ./script/wait-for-it.sh
-
 # overide by compose if command set
 CMD npm start
