@@ -247,7 +247,7 @@ class SupplyAndImport {
           '@graph':framed['@graph']?framed['@graph'].filter(p=>p['dfc:hostedBy']&&p['dfc:hostedBy']['rdfs:label']):[]
         }
 
-        // console.log("framed 1", JSON.stringify(framed));
+        console.log("framed 1", JSON.stringify(framed));
 
         framed['@graph'].forEach(f=>{
           // console.log('hasUnit',f['dfc:hasUnit']);
