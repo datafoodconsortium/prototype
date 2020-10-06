@@ -20,7 +20,7 @@ class Platform {
           }
         });
         let platforms = await response.json();
-        const out = await jsonld.frame(supplies, {
+        const out = await jsonld.frame(platforms, {
           "@context": {
             "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -36,10 +36,31 @@ class Platform {
     })
   }
 
-  getOnePlatformBySlug(slug) {
+  getOnePlatformBySlug(slug,platformStored) {
     return new Promise(async (resolve, reject) => {
       try {
-        resolve ( await this.getOnePlatform(`http://dfc-middleware:3000/ldp/platform/${slug}`) );
+        // console.log('getOnePlatformBySlug',slug);
+        let platform = this.configPlatforms['id']
+
+        if (!platform){
+          if(!platformStored){
+            platformStored=await this.getAll();
+          }
+
+          platform=platformStored['@graph'].filter(p=>{
+            const regexSlug = /.*\/(.*)/gm;
+            const slugFragment=regexSlug.exec(p['@id']);
+            return slugFragment[1]&&slugFragment[1].includes(slug);
+          });
+
+        }
+        if(platform.length>0){
+          resolve ( platform[0]);
+        }else {
+          reject (new Error('Platform not fonded by slug'))
+        }
+        // console.log('out',platform[0]);
+
       } catch (e) {
         reject(e);
       }
@@ -49,6 +70,7 @@ class Platform {
   getOnePlatform(id) {
     return new Promise(async (resolve, reject) => {
       try {
+        // console.log('getOnePlatform',id);
         const response = await fetch(id, {
           method: 'GET',
           headers: {
@@ -106,27 +128,27 @@ class Platform {
       }
     })
   }
-  initDFCPlatform() {
 
+  initConfigPlatformBySlug(source,platformStored){
     return new Promise(async (resolve, reject) => {
       try {
-
+        // console.log('source',source);
         try {
-          let platform = await this.getOnePlatformBySlug('dfc');
-
-          this.DFCPlaform = platform;
+          let platform =await this.getOnePlatformBySlug(source.slug,platformStored);
+          // console.log('FINDED',platform);
+          this.configPlatforms[source.slug]=platform;
         } catch (e){
-          let platformId = await this.createOnePlatform('dfc',{
-            'rdfs:label':'Data Food Consortium'
-          })
-          let platform = await this.getOnePlatform(platformId);
-          this.DFCPlaform = platform;
+          // console.log('NOT FINDED');
+          let newPlaformId = await this.createOnePlatform(source.slug,{
+            'rdfs:label':source.name
+          });
+          let newPlaform = await this.getOnePlatform(newPlaformId);
+          // console.log('newPlaform',newPlaform);
+          this.configPlatforms[source.slug]=newPlaform;
         }
-
         resolve();
-
-      } catch (e) {
-        reject(e);
+      } catch(e){
+        reject (e);
       }
     })
   }
@@ -134,18 +156,21 @@ class Platform {
   updatePlatformsFromConfig() {
     return new Promise(async (resolve, reject) => {
       try {
+        this.configPlatforms={};
+        const existingPlatform = await this.getAll()
+        let platformStored={
+          '@context':existingPlatform['@context'],
+          '@graph':existingPlatform['@graph']||[]
+        };
+        // console.log('INIT');
+        await this.initConfigPlatformBySlug(
+          {slug:'dfc','name':'Data Food Consortium'},
+          platformStored
+        )
         for (let source of config.sources){
-          try {
-            let platform =await this.getOnePlatformBySlug(source.slug);
-          } catch (e){
-            await this.createOnePlatform(source.slug,{
-              'rdfs:label':source.name
-            })
-          }
+          await this.initConfigPlatformBySlug(source,platformStored)
         }
-
         resolve();
-
       } catch (e) {
         reject(e);
       }

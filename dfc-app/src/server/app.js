@@ -57,9 +57,8 @@ request(url, {
           'http-get://dfc-fuseki:3030',
         ]}
         await waitOn(opts);
-        platformServiceSingleton.initDFCPlatform();
-        platformServiceSingleton.updatePlatformsFromConfig();
-        unitServiceSingleton.updateUnitsFromConfig();
+        await platformServiceSingleton.updatePlatformsFromConfig();
+        await unitServiceSingleton.updateUnitsFromConfig();
         app.use(session({
           secret: config.express.session_secret,
           maxAge: null

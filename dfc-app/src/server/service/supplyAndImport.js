@@ -186,7 +186,7 @@ class SupplyAndImport {
           WHERE {
             ?s1 ?p1 ?o1;
                 a dfc:Product ;
-                dfc:hostedBy <${platformServiceSingleton.DFCPlaform['@id']}> ;
+                dfc:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}> ;
                 dfc:hasPivot ?s3;
                 dfc:owner <${owner}>;
                 dfc:hasUnit ?s6.
@@ -209,7 +209,7 @@ class SupplyAndImport {
         });
         let supplies = await response.json();
         // console.log('supplies',JSON.stringify(supplies));
-        console.log('supplies',supplies);
+        // console.log('supplies',supplies);
 
         let framed = await jsonld.frame(supplies, {
           "@context": {
@@ -233,7 +233,7 @@ class SupplyAndImport {
             }
           },
           "@type": "dfc:Product",
-          "dfc:hostedBy": platformServiceSingleton.DFCPlaform['@id']
+          "dfc:hostedBy": (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']
 
         });
 
@@ -247,7 +247,7 @@ class SupplyAndImport {
           '@graph':framed['@graph']?framed['@graph'].filter(p=>p['dfc:hostedBy']&&p['dfc:hostedBy']['rdfs:label']):[]
         }
 
-        console.log("framed 1", JSON.stringify(framed));
+        // console.log("framed 1", JSON.stringify(framed));
 
         framed['@graph'].forEach(f=>{
           // console.log('hasUnit',f['dfc:hasUnit']);
@@ -316,7 +316,7 @@ class SupplyAndImport {
           },
           "@type": "dfc:Product",
           "dfc:hostedBy":{
-            "@id":platformServiceSingleton.DFCPlaform['@id']
+            "@id":(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']
           }
         });
         // console.log('getOneSupply framed',framed);
@@ -495,7 +495,7 @@ class SupplyAndImport {
             },
             "dfc:hostedBy": {
               "@type": "@id",
-              "@id": platformServiceSingleton.DFCPlaform['@id'],
+              "@id": (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'],
             },
             "dfc:owner": {
               "@id": user['@id'],
@@ -607,6 +607,7 @@ class SupplyAndImport {
   importSource(source, user) {
     return new Promise(async (resolve, reject) => {
       // console.log(user);
+      // console.log(await platformServiceSingleton.getOnePlatformBySlug('dfc'))
       try {
         // console.log(user['dfc:importInProgress']);
         if(user['dfc:importInProgress']==true){
@@ -662,7 +663,7 @@ class SupplyAndImport {
               WHERE {
                  ?s1 ?p1 ?o1;
                    rdf:type dfc:Product;
-                   dfc:hostedBy <${platformServiceSingleton.DFCPlaform['@id']}>.
+                   dfc:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}>.
                }
               `,
             headers: {
@@ -714,6 +715,7 @@ class SupplyAndImport {
   }
 
   importSupply(supply, user, plateformConfig, convert) {
+
     return new Promise(async (resolve, reject) => {
       try {
         // console.log(supply['dfc:hasUnit']);
@@ -722,7 +724,7 @@ class SupplyAndImport {
         if (unit){
           const regex = /.*\/(\w*)/gm;
           const unitFragment=regex.exec(unit)[1];
-          console.log('unitFragment',unitFragment);
+          // console.log('unitFragment',unitFragment);
           const unitId = `http://datafoodconsortium.org/data/unit#${unitFragment}`;
           supply['dfc:hasUnit']={
             "@id":unitId,
@@ -741,7 +743,7 @@ class SupplyAndImport {
             "@type": "dfc:Product",
             "dfc:hostedBy": {
               '@type': '@id',
-              '@id': `http://dfc-middleware:3000/ldp/platform/${plateformConfig.slug}`
+              '@id': `${(await platformServiceSingleton.getOnePlatformBySlug(plateformConfig.slug))['@id']}`
             },
             "dfc:owner": {
               "@id": user['@id'],

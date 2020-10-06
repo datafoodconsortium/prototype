@@ -37,7 +37,7 @@ docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
 log:
-	$(DOCKER_COMPOSE) logs -f dfc-app dfc-ui dfc-middleware
+	$(DOCKER_COMPOSE) logs -f dfc-app dfc-ui
 
 # Start
 start: docker-start
