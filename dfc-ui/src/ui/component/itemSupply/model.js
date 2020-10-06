@@ -123,7 +123,7 @@ export default class ItemSupply extends GenericElement {
         raw:d,
         description: d['dfc:description'],
         quantity: d['dfc:quantity'],
-        // unit: d['dfc:hasUnit']['@id'],
+        unit: d['dfc:hasUnit']['rdfs:label'],
         '@id': d['@id']
       }
     })
@@ -139,7 +139,7 @@ export default class ItemSupply extends GenericElement {
     this.elements.quantity.textContent = data['dfc:quantity'];
     this.elements.id.textContent = data['@id'];
     this.setDataGrid(data["dfc:hasPivot"]["dfc:represent"].filter(c=>c['@type']!=undefined))
-    // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
+    this.elements.unit.textContent = data['dfc:hasUnit']['rdfs:label'];
     // this.elements.quantity.textContent = data['dfc:quantity'];
     // this.elements.source.textContent = data['source'];
   }

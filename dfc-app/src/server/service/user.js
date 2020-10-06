@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 const request = require('request');
 const config = require('./../../../configuration.js');
 
-class Entreprise {
+class UserService {
   constructor() {}
 
   getOneUser(id) {
@@ -21,6 +21,7 @@ class Entreprise {
   }
 
   async connectUser(login, accessToken) {
+    // console.log('CONNECT');
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch('http://dfc-middleware:3000/sparql', {
@@ -44,13 +45,23 @@ class Entreprise {
           }
         });
         let user = await response.json();
-        // console.log(user);
+        // console.log('user',user);
 
-        if (user['@id'] == undefined) {
-          user = await this.createOneUser({
-            'login': login,
-            'accessToken': accessToken
-          });
+
+        if (!(user['@id'] || user['@graph'])) {
+
+          if (this.UserCreationByConnect===true) {
+            // console.log('DELAY UserCreationByConnect');
+            user = await this.connectUser(login, accessToken)
+          }else {
+            this.UserCreationByConnect=true;
+            user = await this.createOneUser({
+              'login': login,
+              'accessToken': accessToken
+            });
+            this.UserCreationByConnect=false;
+          }
+
         } else {
           // TODO update token
           // user.accessToken = accessToken;
@@ -133,4 +144,7 @@ class Entreprise {
 
 }
 
-module.exports = Entreprise;
+module.exports = {
+  UserService,
+  singletonUserService: new UserService()
+}

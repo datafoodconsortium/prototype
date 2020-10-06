@@ -110,12 +110,13 @@ export default class CatalogImport extends GenericElement {
 
   setDataGrid(data) {
     // let catalogList =this.shadowRoot.getElementById('catalogList');
-    // console.log('data received', data);
+    console.log('data received', data);
     let counter = 0;
     let dataEasyUi = data.map(d => {
       return {
         id: counter,
-        source: d['dfc:hostedBy']?d['dfc:hostedBy']['dfc:name']:'',
+        source: d['dfc:hostedBy']?d['dfc:hostedBy']['rdfs:label']:'',
+        unit: d['dfc:hasUnit']?d['dfc:hasUnit']['rdfs:label']:'',
         raw:d,
         description: d['dfc:description'],
         quantity: d['dfc:quantity'],

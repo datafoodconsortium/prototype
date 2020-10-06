@@ -6,6 +6,6 @@ module.exports = {
   settings: {
     baseUrl: process.env.SEMAPPS_HOME_URL + 'ldp/',
     ontologies,
-    containers:['product','user','pivot']
+    containers:['product','user','pivot','platform']
   }
 };

@@ -69,7 +69,6 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     next()
   });
   router.get('/auth', async function(req, res, next) {
-    console.log('NEVER');
     let referer = req.headers.referer;
     req.session.referer = referer;
     if (req.query.app_referer != undefined && req.query.app_referer != '' && req.query.app_referer != null) {
@@ -112,7 +111,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
   });
 
   router.get('/auth/logout', async function(req, res, next) {
-    console.log(req.query.redirectUri);
+    // console.log(req.query.redirectUri);
     req.logout(); // Passport logout
     res.redirect(
       `${lesCommunsIssuer.end_session_endpoint}?post_logout_redirect_uri=${encodeURIComponent(req.query.redirectUri)}`

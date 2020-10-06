@@ -2,7 +2,7 @@ const base64url = require('base64url');
 const jose = require('node-jose');
 const config=require("../../../configuration.js")
 // const EntrepriseService=require("../service/entreprise.js")
-const UserService=require("../service/user.js")
+const {UserService,singletonUserService}=require("../service/user.js")
 
 async function middlware_express_oidc (req,res,next) {
   // console.log('req.headers',req.headers.authorization);
@@ -21,15 +21,6 @@ async function middlware_express_oidc (req,res,next) {
       var payload = JSON.parse(base64url.decode(components[1]));
       var signature = components[2];
       var decodedSignature = base64url.decode(components[2])
-      // console.log('payload',payload);
-      // console.log('header', header);
-      // console.log('resource_access', payload.resource_access);
-      // console.log('signature', signature);
-      // console.log('decoded signature', decodedSignature);
-      // let entrepriseService = new EntrepriseService();
-      // console.log('user',user);
-      // let entreprise = await entrepriseService.getOneEntreprise(payload['dfc:Entreprise']);
-      // console.log('entreprise',entreprise);
 
       try {
         // console.log('token',token);
@@ -42,8 +33,9 @@ async function middlware_express_oidc (req,res,next) {
           .verify(token)
         // console.log('AFTER verify');
         req.oidcPayload=payload;
-        let userService = new UserService();
-        let user = await userService.connectUser(payload.preferred_username,token);
+        // let userService = new UserService();
+        // console.log('middleware',req.protocol + '://' + req.get('host') + req.originalUrl);
+        let user = await singletonUserService.connectUser(payload.preferred_username,token);
 
         req.user=user;
         // req.accessToken=token;

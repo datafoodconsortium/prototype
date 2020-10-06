@@ -150,9 +150,7 @@ export default class Catalog extends GenericElement {
           'source': record['source']||record.source,
           'dfc:description': record['dfc:description']||record.description,
           'dfc:quantity': record['dfc:quantity']||record.quantity,
-          // 'dfc:hasUnit': {
-          //   '@id': record['dfc:hasUnit']['@id']
-          // },
+          'dfc:hasUnit': record['dfc:hasUnit']||record.hasUnit,
           'dfc:hostedBy': record['dfc:hostedBy']||record.hostedBy,
         }
       })
@@ -203,6 +201,8 @@ export default class Catalog extends GenericElement {
             'dfc:description': record['dfc:description'],
             'dfc:hasPivot': record['dfc:hasPivot'],
             'dfc:hostedBy': record['dfc:hostedBy'],
+            'dfc:hasUnit': record['dfc:hasUnit'],
+            'dfc:quantity': record['dfc:quantity'],
 
           }
         })

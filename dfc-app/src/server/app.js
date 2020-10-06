@@ -10,6 +10,7 @@ const env = process.env;
 const fs = require('fs');
 const session = require('express-session');
 const passport = require('passport');
+const waitOn = require('wait-on');
 let url = env.CONFIG_URL;
 
 // const mongo_client = require('./mongo_client');
@@ -30,15 +31,16 @@ app.use(bodyParser.urlencoded({
 
 request(url, {
   json: true
-}, (err, result, body) => {
+}, (err, result, body) =>  {
   if (err == undefined) {
     const configJson = result.body
     const content = 'module.exports = ' + JSON.stringify(result.body)
-    fs.writeFile('./configuration.js', content, 'utf8', function(err) {
+    fs.writeFile('./configuration.js', content, 'utf8', async function(err) {
       if (err) {
         throw err
       } else {
         const config = require("../../configuration.js")
+        // console.log('CONFIG',config.sources);
         const middlware_express_oidc = require('./auth/middlware-express-oidc.js');
         const productAPI = require('./api/product.js');
         const entrepriseAPI = require('./api/entreprise.js');
@@ -46,7 +48,18 @@ request(url, {
         const redirectAPI = require('./api/redirectAPI.js');
         const userAPI = require('./api/user.js');
         const configAPI = require('./api/config.js');
-        console.log('config',config);
+        const {PlatformService,platformServiceSingleton} = require ('./service/platform.js')
+        const {UnitService,unitServiceSingleton} = require ('./service/unit.js')
+        // console.log('config',config);
+        var opts = {
+        resources: [
+          'http-get://dfc-middleware:3000/ldp/platform',
+          'http-get://dfc-fuseki:3030',
+        ]}
+        await waitOn(opts);
+        platformServiceSingleton.initDFCPlatform();
+        platformServiceSingleton.updatePlatformsFromConfig();
+        unitServiceSingleton.updateUnitsFromConfig();
         app.use(session({
           secret: config.express.session_secret,
           maxAge: null

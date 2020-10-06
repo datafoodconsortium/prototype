@@ -164,7 +164,7 @@ export default class ItemImport extends GenericElement {
             source: c['dfc:hostedBy']['rdfs:label'],
             description: c['dfc:description'],
             quantity: c['dfc:quantity'],
-            // unit: c['dfc:hasUnit']['@id'],
+            unit: c['dfc:hasUnit']['rdfs:label'],
             // '@id': c['@id']
           }
         })
@@ -177,7 +177,7 @@ export default class ItemImport extends GenericElement {
     console.log('setData',data);
     this.item = data
     this.elements.description.textContent = data['dfc:description'];
-    // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
+    this.elements.unit.textContent = data['dfc:hasUnit']['rdfs:label'];
     this.elements.quantity.textContent = data['dfc:quantity'];
     this.elements.source.textContent = data['dfc:hostedBy']['rdfs:label'];
     this.elements.descriptionSearch.value = data['dfc:description'];

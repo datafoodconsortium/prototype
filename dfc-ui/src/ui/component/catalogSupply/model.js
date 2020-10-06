@@ -126,10 +126,13 @@ export default class CatalogSupply extends GenericElement {
     let counter = 0;
     let dataEasyUi = data.map(d => {
       counter++;
+      console.log(d);
       return {
         id: counter,
         description: d['dfc:description'],
         source: d['dfc:hostedBy']['rdfs:label'],
+        quantity: d['dfc:quantity'],
+        unit: d['dfc:hasUnit']['rdfs:label'],
         raw: d,
         children: d['dfc:hasPivot']['dfc:represent'].filter(c=>c['@type']!=undefined).map(c => {
           counter++;
@@ -139,7 +142,7 @@ export default class CatalogSupply extends GenericElement {
             raw: d,
             description: c['dfc:description'],
             quantity: c['dfc:quantity'],
-            // unit: c['dfc:hasUnit']['@id'],
+            unit: c['dfc:hasUnit']['rdfs:label'],
             // '@id': c['@id']
           }
         })
