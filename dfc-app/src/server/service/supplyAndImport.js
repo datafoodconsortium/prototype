@@ -209,7 +209,7 @@ class SupplyAndImport {
         });
         let supplies = await response.json();
         // console.log('supplies',JSON.stringify(supplies));
-        // console.log('supplies',supplies);
+        console.log('supplies',supplies);
 
         let framed = await jsonld.frame(supplies, {
           "@context": {
