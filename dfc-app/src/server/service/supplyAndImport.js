@@ -250,10 +250,12 @@ class SupplyAndImport {
         // console.log("framed 1", JSON.stringify(framed));
 
         framed['@graph'].forEach(f=>{
-          console.log('hasUnit',f['dfc:hasUnit']);
-          const unitEntity = supplies['@graph'].filter(s=>s['@id']===f['dfc:hasUnit'])[0];
-          // console.log(unitEntity);
-          f['dfc:hasUnit']={'@id':unitEntity['@id'],'rdfs:label':unitEntity['label'],'@type':unitEntity['@type']};
+          // console.log('hasUnit',f['dfc:hasUnit']);
+          if(!f['dfc:hasUnit']['rdfs:label']){
+            const unitEntity = supplies['@graph'].filter(s=>s['@id']===f['dfc:hasUnit'])[0];
+            // console.log(unitEntity);
+            f['dfc:hasUnit']={'@id':unitEntity['@id'],'rdfs:label':unitEntity['label'],'@type':unitEntity['@type']};
+          }
         })
         // console.log("framed 2", framed);
         resolve(framed);
