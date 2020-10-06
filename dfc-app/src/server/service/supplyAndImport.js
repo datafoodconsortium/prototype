@@ -312,7 +312,9 @@ class SupplyAndImport {
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
           "@type": "dfc:Product",
-          "dfc:hostedBy":{"@id":platformServiceSingleton.DFCPlaform['@id']}
+          "dfc:hostedBy":{
+            "@id":platformServiceSingleton.DFCPlaform['@id']
+          }
         });
         // console.log('getOneSupply framed',framed);
         // const root = framed['@graph']?framed['@graph'].filter(p=>p['dfc:hostedBy']&&p['dfc:hostedBy']['rdfs:label'])[0]:{}

@@ -23,8 +23,6 @@ ADD .babelrc .
 ADD webpack.config.js  .
 ADD src  ./src
 
-ADD ./wait-for-it.sh /home
-
 # build src in dist
 RUN npm run build
 
