@@ -166,7 +166,7 @@ class SupplyAndImport {
     return new Promise(async (resolve, reject) => {
       try {
 
-        let owner = user['@id'];
+
 
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
@@ -188,7 +188,7 @@ class SupplyAndImport {
                 a dfc:Product ;
                 dfc:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}> ;
                 dfc:hasPivot ?s3;
-                dfc:owner <${owner}>;
+                dfc:owner <${user['@id']}>;
                 dfc:hasUnit ?s6.
             ?s1 dfc:hostedBy ?s2.
             ?s2 ?p2 ?o2.
@@ -648,6 +648,8 @@ class SupplyAndImport {
             supplies = sourceResponseObject['dfc:Entreprise']['dfc:supplies'];
           } else if (sourceObject.version == "1.2") {
             supplies = sourceResponseObject['dfc:supplies'];
+          } else if (sourceObject.version == "1.3") {
+            supplies = sourceResponseObject['dfc:affiliates'][0]['dfc:supplies'];
           }
 
           // console.log(supplies);
@@ -663,6 +665,7 @@ class SupplyAndImport {
               WHERE {
                  ?s1 ?p1 ?o1;
                    rdf:type dfc:Product;
+                   dfc:owner <${user['@id']}>;
                    dfc:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}>.
                }
               `,
@@ -675,7 +678,7 @@ class SupplyAndImport {
           if (everExistDfcProducts['@graph'] && everExistDfcProducts['@graph'].length > 0) {
             existing = true;
           }
-
+          // console.log('existing',existing);
           let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
           let out=[];
           // let promises=[]
@@ -718,14 +721,14 @@ class SupplyAndImport {
 
     return new Promise(async (resolve, reject) => {
       try {
-        // console.log(supply['dfc:hasUnit']);
+        console.log('supply',supply);
         let unit = supply['dfc:hasUnit']?supply['dfc:hasUnit']['@id']||supply['dfc:hasUnit']:undefined;
         // console.log('unit',unit);
         if (unit){
           const regex = /.*\/(\w*)/gm;
           const unitFragment=regex.exec(unit)[1];
           // console.log('unitFragment',unitFragment);
-          const unitId = `http://datafoodconsortium.org/data/unit#${unitFragment}`;
+          const unitId = `http://datafoodconsortium.org/data/units.rdf#${unitFragment}`;
           supply['dfc:hasUnit']={
             "@id":unitId,
             "@type":"@id"
