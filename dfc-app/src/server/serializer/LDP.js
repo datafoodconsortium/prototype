@@ -16,7 +16,7 @@ class ldpSerializer {
 
     return {
       "@context": {
-        "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+        "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
       },
       "@id": "http://localhost:8080/data/core/entrepriseLDP/5da83c675417a50a1250ee08",
       "@type": "dfc:Entreprise",

@@ -42,8 +42,8 @@ export default class LDP_test extends GenericElement {
 
       const context = {
         "@context": {
-          // "@vocab": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-          "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+          // "@vocab": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+          "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
           "label": "http://www.w3.org/2000/01/rdf-schema#label",
         }
       };

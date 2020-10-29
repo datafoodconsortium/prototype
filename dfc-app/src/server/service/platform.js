@@ -22,7 +22,7 @@ class Platform {
         let platforms = await response.json();
         const out = await jsonld.frame(platforms, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
@@ -83,7 +83,7 @@ class Platform {
         let platform = await response.json();
         const framed = await jsonld.frame(platform, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
@@ -106,7 +106,7 @@ class Platform {
           method: 'POST',
           body:JSON.stringify({
             "@context": {
-              "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },

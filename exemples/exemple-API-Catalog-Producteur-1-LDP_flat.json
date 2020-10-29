@@ -1,6 +1,6 @@
 [{
   "@context": {
-    "DFC": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+    "DFC": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
     "@base": "http://maPlateformeNationale"
   },
   "@graph": [{

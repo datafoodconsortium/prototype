@@ -47,7 +47,7 @@
   {
     "prefix": "dfc",
     "owl": "",
-    "url": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+    "url": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
   },
   {
     "prefix": "ontosec",

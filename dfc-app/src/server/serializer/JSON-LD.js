@@ -5,7 +5,7 @@
 class json_ldSerializer {
   constructor() {
     this.context = {
-      "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+      "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
       "@base": "http://localhost:8080"
     };
 

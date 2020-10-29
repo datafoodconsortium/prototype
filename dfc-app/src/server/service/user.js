@@ -29,7 +29,7 @@ class UserService {
           body: `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
           PREFIX ontosec: <http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
 
           CONSTRUCT  {
             ?s1 ?p1 ?o1 .
@@ -107,7 +107,7 @@ class UserService {
         // TODO add token
         let data = {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "ontosec": "http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#"
           },
           "@type": "dfc:Person",

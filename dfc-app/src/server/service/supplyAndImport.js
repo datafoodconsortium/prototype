@@ -18,7 +18,7 @@ class SupplyAndImport {
           method: 'POST',
           body: `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           CONSTRUCT  {
             ?s1 ?p1 ?o1 .
           }
@@ -63,7 +63,7 @@ class SupplyAndImport {
           method: 'POST',
           body: `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
             ?s1 ?p1 ?o1 .
@@ -93,7 +93,7 @@ class SupplyAndImport {
         // console.log(supplies);
         const out = await jsonld.frame(supplies, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
@@ -116,7 +116,7 @@ class SupplyAndImport {
           method: 'POST',
           body: `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
             <${id}> ?p1 ?o1 .
@@ -139,7 +139,7 @@ class SupplyAndImport {
 
         const framed = await jsonld.frame(supplies, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
@@ -172,7 +172,7 @@ class SupplyAndImport {
           method: 'POST',
           body: `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
             ?s1 ?p1 ?o1 .
@@ -213,7 +213,7 @@ class SupplyAndImport {
 
         let framed = await jsonld.frame(supplies, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
             "dfc:hostedBy":{
@@ -273,7 +273,7 @@ class SupplyAndImport {
           method: 'POST',
           body: `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
             ?s1 ?p1 ?o1 .
@@ -310,7 +310,7 @@ class SupplyAndImport {
         // console.log('getOneSupply',supplies);
         let framed = await jsonld.frame(supplies, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
@@ -375,7 +375,7 @@ class SupplyAndImport {
             body: JSON.stringify({
               ...r,
               "@context": {
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
                 "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
               },
@@ -392,7 +392,7 @@ class SupplyAndImport {
           method: 'Patch',
           body: JSON.stringify({
             "@context": {
-              "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },
@@ -408,7 +408,7 @@ class SupplyAndImport {
           method: 'Patch',
           body: JSON.stringify({
             "@context": {
-              "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },
@@ -469,7 +469,7 @@ class SupplyAndImport {
           // });
           const body = {
             '@context': {
-              'dfc': 'http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#'
+              'dfc': 'http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#'
             },
             '@type': 'dfc:RepresentationPivot',
             "dfc:owner": {
@@ -491,7 +491,7 @@ class SupplyAndImport {
             ...importToConvert,
             "@context": {
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-              "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
             },
             "dfc:hostedBy": {
               "@type": "@id",
@@ -522,7 +522,7 @@ class SupplyAndImport {
             method: 'Patch',
             body: JSON.stringify({
               "@context": {
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
               },
               "dfc:represent": [
                 { "@id": importToConvert['@id'], "@type": "@id" },
@@ -538,7 +538,7 @@ class SupplyAndImport {
             method: 'Patch',
             body: JSON.stringify({
               "@context": {
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
               },
               "dfc:hasPivot": { "@id": responsePivot.headers.get('location'), "@type": "@id" }
             }),
@@ -566,7 +566,7 @@ class SupplyAndImport {
             method: 'Patch',
             body: JSON.stringify({
               "@context": {
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
               },
               "dfc:represent":pivot["dfc:represent"]
             }),
@@ -582,7 +582,7 @@ class SupplyAndImport {
             method: 'Patch',
             body: JSON.stringify({
               "@context": {
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
               },
               "dfc:hasPivot": { "@id": pivot['@id'], "@type": "@id" }
             }),
@@ -618,7 +618,7 @@ class SupplyAndImport {
             body: JSON.stringify({
               "@context": {
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
               },
               "dfc:importInProgress":true
             }),
@@ -657,7 +657,7 @@ class SupplyAndImport {
             method: 'POST',
             body: `
               PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-              PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+              PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
               PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
               CONSTRUCT  {
                 ?s1 ?p1 ?o1 .
@@ -694,7 +694,7 @@ class SupplyAndImport {
               body: JSON.stringify({
                 "@context": {
                   "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                  "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+                  "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
                 },
                 "dfc:importInProgress":false
               }),
@@ -728,7 +728,7 @@ class SupplyAndImport {
           const regex = /.*\/(\w*)/gm;
           const unitFragment=regex.exec(unit)[1];
           // console.log('unitFragment',unitFragment);
-          const unitId = `http://datafoodconsortium.org/data/units.rdf#${unitFragment}`;
+          const unitId = `http://static.datafoodconsortium.org/data/units.rdf#${unitFragment}`;
           supply['dfc:hasUnit']={
             "@id":unitId,
             "@type":"@id"
@@ -741,7 +741,7 @@ class SupplyAndImport {
             ...supply,
             "@context": {
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-              "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
+              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#"
             },
             "@type": "dfc:Product",
             "dfc:hostedBy": {

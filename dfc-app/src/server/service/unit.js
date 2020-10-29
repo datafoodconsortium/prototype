@@ -23,7 +23,7 @@ class Unit {
           },
           body:`
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
           	?s1 ?p1 ?o1 .
@@ -38,7 +38,7 @@ class Unit {
 
         const framed = await jsonld.frame(units, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           }
@@ -67,7 +67,7 @@ class Unit {
           },
           body:`
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
           	<${id}> ?p1 ?o1 .
@@ -92,7 +92,7 @@ class Unit {
 
         const framed = await jsonld.frame(unit, {
           "@context": {
-            "dfc": "http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
@@ -119,7 +119,7 @@ class Unit {
           },
           body:`
           INSERT DATA {
-            <${data['@id']}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://datafoodconsortium.org/ontologies/DFC_FullModel.owl#Unit> .
+            <${data['@id']}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#Unit> .
             <${data['@id']}> <http://www.w3.org/2000/01/rdf-schema#label> "${data['rdfs:label']}" .
           }
           `
