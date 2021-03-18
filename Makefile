@@ -3,6 +3,7 @@
 
 DOCKER_COMPOSE=docker-compose -f docker-compose.yml
 DOCKER_COMPOSE_PROD=docker-compose -f docker-compose-prod.yml
+DOCKER_COMPOSE_DEV=docker-compose -f docker-compose-dev.yml
 
 # Docker
 docker-build:
@@ -17,11 +18,12 @@ docker-up:
 
 docker-stop:
 	$(DOCKER_COMPOSE) down
-	$(DOCKER_COMPOSE) rm -fv
 
 docker-stop-prod:
 	$(DOCKER_COMPOSE_PROD) down
-	$(DOCKER_COMPOSE_PROD) rm -fv
+
+docker-stop-dev:
+	$(DOCKER_COMPOSE_DEV) down
 
 docker-clean:
 	$(DOCKER_COMPOSE) kill
@@ -33,18 +35,27 @@ docker-start:
 docker-start-prod:
 	$(DOCKER_COMPOSE_PROD) up -d --force-recreate
 
+docker-start-dev:
+	$(DOCKER_COMPOSE_DEV) up -d --force-recreate
+
 docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
 log:
-	$(DOCKER_COMPOSE) logs -f dfc-app dfc-ui
+	$(DOCKER_COMPOSE) logs -f dfc-app dfc-ui dfc-middleware
 
 # Start
-start: docker-start
+start:
+	rm -rf ./dfc-semapps/node_modules
+	make docker-start
 start-prod: docker-start-prod
+start-dev:
+	rm -rf ./dfc-semapps/node_modules
+	make docker-start-dev
 
 stop: docker-stop
 stop-prod: docker-stop-prod
+stop-dev: docker-stop-dev
 
 restart: docker-restart
 

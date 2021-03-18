@@ -1,0 +1,47 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+CONSTRUCT  {
+  ?sCatalog ?pCatalog ?oCatalog.
+  ?sPlatform ?pPlatform ?oPlatform.
+  ?sPivot ?pPivot ?oPivot.
+  ?sCatalog2 ?pCatalog2 ?oCatalog2.
+  ?sPlatform2 ?pPlatform2 ?oPlatform2.
+  ?sSupply ?pSupply ?oSupply.
+  ?sSupply2 ?pSupply2 ?oSupply2.
+  ?sType ?pType ?oType.
+  ?sUnit ?pUnit ?oUnit.
+  ?sType2 ?pType2 ?oType2.
+  ?sUnit2 ?pUnit2 ?oUnit2.
+}
+WHERE {
+  ?sCatalog ?pCatalog ?oCatalog;
+      a dfc-b:CatalogItem ;
+      dfc-t:hostedBy <http://dfc-middleware:3000/ldp/platform/dfc> ;
+      dfc-t:hasPivot ?sPivot;
+      dfc-b:references ?sSupply;
+      dfc:owner <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86>;
+      dfc-t:hostedBy ?sPlatform.
+  ?sPlatform ?pPlatform ?oPlatform.
+  ?sPivot ?pPivot ?oPivot;
+      dfc-t:represent ?sCatalog2.
+  ?sCatalog2 ?pCatalog2 ?oCatalog2;
+      dfc-b:references ?sSupply2;
+      dfc-t:hostedBy ?sPlatform2.
+  ?sPlatform2 ?pPlatform2 ?oPlatform2.
+  ?sSupply ?pSupply ?oSupply;
+    dfc-b:hasUnit ?sUnit;
+    dfc-b:hasType ?sType.
+  ?sSupply2 ?pSupply2 ?oSupply2;
+      dfc-b:hasUnit ?sUnit2;
+      dfc-b:hasType ?sType2.
+  ?sType ?pType ?oType.
+  ?sUnit ?pUnit ?oUnit.
+  ?sType2 ?pType2 ?oType2.
+  ?sUnit2 ?pUnit2 ?oUnit2.
+}

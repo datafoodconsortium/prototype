@@ -85,7 +85,7 @@ export default class Catalog extends GenericElement {
   }
 
   cleanAll(source) {
-    let url = `${url_server}/data/core/clean`;
+    let url = `${url_server}/data/core/catalog/clean`;
     let option = {
       method: 'POST'
     };
@@ -102,7 +102,7 @@ export default class Catalog extends GenericElement {
   importOne(source,name) {
     // let sourceObject = config.sources.filter(so => so.name == source)[0];
     // console.log('importOne',sourceObject);
-    let url = `${url_server}/data/core/import/importSource?source=${source}`;
+    let url = `${url_server}/data/core/catalog/importSource?source=${source}`;
     let option = {
       method: 'POST'
     };
@@ -139,26 +139,26 @@ export default class Catalog extends GenericElement {
     });
   }
   loadAllImport() {
-    let url = `${url_server}/data/core/import`;
+    let url = `${url_server}/data/core/catalog/import`;
     this.catalogs = [];
     this.catalogsTree = [];
     this.util.ajaxCall(url).then(data => {
 
-      let newRecords = (data.body['@graph']?data.body['@graph']:[]).map(record => {
+      let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
         return {
           '@id': record['@id'],
           'source': record['source']||record.source,
-          'dfc:description': record['dfc:description']||record.description,
-          'dfc:quantity': record['dfc:quantity']||record.quantity,
-          'dfc:hasUnit': record['dfc:hasUnit']||record.hasUnit,
-          'dfc:hostedBy': record['dfc:hostedBy']||record.hostedBy,
+          'dfc-b:description': record['dfc-b:references']['dfc-b:description']||record.description,
+          'dfc-b:quantity': record['dfc-b:quantity']||record.quantity,
+          'dfc-b:hasUnit': record['dfc-b:hasUnit']||record.hasUnit,
+          'dfc-t:hostedBy': record['dfc-t:hostedBy']||record.hostedBy,
         }
       })
       console.log('newRecords',newRecords);
       this.catalogs = newRecords;
       this.catalogs.sort((a, b) => {
         // console.log(a['dfc:description'],'---',b['dfc:description']);
-        let dif = a['dfc:description'].localeCompare(b['dfc:description']);
+        let dif = a['dfc-b:description'].localeCompare(b['dfc-b:description']);
         // console.log(dif);
         return dif;
       });
@@ -188,34 +188,37 @@ export default class Catalog extends GenericElement {
 
 
   loadAllSupply() {
-    let url = `${url_server}/data/core/supply`;
+    let url = `${url_server}/data/core/catalog/reconciled`;
     this.catalogs = [];
     this.catalogsTree = [];
     this.util.ajaxCall(url).then(data => {
-      console.log(data);
+      // console.log(data);
       if(data.body['@graph']){
-        let newRecords = data.body['@graph'].map(record => {
-          return {
-            '@id': record['@id'],
-            'imports': record['imports'],
-            'dfc:description': record['dfc:description'],
-            'dfc:hasPivot': record['dfc:hasPivot'],
-            'dfc:hostedBy': record['dfc:hostedBy'],
-            'dfc:hasUnit': record['dfc:hasUnit'],
-            'dfc:quantity': record['dfc:quantity'],
-
-          }
+        let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
+          // return {
+          //   '@id': record['@id'],
+          //   'imports': record['imports'],
+          //   'dfc-b:references': record['dfc-b:references'],
+          //   'dfc-t:hasPivot': record['dfc-t:hasPivot'],
+          //   'dfc-t:hostedBy': record['dfc-t:hostedBy'],
+          //
+          //   // 'dfc-b:hasUnit': record['dfc-b:hasUnit'],
+          //   // 'dfc-b:quantity': record['dfc-b:quantity'],
+          //
+          // }
+          return {...record}
         })
-        // console.log(newRecords);
+        // console.log('newRecords',newRecords);
 
         this.catalogs = newRecords;
-        this.catalogs.sort((a, b) => {
-          let dif = a['dfc:description'].localeCompare(b['dfc:description']);
-          // console.log(dif);
-          return dif;
-        });
+        // console.log('newRecords',newRecords);
+        // this.catalogs.sort((a, b) => {
+        //   let dif = a['dfc-b:description']?a['dfc-b:description'].localeCompare(b['dfc-b:description']):0;
+        //   // console.log(dif);
+        //   return dif;
+        // });
 
-        // console.log('this.catalogsTree',this.catalogsTree);
+        console.log('this.catalogs',this.catalogs);
         this.publish({
           channel: 'supply',
           topic: 'changeAll',
@@ -246,7 +249,8 @@ export default class Catalog extends GenericElement {
   }
 
   unlinkSupply(supply, importItem) {
-    supply["dfc:hasPivot"]["dfc:represent"] = supply["dfc:hasPivot"]["dfc:represent"].filter(r => r['@id'] != importItem['@id']);
+    console.log('supply',supply);
+    supply["dfc-t:hasPivot"]["dfc-t:represent"] = supply["dfc-t:hasPivot"]["dfc-t:represent"].filter(r => r['@id'] != importItem['@id']);
     let url = `${url_server}/data/core/supply/`;
     let option = {
       method: 'POST',

@@ -11,6 +11,6 @@ module.exports = function (router) {
 
   router.post('/user/:id/entreprise', async (req, res, next)=>{
     let out= await singletonUserService.createEntreprise(req.params.id,req.body);
-    res.json(out)
+    res.json(out);
   })
 }

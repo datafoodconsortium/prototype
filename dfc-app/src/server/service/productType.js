@@ -7,7 +7,7 @@ const config = require('./../../../configuration.js');
 const fetch = require('node-fetch');
 const jsonld = require('jsonld');
 
-class Unit {
+class ProductType {
   constructor() {}
 
   getAll() {
@@ -28,25 +28,27 @@ class Unit {
           PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
           PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
           PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
           	?s1 ?p1 ?o1 .
           }
           WHERE {
-          	?s1 a dfc-p:Unit ;
+          	?s1 a dfc-p:ProductType ;
               ?s1 ?p1 ?o1 .
           }
           `
         });
-        let units = await response.json();
+        let products = await response.json();
 
-        const framed = await jsonld.frame(units, {
+        const framed = await jsonld.frame(products, {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
             "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
             "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
             "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           }
@@ -62,7 +64,7 @@ class Unit {
   }
 
 
-  getOneUnitById(id) {
+  getOneById(id) {
     return new Promise(async (resolve, reject) => {
       try {
 
@@ -80,6 +82,7 @@ class Unit {
           PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
           PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
           PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           CONSTRUCT  {
           	<${id}> ?p1 ?o1 .
@@ -89,32 +92,33 @@ class Unit {
           }
           `
         });
-        let unitRaw = await response.json();
-        let unit;
-        if (unitRaw['@id']){
-          unit=unitRaw;
-        }else if(unitRaw['@graph']) {
-          unit={
-            '@context':unitRaw['@context'],
-            ...unitRaw['@graph'][0]
+        let productRaw = await response.json();
+        // console.log('productRaw',productRaw);
+        let product;
+        if (productRaw['@id']){
+          product=productRaw;
+        }else if(productRaw['@graph']) {
+          product={
+            '@context':productRaw['@context'],
+            ...productRaw['@graph'][0]
           }
         }else{
           throw new Error('unit not found')
         }
 
-        const framed = await jsonld.frame(unit, {
+        const framed = await jsonld.frame(product, {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
             "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
             "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
             "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
-          "@type": "dfc-p:Unit"
+          "@type": "dfc-p:ProductType"
         });
-        // const out=framed
 
         resolve(framed);
 
@@ -124,7 +128,7 @@ class Unit {
     })
   }
 
-  createOneUnit(data) {
+  createOne(data) {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch("http://dfc-fuseki:3030/localData/update", {
@@ -135,14 +139,14 @@ class Unit {
           },
           body:`
           INSERT DATA {
-            <${data['@id']}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+            <${data['@id']}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
             <${data['@id']}> <http://www.w3.org/2000/01/rdf-schema#label> "${data['rdfs:label']}" .
           }
           `
         });
 
         if(!response.ok){
-          throw new Error(`SPARQL INSERT UNIT FAILED : ${await response.text()}`)
+          throw new Error(`SPARQL INSERT PRODUCT FAILED : ${await response.text()}`)
         }
         resolve(data['@id']);
 
@@ -152,17 +156,28 @@ class Unit {
     })
   }
 
-  updateUnitsFromConfig() {
+  updateProductsFromReference() {
     return new Promise(async (resolve, reject) => {
       try {
-        // console.log('config',config.data);
-        for (let unitConf of config.data.units){
+
+        const typesResponse = await fetch('http://static.datafoodconsortium.org/data/productTypes.json');
+        const types= (await typesResponse.json())['@graph'];
+
+        for (let productTypeConf of types){
+          let frLabel = productTypeConf['rdfs:label'].find(l=>l['@language']==='fr')['@value'];
+          if(frLabel){
+            productTypeConf['rdfs:label']=frLabel
+          }
+          // console.log(productTypeConf);
           try {
-            let unit =await this.getOneUnitById(unitConf['@id']);
-            // console.log('UNIT',unit);
+            // console.log(productTypeConf['@id']);
+            let productType =await this.getOneById(productTypeConf['@id']);
+            // console.log('exist type');
+            // console.log('productType',unit);
           } catch (e){
             // console.log(e);
-            await this.createOneUnit(unitConf)
+            await this.createOne(productTypeConf);
+            // console.log('create type');
           }
         }
 
@@ -176,6 +191,6 @@ class Unit {
 }
 
 module.exports ={
-  UnitService : Unit,
-  unitServiceSingleton : new Unit()
+  ProducTypeService : ProductType,
+  productTypeServiceSingleton : new ProductType()
 }

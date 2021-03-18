@@ -46,8 +46,7 @@ class UserService {
         });
         let user = await response.json();
         // console.log('user',user);
-
-
+        // TODO fefactor removing  this.UserCreationByConnect
         if (!(user['@id'] || user['@graph'])) {
 
           if (this.UserCreationByConnect===true) {
@@ -64,8 +63,8 @@ class UserService {
 
         } else {
           // TODO update token
-          // user.accessToken = accessToken;
-          // await user.save();
+          user.accessToken = accessToken;
+          user =  await this.updateOneUser(user);
         }
         resolve(user);
       } catch (e) {
@@ -91,10 +90,30 @@ class UserService {
   async updateOneUser(user) {
     return new Promise(async (resolve, reject) => {
       try {
-        let userOld = await userModel.model.findById(user._id);
-        Object.assign(userOld, user);
-        await userOld.save();
-        resolve(userOld);
+        let data = {
+          "@context": user['@context'],
+          "ontosec:token": user.accessToken
+        }
+
+        const response = await fetch(user['@id'], {
+          method: 'PATCH',
+          body: JSON.stringify(data),
+          headers: {
+            'accept': 'application/ld+json',
+            'content-type': 'application/ld+json'
+          }
+        });
+        let location = response.headers.get('location');
+
+
+
+        // let userOld = await userModel.model.findById(user._id);
+        // Object.assign(userOld, user);
+        // await userOld.save();
+        resolve({
+          ...user,
+          'ontosec:token':user.accessToken
+        });
       } catch (e) {
         reject(e);
       }

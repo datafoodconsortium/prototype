@@ -23,10 +23,14 @@ class Platform {
         const out = await jsonld.frame(platforms, {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
-          "@type": "dfc:Platform"
+          "@type": "dfc-t:Platform"
         });
 
         resolve(out);
@@ -84,10 +88,14 @@ class Platform {
         const framed = await jsonld.frame(platform, {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
           },
-          "@type": "dfc:Platform"
+          "@type": "dfc-t:Platform"
         });
         const out=framed
 
@@ -107,10 +115,14 @@ class Platform {
           body:JSON.stringify({
             "@context": {
               "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },
-            '@type':'dfc:Platform',
+            '@type':'dfc-t:Platform',
             ...data
           }),
           headers: {

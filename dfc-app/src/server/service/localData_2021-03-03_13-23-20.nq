@@ -1,0 +1,791 @@
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#BasicContainer> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#Container> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> .
+<http://dfc-middleware:3000/ldp/product> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> .
+<http://dfc-middleware:3000/ldp/user> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#BasicContainer> .
+<http://dfc-middleware:3000/ldp/user> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#Container> .
+<http://dfc-middleware:3000/ldp/user> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/user> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/pivot> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#BasicContainer> .
+<http://dfc-middleware:3000/ldp/pivot> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#Container> .
+<http://dfc-middleware:3000/ldp/pivot> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> .
+<http://dfc-middleware:3000/ldp/pivot> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> .
+<http://dfc-middleware:3000/ldp/pivot> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> .
+<http://dfc-middleware:3000/ldp/pivot> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#BasicContainer> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#Container> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/cagette> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/la-ruche-qui-dit-oui> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/open-food-fact> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/test_v1-3> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/ofn> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/test_v1-4> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/platform> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/platform/socleo> .
+<http://dfc-middleware:3000/ldp/platform/cagette> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/cagette> <http://www.w3.org/2000/01/rdf-schema#label> "cagette" .
+<http://dfc-middleware:3000/ldp/platform/dfc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/dfc> <http://www.w3.org/2000/01/rdf-schema#label> "Data Food Consortium" .
+<http://dfc-middleware:3000/ldp/platform/la-ruche-qui-dit-oui> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/la-ruche-qui-dit-oui> <http://www.w3.org/2000/01/rdf-schema#label> "la ruche qui dit oui" .
+<http://dfc-middleware:3000/ldp/platform/open-food-fact> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/open-food-fact> <http://www.w3.org/2000/01/rdf-schema#label> "Open Food Fact" .
+<http://dfc-middleware:3000/ldp/platform/test_v1-3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/test_v1-3> <http://www.w3.org/2000/01/rdf-schema#label> "test v1.3" .
+<http://dfc-middleware:3000/ldp/platform/ofn> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/ofn> <http://www.w3.org/2000/01/rdf-schema#label> "Open Food Network" .
+<http://static.datafoodconsortium.org/data/units.rdf#Piece> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#Piece> <http://www.w3.org/2000/01/rdf-schema#label> "unité" .
+<http://static.datafoodconsortium.org/data/units.rdf#piece> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#piece> <http://www.w3.org/2000/01/rdf-schema#label> "unité" .
+<http://static.datafoodconsortium.org/data/units.rdf#Kilogram> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#Kilogram> <http://www.w3.org/2000/01/rdf-schema#label> "kilogramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#kilogram> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#kilogram> <http://www.w3.org/2000/01/rdf-schema#label> "kilogramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#KG> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#KG> <http://www.w3.org/2000/01/rdf-schema#label> "kilogramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#Gram> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#Gram> <http://www.w3.org/2000/01/rdf-schema#label> "gramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#G> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#G> <http://www.w3.org/2000/01/rdf-schema#label> "gramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#U> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#U> <http://www.w3.org/2000/01/rdf-schema#label> "unité" .
+<http://static.datafoodconsortium.org/data/units.rdf#Unit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#Unit> <http://www.w3.org/2000/01/rdf-schema#label> "unité" .
+<http://static.datafoodconsortium.org/data/units.rdf#gram> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#gram> <http://www.w3.org/2000/01/rdf-schema#label> "gramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#unit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#unit> <http://www.w3.org/2000/01/rdf-schema#label> "unité" .
+<http://static.datafoodconsortium.org/data/units.rdf#kg> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#kg> <http://www.w3.org/2000/01/rdf-schema#label> "kilogramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#u> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#u> <http://www.w3.org/2000/01/rdf-schema#label> "unité" .
+<http://static.datafoodconsortium.org/data/units.rdf#g> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#g> <http://www.w3.org/2000/01/rdf-schema#label> "gramme" .
+<http://static.datafoodconsortium.org/data/units.rdf#l> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#Unit> .
+<http://static.datafoodconsortium.org/data/units.rdf#l> <http://www.w3.org/2000/01/rdf-schema#label> "litre" .
+<http://dfc-middleware:3000/ldp/platform/test_v1-4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/test_v1-4> <http://www.w3.org/2000/01/rdf-schema#label> "test v1.4" .
+<http://dfc-middleware:3000/ldp/platform/test_v1-5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/test_v1-5> <http://www.w3.org/2000/01/rdf-schema#label> "test v1.5" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#soft-drink> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#soft-drink> <http://www.w3.org/2000/01/rdf-schema#label> "Boisson non alcoolisée" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salad> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salad> <http://www.w3.org/2000/01/rdf-schema#label> "Salade" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#egg> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#egg> <http://www.w3.org/2000/01/rdf-schema#label> "Oeuf" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#old-variety-squash> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#old-variety-squash> <http://www.w3.org/2000/01/rdf-schema#label> "Variété ancienne" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fig> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fig> <http://www.w3.org/2000/01/rdf-schema#label> "Figue" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rocket> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rocket> <http://www.w3.org/2000/01/rdf-schema#label> "Roquette" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beef> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beef> <http://www.w3.org/2000/01/rdf-schema#label> "Viande bovine" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-mature-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-mature-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage affinés" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-milk> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-milk> <http://www.w3.org/2000/01/rdf-schema#label> "Lait" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chanterelle-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chanterelle-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Chanterelle" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-sweet-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-sweet-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt sucré" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rabbit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rabbit> <http://www.w3.org/2000/01/rdf-schema#label> "Lapin" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pie-pastry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pie-pastry> <http://www.w3.org/2000/01/rdf-schema#label> "Pâte à tarte" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#jam> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#jam> <http://www.w3.org/2000/01/rdf-schema#label> "Confiture" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fourth-range-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fourth-range-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume quatrième gamme" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Champignon" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beer> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beer> <http://www.w3.org/2000/01/rdf-schema#label> "Bière" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chilli-pepper> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chilli-pepper> <http://www.w3.org/2000/01/rdf-schema#label> "Piment" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#non-local-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#non-local-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume non local" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chicory> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chicory> <http://www.w3.org/2000/01/rdf-schema#label> "Chicorée" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#other-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#other-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cream-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cream-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage blanc" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#peach> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#peach> <http://www.w3.org/2000/01/rdf-schema#label> "Pêche" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#almond> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#almond> <http://www.w3.org/2000/01/rdf-schema#label> "Amande" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#milk> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#milk> <http://www.w3.org/2000/01/rdf-schema#label> "Lait" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#romanesco-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#romanesco-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou romanesco" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen> <http://www.w3.org/2000/01/rdf-schema#label> "Surgelé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fresh-meat> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fresh-meat> <http://www.w3.org/2000/01/rdf-schema#label> "Viande fraîche" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#semolina> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#semolina> <http://www.w3.org/2000/01/rdf-schema#label> "Semoule" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#turkey> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#turkey> <http://www.w3.org/2000/01/rdf-schema#label> "Dinde" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#plant> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#plant> <http://www.w3.org/2000/01/rdf-schema#label> "Plant" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kale-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kale-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou kale" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#asparagus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#asparagus> <http://www.w3.org/2000/01/rdf-schema#label> "Asperge" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-yogurt-with-fruits> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-yogurt-with-fruits> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt aux fruits" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#wine> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#wine> <http://www.w3.org/2000/01/rdf-schema#label> "Vin" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-yogurt-on-a-bed-of-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-yogurt-on-a-bed-of-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt sur lit de fruit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#crepe-and-galette> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#crepe-and-galette> <http://www.w3.org/2000/01/rdf-schema#label> "Crêpe et galette" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-dairy-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-dairy-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produits laitiers de chèvre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#oyster-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#oyster-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Pleurote" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#seashell> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#seashell> <http://www.w3.org/2000/01/rdf-schema#label> "Coquillage" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#radish> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#radish> <http://www.w3.org/2000/01/rdf-schema#label> "Radis" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#tomato> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#tomato> <http://www.w3.org/2000/01/rdf-schema#label> "Tomate" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pork> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pork> <http://www.w3.org/2000/01/rdf-schema#label> "Porc" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#thyme> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#thyme> <http://www.w3.org/2000/01/rdf-schema#label> "Thym" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cider> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cider> <http://www.w3.org/2000/01/rdf-schema#label> "Cidre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mint> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mint> <http://www.w3.org/2000/01/rdf-schema#label> "Menthe" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#parsley> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#parsley> <http://www.w3.org/2000/01/rdf-schema#label> "Persil" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-fresh-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-fresh-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage frais" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cow-dairy-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cow-dairy-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produit laitier de vache" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#jerusalem-artichoke> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#jerusalem-artichoke> <http://www.w3.org/2000/01/rdf-schema#label> "Topinambour" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#ripe> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#ripe> <http://www.w3.org/2000/01/rdf-schema#label> "Mûre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salad-mix> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salad-mix> <http://www.w3.org/2000/01/rdf-schema#label> "Mélange salades" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#parsnip> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#parsnip> <http://www.w3.org/2000/01/rdf-schema#label> "Panais" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#broccoli-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#broccoli-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou brocoli" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salt> <http://www.w3.org/2000/01/rdf-schema#label> "Sel" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#yam> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#yam> <http://www.w3.org/2000/01/rdf-schema#label> "Patate douce" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-yogurt-with-fruits> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-yogurt-with-fruits> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt aux fruits" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#green-garlic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#green-garlic> <http://www.w3.org/2000/01/rdf-schema#label> "Aillet" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chestnut> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chestnut> <http://www.w3.org/2000/01/rdf-schema#label> "Marron" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chard> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chard> <http://www.w3.org/2000/01/rdf-schema#label> "Blette" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#flower> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#flower> <http://www.w3.org/2000/01/rdf-schema#label> "Fleur" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fennel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fennel> <http://www.w3.org/2000/01/rdf-schema#label> "Fenouil" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fish> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fish> <http://www.w3.org/2000/01/rdf-schema#label> "Poisson" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#shallot> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#shallot> <http://www.w3.org/2000/01/rdf-schema#label> "Échalote" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dried-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dried-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit séché" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kiwi> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kiwi> <http://www.w3.org/2000/01/rdf-schema#label> "Kiwi" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#berry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#berry> <http://www.w3.org/2000/01/rdf-schema#label> "Petit fruit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#inedible> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#inedible> <http://www.w3.org/2000/01/rdf-schema#label> "Non alimentaire" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chewed-up> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chewed-up> <http://www.w3.org/2000/01/rdf-schema#label> "Mâche" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#endive> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#endive> <http://www.w3.org/2000/01/rdf-schema#label> "Endive" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#celeriac> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#celeriac> <http://www.w3.org/2000/01/rdf-schema#label> "Céleri-rave" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kohlrabi> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kohlrabi> <http://www.w3.org/2000/01/rdf-schema#label> "Chou rave" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dandelion> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dandelion> <http://www.w3.org/2000/01/rdf-schema#label> "Pissenlit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#guinea-fowl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#guinea-fowl> <http://www.w3.org/2000/01/rdf-schema#label> "Pintade" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cassis> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cassis> <http://www.w3.org/2000/01/rdf-schema#label> "Cassis" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#duck> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#duck> <http://www.w3.org/2000/01/rdf-schema#label> "Canard" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#deaths-trumpet> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#deaths-trumpet> <http://www.w3.org/2000/01/rdf-schema#label> "Trompette de la mort" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cosmetic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cosmetic> <http://www.w3.org/2000/01/rdf-schema#label> "Cosmétique" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#festive-poultry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#festive-poultry> <http://www.w3.org/2000/01/rdf-schema#label> "Volaille festive" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#melon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#melon> <http://www.w3.org/2000/01/rdf-schema#label> "Melon" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sweet-groceries> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sweet-groceries> <http://www.w3.org/2000/01/rdf-schema#label> "Epicerie sucrée" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#smoothie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#smoothie> <http://www.w3.org/2000/01/rdf-schema#label> "Smoothie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#blueberry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#blueberry> <http://www.w3.org/2000/01/rdf-schema#label> "Myrtille" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#gooseberry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#gooseberry> <http://www.w3.org/2000/01/rdf-schema#label> "Groseille à maquereau" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#girolle-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#girolle-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Girolle" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#grape> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#grape> <http://www.w3.org/2000/01/rdf-schema#label> "Raisin" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#aromatic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#aromatic> <http://www.w3.org/2000/01/rdf-schema#label> "Aromate" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-fresh-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-fresh-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage frais" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-flavored-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-flavored-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt aromatisé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#quinoa> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#quinoa> <http://www.w3.org/2000/01/rdf-schema#label> "Quinoa" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#ready-meal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#ready-meal> <http://www.w3.org/2000/01/rdf-schema#label> "Plat cuisiné" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rhubarb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rhubarb> <http://www.w3.org/2000/01/rdf-schema#label> "Rhubarbe" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rosemary> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rosemary> <http://www.w3.org/2000/01/rdf-schema#label> "Romarin" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chinese-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chinese-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou chinois" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#brussels-sprouts> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#brussels-sprouts> <http://www.w3.org/2000/01/rdf-schema#label> "Chou de Bruxelles" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#alcoholic-beverage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#alcoholic-beverage> <http://www.w3.org/2000/01/rdf-schema#label> "Boisson alcoolisée" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#paris-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#paris-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Champignon de Paris" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bottled-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bottled-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit en bocal" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pepper> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pepper> <http://www.w3.org/2000/01/rdf-schema#label> "Poivron" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#round-tomato> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#round-tomato> <http://www.w3.org/2000/01/rdf-schema#label> "Tomate ronde" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goose> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goose> <http://www.w3.org/2000/01/rdf-schema#label> "Oie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bottled-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bottled-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume en bocal" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cooked-meat> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cooked-meat> <http://www.w3.org/2000/01/rdf-schema#label> "Viande cuite" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#quail> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#quail> <http://www.w3.org/2000/01/rdf-schema#label> "Caille" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mature-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mature-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage affiné" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lemon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lemon> <http://www.w3.org/2000/01/rdf-schema#label> "Citron" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pear> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pear> <http://www.w3.org/2000/01/rdf-schema#label> "Poire" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit surgelé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#peas> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#peas> <http://www.w3.org/2000/01/rdf-schema#label> "Pois" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salting> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salting> <http://www.w3.org/2000/01/rdf-schema#label> "Salaison" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#honey> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#honey> <http://www.w3.org/2000/01/rdf-schema#label> "Miel" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-meal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-meal> <http://www.w3.org/2000/01/rdf-schema#label> "Plat surgelé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pasta> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pasta> <http://www.w3.org/2000/01/rdf-schema#label> "Pâte" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cherry-tomato> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cherry-tomato> <http://www.w3.org/2000/01/rdf-schema#label> "Tomate cerise" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-meat> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-meat> <http://www.w3.org/2000/01/rdf-schema#label> "Viande surgelée" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#non-local-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#non-local-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit non local" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#clementine> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#clementine> <http://www.w3.org/2000/01/rdf-schema#label> "Clémentine" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#other-milk> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#other-milk> <http://www.w3.org/2000/01/rdf-schema#label> "Lait" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dill> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dill> <http://www.w3.org/2000/01/rdf-schema#label> "Aneth" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lemonade> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lemonade> <http://www.w3.org/2000/01/rdf-schema#label> "Limonade" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rice> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rice> <http://www.w3.org/2000/01/rdf-schema#label> "Riz" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#snails> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#snails> <http://www.w3.org/2000/01/rdf-schema#label> "Escargots" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fifth-range-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fifth-range-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume cinquième gamme" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#turnip> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#turnip> <http://www.w3.org/2000/01/rdf-schema#label> "Navet" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cluster-tomato> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cluster-tomato> <http://www.w3.org/2000/01/rdf-schema#label> "Tomate grappe" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fruit-in-compote> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fruit-in-compote> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit en compote" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#digestive> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#digestive> <http://www.w3.org/2000/01/rdf-schema#label> "Digestif" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#truffle> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#truffle> <http://www.w3.org/2000/01/rdf-schema#label> "Truffe" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-yogurt-on-a-bed-of-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-yogurt-on-a-bed-of-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt sur lit de fruit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#flour> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#flour> <http://www.w3.org/2000/01/rdf-schema#label> "Farine" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#eggplant> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#eggplant> <http://www.w3.org/2000/01/rdf-schema#label> "Aubergine" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cress> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cress> <http://www.w3.org/2000/01/rdf-schema#label> "Cresson" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#quince> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#quince> <http://www.w3.org/2000/01/rdf-schema#label> "Coing" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sweet-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sweet-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt sucré" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#laurel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#laurel> <http://www.w3.org/2000/01/rdf-schema#label> "Laurier" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-dairy-dessert> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-dairy-dessert> <http://www.w3.org/2000/01/rdf-schema#label> "Desserts lactés" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#raspberry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#raspberry> <http://www.w3.org/2000/01/rdf-schema#label> "Framboise" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#hazelnut> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#hazelnut> <http://www.w3.org/2000/01/rdf-schema#label> "Noisette" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#delicatessen> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#delicatessen> <http://www.w3.org/2000/01/rdf-schema#label> "Charcuterie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-natural-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-natural-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt nature" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bakery> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bakery> <http://www.w3.org/2000/01/rdf-schema#label> "Boulangerie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lettuce> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lettuce> <http://www.w3.org/2000/01/rdf-schema#label> "Laitue" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#veal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#veal> <http://www.w3.org/2000/01/rdf-schema#label> "Veau" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#drink> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#drink> <http://www.w3.org/2000/01/rdf-schema#label> "Boisson" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#tarragon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#tarragon> <http://www.w3.org/2000/01/rdf-schema#label> "Estragon" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#meat-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#meat-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produit carné" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#natural-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#natural-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt nature" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-dairy-dessert> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-dairy-dessert> <http://www.w3.org/2000/01/rdf-schema#label> "Dessert lacté" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#milky-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#milky-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Lactaire" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cherry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cherry> <http://www.w3.org/2000/01/rdf-schema#label> "Cerise" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#flavored-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#flavored-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt aromatisé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#squash-melon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#squash-melon> <http://www.w3.org/2000/01/rdf-schema#label> "Pâtisson" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chervil> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chervil> <http://www.w3.org/2000/01/rdf-schema#label> "Cerfeuil" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#savory-groceries> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#savory-groceries> <http://www.w3.org/2000/01/rdf-schema#label> "Epicerie salée" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#local-grocery-store> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#local-grocery-store> <http://www.w3.org/2000/01/rdf-schema#label> "Epicerie locale" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#processed-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#processed-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit transformé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#other-dairy-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#other-dairy-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produit laitier autre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#potato> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#potato> <http://www.w3.org/2000/01/rdf-schema#label> "Pomme de terre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#coriander> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#coriander> <http://www.w3.org/2000/01/rdf-schema#label> "Coriandre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beans> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beans> <http://www.w3.org/2000/01/rdf-schema#label> "Fèves" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#viennoiserie-> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#viennoiserie-> <http://www.w3.org/2000/01/rdf-schema#label> "Viennoiserie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-flavored-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-flavored-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt aromatisé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#currant> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#currant> <http://www.w3.org/2000/01/rdf-schema#label> "Groseille" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#nectarine> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#nectarine> <http://www.w3.org/2000/01/rdf-schema#label> "Nectarine" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bread> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bread> <http://www.w3.org/2000/01/rdf-schema#label> "Pain" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-sweet-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-sweet-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt sucré" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#smooth-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#smooth-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou lisse" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#courgette> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#courgette> <http://www.w3.org/2000/01/rdf-schema#label> "Courgette" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#strawberry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#strawberry> <http://www.w3.org/2000/01/rdf-schema#label> "Fraise" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-natural-yogurt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-natural-yogurt> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt nature" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pastry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pastry> <http://www.w3.org/2000/01/rdf-schema#label> "Pâtisserie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fresh-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fresh-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage frais" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#canned-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#canned-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume en conserve" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#yogurt-on-a-bed-of-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#yogurt-on-a-bed-of-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt sur lit de fruit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#aperitif> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#aperitif> <http://www.w3.org/2000/01/rdf-schema#label> "Apéritif" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kale> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#kale> <http://www.w3.org/2000/01/rdf-schema#label> "Chou frisé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#grilling-meat> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#grilling-meat> <http://www.w3.org/2000/01/rdf-schema#label> "Viande à griller" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#processed-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#processed-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume transformé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#spinach> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#spinach> <http://www.w3.org/2000/01/rdf-schema#label> "Épinard" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#morel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#morel> <http://www.w3.org/2000/01/rdf-schema#label> "Morille" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cucumber> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cucumber> <http://www.w3.org/2000/01/rdf-schema#label> "Concombre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#onion> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#onion> <http://www.w3.org/2000/01/rdf-schema#label> "Oignon" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#artichoke> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#artichoke> <http://www.w3.org/2000/01/rdf-schema#label> "Artichaut" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-milk> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-milk> <http://www.w3.org/2000/01/rdf-schema#label> "Lait" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#nut> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#nut> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit à coque" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dairy-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dairy-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produit laitier" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#red-kuri-squash> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#red-kuri-squash> <http://www.w3.org/2000/01/rdf-schema#label> "Potimarron" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#squash> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#squash> <http://www.w3.org/2000/01/rdf-schema#label> "Courge" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#frozen-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume surgelé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sage> <http://www.w3.org/2000/01/rdf-schema#label> "Sauge" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salsify> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#salsify> <http://www.w3.org/2000/01/rdf-schema#label> "Salsifis" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bean> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bean> <http://www.w3.org/2000/01/rdf-schema#label> "Haricot" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#plum> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#plum> <http://www.w3.org/2000/01/rdf-schema#label> "Prune" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pigeon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pigeon> <http://www.w3.org/2000/01/rdf-schema#label> "Pigeon" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#basil> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#basil> <http://www.w3.org/2000/01/rdf-schema#label> "Basilic" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#red-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#red-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou rouge" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#butternut> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#butternut> <http://www.w3.org/2000/01/rdf-schema#label> "Butternut" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#celery-branch> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#celery-branch> <http://www.w3.org/2000/01/rdf-schema#label> "Céleri-branche" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#coulemelle-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#coulemelle-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Coulemelle" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#apple-cabbage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#apple-cabbage> <http://www.w3.org/2000/01/rdf-schema#label> "Chou pomme" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cereal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cereal> <http://www.w3.org/2000/01/rdf-schema#label> "Céréale" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#canned-fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#canned-fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit en conserve" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#apples> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#apples> <http://www.w3.org/2000/01/rdf-schema#label> "Pomme" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rutabaga> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#rutabaga> <http://www.w3.org/2000/01/rdf-schema#label> "Rutabaga" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mousseron> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mousseron> <http://www.w3.org/2000/01/rdf-schema#label> "Mousseron" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cauliflower> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#cauliflower> <http://www.w3.org/2000/01/rdf-schema#label> "Chou-fleur" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chicken> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chicken> <http://www.w3.org/2000/01/rdf-schema#label> "Poulet" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#soup> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#soup> <http://www.w3.org/2000/01/rdf-schema#label> "Soupe" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fruit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fruit> <http://www.w3.org/2000/01/rdf-schema#label> "Fruit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#confectionery> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#confectionery> <http://www.w3.org/2000/01/rdf-schema#label> "Confiserie" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#oil> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#oil> <http://www.w3.org/2000/01/rdf-schema#label> "Huile" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fresh-cream> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fresh-cream> <http://www.w3.org/2000/01/rdf-schema#label> "Crème Fraîche" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-dairy-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheep-dairy-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produits laitiers de brebis" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mandarin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mandarin> <http://www.w3.org/2000/01/rdf-schema#label> "Mandarine" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#garlic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#garlic> <http://www.w3.org/2000/01/rdf-schema#label> "Ail" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#yogurt-with-fruits> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#yogurt-with-fruits> <http://www.w3.org/2000/01/rdf-schema#label> "Yaourt aux fruits" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#butter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#butter> <http://www.w3.org/2000/01/rdf-schema#label> "Beurre" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#poultry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#poultry> <http://www.w3.org/2000/01/rdf-schema#label> "Volaille" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fishery-product> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fishery-product> <http://www.w3.org/2000/01/rdf-schema#label> "Produit de la pêche" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#porcini> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#porcini> <http://www.w3.org/2000/01/rdf-schema#label> "Cèpe" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bluefoot-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#bluefoot-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Pied-bleu" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dairy-dessert> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dairy-dessert> <http://www.w3.org/2000/01/rdf-schema#label> "Dessert lacté" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#leek> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#leek> <http://www.w3.org/2000/01/rdf-schema#label> "Poireau" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beetroot> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#beetroot> <http://www.w3.org/2000/01/rdf-schema#label> "Betterave rouge" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lentils> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lentils> <http://www.w3.org/2000/01/rdf-schema#label> "Lentilles" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#medlar> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#medlar> <http://www.w3.org/2000/01/rdf-schema#label> "Nèfle" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chive> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#chive> <http://www.w3.org/2000/01/rdf-schema#label> "Ciboulette" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#apricot> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#apricot> <http://www.w3.org/2000/01/rdf-schema#label> "Abricot" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#orange> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#orange> <http://www.w3.org/2000/01/rdf-schema#label> "Orange" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#old-variety-tomato> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#old-variety-tomato> <http://www.w3.org/2000/01/rdf-schema#label> "Tomate ancienne" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#walnut> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#walnut> <http://www.w3.org/2000/01/rdf-schema#label> "Noix" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#shellfish> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#shellfish> <http://www.w3.org/2000/01/rdf-schema#label> "Crustacé" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheepfoot-mushroom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#sheepfoot-mushroom> <http://www.w3.org/2000/01/rdf-schema#label> "Pied de mouton" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#prune> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#prune> <http://www.w3.org/2000/01/rdf-schema#label> "Pruneau" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#simmering-meat> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#simmering-meat> <http://www.w3.org/2000/01/rdf-schema#label> "Viande à mijoter" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dried-vegetable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#dried-vegetable> <http://www.w3.org/2000/01/rdf-schema#label> "Légume sec" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lamb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#lamb> <http://www.w3.org/2000/01/rdf-schema#label> "Agneau" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fruit-juice> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#fruit-juice> <http://www.w3.org/2000/01/rdf-schema#label> "Jus de fruit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-mature-cheese> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#goat-mature-cheese> <http://www.w3.org/2000/01/rdf-schema#label> "Fromage affinés" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#biscuit> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#biscuit> <http://www.w3.org/2000/01/rdf-schema#label> "Biscuit" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pumpkin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#pumpkin> <http://www.w3.org/2000/01/rdf-schema#label> "Potiron" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mesclun> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#mesclun> <http://www.w3.org/2000/01/rdf-schema#label> "Mesclun" .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+<http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> <http://www.w3.org/2000/01/rdf-schema#label> "Carotte" .
+<http://dfc-middleware:3000/ldp/platform/socleo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#Platform> .
+<http://dfc-middleware:3000/ldp/platform/socleo> <http://www.w3.org/2000/01/rdf-schema#label> "Socleo" .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#BasicContainer> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/ldp#Container> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/602c3c3964fc551cb49f9b2a> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/602c3c3964fc551cb49f9b29> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> .
+<http://dfc-middleware:3000/ldp/catalogItem> <http://www.w3.org/ns/ldp#contains> <http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> .
+<http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#Person> .
+<http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> <http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#token> "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJVNXpSenhWMmZpaHpkWXkzNVl2ZkJSajVFX0h1UmpRRENOc29vc1J1RzU4In0.eyJqdGkiOiI3NzUxMTJjYi01ZDBkLTRiYjUtODJjMy1mM2Y5NmI1M2I2YzciLCJleHAiOjE2NDMzNjU5NDMsIm5iZiI6MCwiaWF0IjoxNjExODI5OTQzLCJpc3MiOiJodHRwczovL2xvZ2luLmxlc2NvbW11bnMub3JnL2F1dGgvcmVhbG1zL21hc3RlciIsInN1YiI6ImZlODhhZjQyLTQ4OTMtNGEwMS05NzA1LTExOTk2MjMyYzVlMCIsInR5cCI6IkJlYXJlciIsImF6cCI6IjQ0NjE3NDYxMjA0NjZmNmY2NDIwNDM2ZjZlNzM2ZjcyNzQ2OTc1NmQiLCJhdXRoX3RpbWUiOjE2MTE4Mjk5NDMsInNlc3Npb25fc3RhdGUiOiI2MWU2ODc5Ny0xZjQyLTQ4YzUtYTlhOC1mNWNjZjM0NGUzNjQiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQiLCJuYW1lIjoidGVzdCBERkMiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0ZXN0ZGZjQHR1dGFub3RhLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJERkMiLCJlbWFpbCI6InRlc3RkZmNAdHV0YW5vdGEuY29tIn0.SYUu0Mpv8PxkRSEcQBgkVyL3WkI0GqSDmtlQjzv8M7cidsO4AUBel9dejdB_USccaH1hepWSSzwY5NemlkObWYSdDkyon7NwSjSaXiOHskXGzd7MnXiIQ91lYB3or3ZNCc5yLXXuV_WVCP3P-LYsp4WvfRocZkf90KTx-RWc-iMcletxAGZcHz3SEgFpbvpMLWTI-TNQdwxnQ0yEPodHDK8no-82IXkNKuo7ShykL4pLOsJx7xpSfQ3PaREKgyLjeDNYkylUX8HIgJfVtjqT0Qz9JB8fTJCUXpDgwrpU97eL9ih__YI_tjVtQIhzWHgt_p2AiVxx4PuhwhQGW_aKvg" .
+<http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#email> "testdfc@tutanota.com" .
+<http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#importInProgress> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 2" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "1" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#prune> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 1" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "99.99" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7e> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/602c612e93ed03b47f24bb7f> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#RepresentationPivot> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7d> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#RepresentationPivot> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/602c612e93ed03b47f24bb7c> .
+<http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 2" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "1" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#prune> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 1" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "99.99" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb80> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb83> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb82> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c057b709479a9847c6302> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/602c612f93ed03b47f24bb81> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/602c613093ed03b47f24bb85> .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/602c613093ed03b47f24bb84> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#Person> .
+<http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> <http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#token> "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJVNXpSenhWMmZpaHpkWXkzNVl2ZkJSajVFX0h1UmpRRENOc29vc1J1RzU4In0.eyJqdGkiOiJhYmIzZTk0Ny1hODkyLTRlZmYtOWUxOS02MGUwNDczZTVhMjIiLCJleHAiOjE2NDM4NzEzMzcsIm5iZiI6MCwiaWF0IjoxNjEzNTIxNTkwLCJpc3MiOiJodHRwczovL2xvZ2luLmxlc2NvbW11bnMub3JnL2F1dGgvcmVhbG1zL21hc3RlciIsInN1YiI6IjVmNzM4NTAzLTYzZDgtNDY1YS05ZGQ2LTIxODU3ZTBlNWU0NiIsInR5cCI6IkJlYXJlciIsImF6cCI6IjQ0NjE3NDYxMjA0NjZmNmY2NDIwNDM2ZjZlNzM2ZjcyNzQ2OTc1NmQiLCJhdXRoX3RpbWUiOjE2MTIzMzUzMzcsInNlc3Npb25fc3RhdGUiOiI1OTA4ZTdhMi1kYTllLTRkOGYtODdmNy0wZTJkMjgxODE2MzkiLCJhY3IiOiIwIiwicmVzb3VyY2VfYWNjZXNzIjp7IjQ0NjE3NDYxMjA0NjZmNmY2NDIwNDM2ZjZlNzM2ZjcyNzQ2OTc1NmQiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX19LCJzY29wZSI6Im9wZW5pZCIsIkRGQzpFbnRyZXByaXNlIjoiNWRhMDkyMmU0MDY4NWMyNzgwMmJhMDdjIiwibmFtZSI6InNpbW9uIGxvdXZldCIsInByZWZlcnJlZF91c2VybmFtZSI6InNpbW9uLmxvdXZldC56ZW5AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6InNpbW9uIiwiZmFtaWx5X25hbWUiOiJsb3V2ZXQiLCJlbWFpbCI6InNpbW9uLmxvdXZldC56ZW5AZ21haWwuY29tIn0.kWEmii3IH5AvOOjoAp-F7LDQSxbEOX2Fy5bQAyHA9y1b8FoxBmRkhYPC93wNSt2xgg0Q-u2G66J0df9m9mbrBz2N7nLEV5lLM0pjTLQ4MMi4tAPRPzSD_O0Qfx6OSdHU_qT0vm9uiCKy-zXA3ia4BOx6sJseUGm8t668Svqu5IEQENuxvAr8wBPxhZ3XJVfeAG-JuPOX383XHPSRMXgyHepD4O6VIPQfa8IJY9Ik8obarV_5e73Z-a9TD4G2lbeWzO1rpJI5bIOcBtMUxe8GGU_djMjhme7T4mFJviyKT_aJjzh_9ORF0qOPE8BFAjs_ghqIbAfVSpBc0EIFAWI61w" .
+<http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#email> "simon.louvet.zen@gmail.com" .
+<http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#importInProgress> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 1" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "99.99" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+_:B39de314eX2D20f8X2D4820X2D8bf0X2D0fd55da88de1 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 2" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "1" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+_:Baf6fa2c2X2D7c10X2D4e34X2D9dfbX2Da3cfe07a7418 <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#prune> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 1" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "99.99" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 2" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "1" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#prune> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca3> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/test_v1-5> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/603525417986145632cb1ca4> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#RepresentationPivot> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca1> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#RepresentationPivot> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/603525417986145632cb1ca2> .
+<http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#represent> <http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 1" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "99.99" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#carrot> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#SuppliedProduct> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#brand> "supply brand" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#claim> "supply claim" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#description> "supply description 2" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasUnit> <http://static.datafoodconsortium.org/data/units.rdf#u> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#image> "supply image url" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#lifeTime> "supply lifeTime" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#physicalCharacterisctics> "supply physical characterisctics" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#quantity> "1" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#totalTheoriticalStock> "999" .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#hasType> <http://static.datafoodconsortium.org/data/productTypes.rdf#prune> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca5> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/603525447986145632cb1ca9> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca7> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#CatalogItem> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#owner> <http://dfc-middleware:3000/ldp/user/602c62b793ed03b47f24bb86> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hostedBy> <http://dfc-middleware:3000/ldp/platform/dfc> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#hasPivot> <http://dfc-middleware:3000/ldp/pivot/603525437986145632cb1ca6> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#references> <http://dfc-middleware:3000/ldp/product/603525447986145632cb1caa> .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#sku> "catalog item gtin or sku" .
+<http://dfc-middleware:3000/ldp/catalogItem/603525447986145632cb1ca8> <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#stockLimitation> "999" .

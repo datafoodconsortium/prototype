@@ -43,6 +43,7 @@ request(url, {
         // console.log('CONFIG',config.sources);
         const middlware_express_oidc = require('./auth/middlware-express-oidc.js');
         const productAPI = require('./api/product.js');
+        const catalogAPI = require('./api/catalogItem.js');
         const entrepriseAPI = require('./api/entreprise.js');
         const entrepriseUnsafe = require('./api/entrepriseUnsafe.js');
         const redirectAPI = require('./api/redirectAPI.js');
@@ -50,6 +51,8 @@ request(url, {
         const configAPI = require('./api/config.js');
         const {PlatformService,platformServiceSingleton} = require ('./service/platform.js')
         const {UnitService,unitServiceSingleton} = require ('./service/unit.js')
+        const {ProductTypeService,productTypeServiceSingleton} = require ('./service/productType.js')
+        // console.log('catalogAPI',catalogAPI);
         // console.log('config',config);
         var opts = {
         resources: [
@@ -59,6 +62,7 @@ request(url, {
         await waitOn(opts);
         await platformServiceSingleton.updatePlatformsFromConfig();
         await unitServiceSingleton.updateUnitsFromConfig();
+        await productTypeServiceSingleton.updateProductsFromReference();
         app.use(session({
           secret: config.express.session_secret,
           maxAge: null
@@ -77,6 +81,7 @@ request(url, {
         userAPI(safeRouter);
         configAPI(unsafeRouter,config);
         entrepriseAPI(safeRouter);
+        catalogAPI(safeRouter);
 
         const port = process.env.APP_PORT || 8080
         app.listen(port, function(err) {

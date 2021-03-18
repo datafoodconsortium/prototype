@@ -36,7 +36,6 @@ async function middlware_express_oidc (req,res,next) {
         // let userService = new UserService();
         // console.log('middleware',req.protocol + '://' + req.get('host') + req.originalUrl);
         let user = await singletonUserService.connectUser(payload.preferred_username,token);
-
         req.user=user;
         // req.accessToken=token;
         next()

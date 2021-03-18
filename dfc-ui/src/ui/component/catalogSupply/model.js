@@ -54,6 +54,11 @@ export default class CatalogSupply extends GenericElement {
             width: 100
           },
           {
+            field: 'type',
+            title: 'type',
+            width: 100
+          },
+          {
             field: 'source',
             title: 'source',
             width: 200
@@ -116,34 +121,36 @@ export default class CatalogSupply extends GenericElement {
 
   filter(value) {
     let filteredData = this.rawSupplies.filter(record => {
-      return this.normalize(record['dfc:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
+      return this.normalize(record['dfc-b:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
     })
     this.setDataGrid(filteredData)
   }
 
 
   setDataGrid(data) {
+    console.log('setDataGrid',data);
     let counter = 0;
     let dataEasyUi = data.map(d => {
       counter++;
       console.log(d);
       return {
         id: counter,
-        description: d['dfc:description'],
-        source: d['dfc:hostedBy']['rdfs:label'],
-        quantity: d['dfc:quantity'],
-        unit: d['dfc:hasUnit']['rdfs:label'],
+        description: d['dfc-b:references']['dfc-b:description'],
+        source: d['dfc-t:hostedBy']['rdfs:label'],
+        quantity: d['dfc-b:references']['dfc-b:quantity'],
+        unit: d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
+        type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
         raw: d,
-        children: d['dfc:hasPivot']['dfc:represent'].filter(c=>c['@type']!=undefined).map(c => {
+        children: d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
           counter++;
           return {
             id: counter,
-            source: c['dfc:hostedBy']['rdfs:label'],
+            source: c['dfc-t:hostedBy']['rdfs:label'],
             raw: d,
-            description: c['dfc:description'],
-            quantity: c['dfc:quantity'],
-            unit: c['dfc:hasUnit']['rdfs:label'],
-            // '@id': c['@id']
+            description: c['dfc-b:references']['dfc-b:description'],
+            quantity: c['dfc-b:references']['dfc-b:quantity'],
+            unit: c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
+            type: c['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
           }
         })
       }

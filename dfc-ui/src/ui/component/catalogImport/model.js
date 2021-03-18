@@ -115,11 +115,11 @@ export default class CatalogImport extends GenericElement {
     let dataEasyUi = data.map(d => {
       return {
         id: counter,
-        source: d['dfc:hostedBy']?d['dfc:hostedBy']['rdfs:label']:'',
-        unit: d['dfc:hasUnit']?d['dfc:hasUnit']['rdfs:label']:'',
+        source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
+        unit: d['dfc-b:hasUnit']?d['dfc-b:hasUnit']['rdfs:label']:'',
         raw:d,
-        description: d['dfc:description'],
-        quantity: d['dfc:quantity'],
+        description: d['dfc-b:description'],
+        quantity: d['dfc-b:quantity'],
         // unit: d['dfc:hasUnit']['@id'],
         '@id': d['@id']
       }

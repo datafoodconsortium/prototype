@@ -141,7 +141,7 @@ export default class ItemImport extends GenericElement {
 
   filter(value){
     let filteredData = this.rawSupplies.filter(record=>{
-      return this.normalize(record['dfc:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
+      return this.normalize(record['dfc-b:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
     })
     this.setDataGrid(filteredData)
   }
@@ -153,18 +153,18 @@ export default class ItemImport extends GenericElement {
       // console.log(d);
       return {
         id: counter,
-        description: d['dfc:description'],
+        description: d['dfc-b:description'],
         raw: d,
         // 'id': d['@id'],
-        children: d['dfc:hasPivot']['dfc:represent'].filter(c=>c['@type']!=undefined).map(c => {
+        children: d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
           counter++;
           return {
             id: counter,
             raw: {DFCid:d['@id'],...c},
-            source: c['dfc:hostedBy']['rdfs:label'],
-            description: c['dfc:description'],
-            quantity: c['dfc:quantity'],
-            unit: c['dfc:hasUnit']['rdfs:label'],
+            source: c['dfc-t:hostedBy']['rdfs:label'],
+            description: c['dfc-b:description'],
+            quantity: c['dfc-b:quantity'],
+            unit: c['dfc-b:hasUnit']['rdfs:label'],
             // '@id': c['@id']
           }
         })
@@ -176,11 +176,11 @@ export default class ItemImport extends GenericElement {
   setData(data) {
     console.log('setData',data);
     this.item = data
-    this.elements.description.textContent = data['dfc:description'];
-    this.elements.unit.textContent = data['dfc:hasUnit']['rdfs:label'];
-    this.elements.quantity.textContent = data['dfc:quantity'];
-    this.elements.source.textContent = data['dfc:hostedBy']['rdfs:label'];
-    this.elements.descriptionSearch.value = data['dfc:description'];
+    this.elements.description.textContent = data['dfc-b:description'];
+    this.elements.unit.textContent = data['dfc-b:hasUnit']['rdfs:label'];
+    this.elements.quantity.textContent = data['dfc-b:quantity'];
+    this.elements.source.textContent = data['dfc-t:hostedBy']['rdfs:label'];
+    this.elements.descriptionSearch.value = data['dfc-b:description'];
   }
 
   consolidate(newSupply) {

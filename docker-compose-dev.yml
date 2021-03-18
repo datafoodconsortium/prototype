@@ -2,10 +2,10 @@ version: '3.5'
 
 services:
   dfc-fuseki:
-    image: stain/jena-fuseki:3.10.0
+    image: stain/jena-fuseki
     container_name: dfc-fuseki
     environment:
-      ADMIN_PASSWORD: "admin"
+      - ADMIN_PASSWORD=admin
     volumes:
       - ./data/fuseki:/fuseki
       - ./data/staging:/staging
@@ -27,15 +27,19 @@ services:
       - SEMAPPS_MAIN_DATASET=localData
       - SEMAPPS_JENA_USER=admin
       - SEMAPPS_JENA_PASSWORD=admin
-      - SEMAPPS_HOME_URL=http://185.25.192.252:3000/
+      - SEMAPPS_HOME_URL=http://dfc-middleware:3000/
     volumes:
       - ./dfc-semapps:/server/app
+      - ./../semapps:/semapps
     networks:
       - dfc
     ports:
       - "3000:3000"
     expose:
       - "3000"
+    command: bash -c "npm rebuild && npm install && make link-yarn && npm run dev"
+
+
   dfc-app:
     build:
       context: ./dfc-app
@@ -55,16 +59,18 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    command: bash -c "npm start"
+    command: bash -c "npm run dev"
   dfc-ui:
     build:
       context: ./dfc-ui
       dockerfile: ./Dockerfile.dev
     container_name: dfc-ui
     environment:
-      - URL_SERVER=http://185.25.192.252:8080
+      - URL_SERVER=http://localhost:8080
     volumes:
       - ./dfc-ui/src:/app/src
+    depends_on:
+      - dfc-app
     networks:
       - dfc
     ports:
@@ -72,7 +78,7 @@ services:
       - "8090:8090"
     expose:
       - "8090"
-    command: bash -c "npm start"
+    command: bash -c "npm run dev"
 volumes:
   rdf_data:
   staging:

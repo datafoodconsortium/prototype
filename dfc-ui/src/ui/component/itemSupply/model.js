@@ -119,11 +119,11 @@ export default class ItemSupply extends GenericElement {
       counter++;
       return {
         id: counter,
-        source: d['dfc:hostedBy']['rdfs:label'],
+        source: d['dfc-t:hostedBy']['rdfs:label'],
         raw:d,
-        description: d['dfc:description'],
-        quantity: d['dfc:quantity'],
-        unit: d['dfc:hasUnit']['rdfs:label'],
+        description: d['dfc-b:description'],
+        quantity: d['dfc-b:quantity'],
+        unit: d['dfc-b:hasUnit']['rdfs:label'],
         '@id': d['@id']
       }
     })
@@ -134,12 +134,12 @@ export default class ItemSupply extends GenericElement {
   setData(data) {
     // console.log(data);
     this.item = data
-    this.elements.description.textContent = data['dfc:description'];
+    this.elements.description.textContent = data['dfc-b:description'];
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
-    this.elements.quantity.textContent = data['dfc:quantity'];
+    this.elements.quantity.textContent = data['dfc-b:quantity'];
     this.elements.id.textContent = data['@id'];
-    this.setDataGrid(data["dfc:hasPivot"]["dfc:represent"].filter(c=>c['@type']!=undefined))
-    this.elements.unit.textContent = data['dfc:hasUnit']['rdfs:label'];
+    this.setDataGrid(data["dfc-t:hasPivot"]["dfc-t:represent"].filter(c=>c['@type']!=undefined))
+    this.elements.unit.textContent = data['dfc-b:hasUnit']['rdfs:label'];
     // this.elements.quantity.textContent = data['dfc:quantity'];
     // this.elements.source.textContent = data['source'];
   }
@@ -157,9 +157,9 @@ export default class ItemSupply extends GenericElement {
 
   referer(){
       if(this.selectedImport!=undefined){
-        this.item['dfc:description']=this.selectedImport['dfc:description'];
-        this.item['dfc:quantity']=this.selectedImport['dfc:quantity'];
-        this.item['dfc:hasUnit']=this.selectedImport['dfc:hasUnit'];
+        this.item['dfc-b:description']=this.selectedImport['dfc-b:description'];
+        this.item['dfc-b:quantity']=this.selectedImport['dfc-b:quantity'];
+        this.item['dfc-b:hasUnit']=this.selectedImport['dfc-b:hasUnit'];
       }
 
       this.publish({
