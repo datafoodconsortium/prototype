@@ -16,7 +16,7 @@ export default class TestAPI extends GenericElement {
   }
 
   testApiHeader(url) {
-    url=window.location.origin +'/data/core/redirectAPI?url='+url;
+    url=`${url_server}/data/core/redirectAPI?url=`+url;
     this.util.ajaxCall(url).then(data => {
       this.publish({
         channel: 'testAPI',

@@ -83,7 +83,7 @@ export default class LDP_test extends GenericElement {
     //   this.elements.urlInput.value=url;
     // })
     this.elements.urlInit2.addEventListener('click', e => {
-      let url = window.location.origin + '/data/core/me/entrepriseLDP';
+      let url = url=`${url_server}/data/core/me/entrepriseLDP`;
       this.elements.urlInput.value = url;
     })
   }
