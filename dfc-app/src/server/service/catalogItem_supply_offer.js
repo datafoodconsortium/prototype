@@ -785,7 +785,7 @@ class CatalogService {
               }
             });
           } else {
-            throw new Error("version not supported"
+            throw new Error("version not supported")
           }
 
           // console.log(JSON.stringify(itemsToImport));
