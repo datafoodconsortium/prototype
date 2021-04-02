@@ -50,6 +50,26 @@ export default class CatalogImport extends GenericElement {
             sortable: true
           },
           {
+            field: 'sku',
+            title: 'sku',
+            width: 100
+          },
+          {
+            field: 'stockLimitation',
+            title: 'stock limitation (catalog)',
+            width: 100
+          },
+          {
+            field: 'totalTheoriticalStock',
+            title: 'total theoritical stock (supply)',
+            width: 100
+          },
+          {
+            field: 'type',
+            title: 'type',
+            width: 100
+          },
+          {
             field: 'source',
             title: 'source',
             width: 200,
@@ -116,10 +136,14 @@ export default class CatalogImport extends GenericElement {
       return {
         id: counter,
         source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
-        unit: d['dfc-b:hasUnit']?d['dfc-b:hasUnit']['rdfs:label']:'',
+        sku: d['dfc-b:sku'],
+        stockLimitation : d['dfc-b:stockLimitation'],
+        totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+        description: d['dfc-b:references']['dfc-b:description'],
+        quantity: d['dfc-b:references']['dfc-b:quantity'],
         raw:d,
-        description: d['dfc-b:description'],
-        quantity: d['dfc-b:quantity'],
         // unit: d['dfc:hasUnit']['@id'],
         '@id': d['@id']
       }

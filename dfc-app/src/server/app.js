@@ -42,7 +42,7 @@ request(url, {
         const config = require("../../configuration.js")
         // console.log('CONFIG',config.sources);
         const middlware_express_oidc = require('./auth/middlware-express-oidc.js');
-        const productAPI = require('./api/product.js');
+        // const productAPI = require('./api/product.js');
         const catalogAPI = require('./api/catalogItem.js');
         const entrepriseAPI = require('./api/entreprise.js');
         const entrepriseUnsafe = require('./api/entrepriseUnsafe.js');
@@ -77,7 +77,7 @@ request(url, {
         addOidcLesCommunsPassportToApp(unsafeRouter);
         entrepriseUnsafe(unsafeRouter);
         redirectAPI(safeRouter);
-        productAPI(safeRouter);
+        // productAPI(safeRouter);
         userAPI(safeRouter);
         configAPI(unsafeRouter,config);
         entrepriseAPI(safeRouter);

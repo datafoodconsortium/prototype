@@ -48,7 +48,28 @@ export default class CatalogSupply extends GenericElement {
             field: 'quantity',
             title: 'quantity',
             width: 100
-          }, {
+          },
+          {
+            field: 'sku',
+            title: 'sku',
+            width: 100
+          },
+          {
+            field: 'stockLimitation',
+            title: 'stock limitation (catalog)',
+            width: 100
+          },
+          {
+            field: 'totalTheoriticalStock',
+            title: 'total theoritical stock (supply)',
+            width: 100
+          },
+          {
+            field: 'quantity',
+            title: 'quantity',
+            width: 100
+          },
+          {
             field: 'unit',
             title: 'unit',
             width: 100
@@ -137,6 +158,9 @@ export default class CatalogSupply extends GenericElement {
         id: counter,
         description: d['dfc-b:references']['dfc-b:description'],
         source: d['dfc-t:hostedBy']['rdfs:label'],
+        sku: d['dfc-b:sku'],
+        stockLimitation : d['dfc-b:stockLimitation'],
+        totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
         quantity: d['dfc-b:references']['dfc-b:quantity'],
         unit: d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
         type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
@@ -146,11 +170,14 @@ export default class CatalogSupply extends GenericElement {
           return {
             id: counter,
             source: c['dfc-t:hostedBy']['rdfs:label'],
-            raw: d,
+            sku: c['dfc-b:sku'],
+            stockLimitation : c['dfc-b:stockLimitation'],
+            totalTheoriticalStock : c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             description: c['dfc-b:references']['dfc-b:description'],
             quantity: c['dfc-b:references']['dfc-b:quantity'],
             unit: c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
             type: c['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+            raw: d,
           }
         })
       }

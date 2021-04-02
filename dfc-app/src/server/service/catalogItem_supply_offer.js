@@ -132,58 +132,14 @@ class CatalogService {
   getOneImport(id) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch('http://dfc-middleware:3000/sparql', {
-          method: 'POST',
-          body: `
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          CONSTRUCT  {
-            <${id}> ?p1 ?o1 .
-            ?s2 ?p2 ?o2 .
-            ?s3 ?p3 ?o3 .
-          }
-          WHERE {
-            <${id}> ?p1 ?o1;
-                dfc-t:hostedBy ?s2;
-                dfc-p:hasUnit ?s3.
-            ?s2 ?p2 ?o2.
-            ?s3 ?p3 ?o3.
-          }
-          `,
+        const item = await (await fetch(id, {
+          method: 'GET',
           headers: {
             'accept': 'application/ld+json'
           }
-        });
-        let items = await response.json();
+        })).json() ;
 
-        const framed = await jsonld.frame(items, {
-          "@context": {
-            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-          },
-          "@type": "dfc-b:CatalogItem"
-        });
-        // console.log('getOneImport',framed);
-        const root = framed['@graph']?framed['@graph']:framed['@type']?framed:{}
-        // console.log('root',root);
-        const out={
-          '@context':framed['@context'],
-          ...root
-        }
-
-        resolve(out);
+        resolve(item);
 
 
       } catch (e) {
@@ -258,7 +214,7 @@ class CatalogService {
 
         let framed={
           '@context':framedRaw['@context'],
-          '@graph':framedRaw['@graph']?framedRaw['@graph']:single?[signle]:[]}
+          '@graph':framedRaw['@graph']?framedRaw['@graph']:single?[single]:[]}
 
         for(let dfcItem of framed['@graph']){
           const response= await fetch(dfcItem['@id'],{ headers: {
@@ -304,97 +260,39 @@ class CatalogService {
   getOneItem(id) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch('http://dfc-middleware:3000/sparql', {
-          method: 'POST',
-          body: `
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          CONSTRUCT  {
-            ?s1 ?p1 ?o1 .
-            ?s2 ?p2 ?o2 .
-            ?s3 ?p3 ?o3 .
-            ?s4 ?p4 ?o4 .
-            ?s5 ?p5 ?o5 .
-            ?s6 ?p6 ?o6 .
-            ?s7 ?p7 ?o7 .
-          }
-          WHERE {
-            <${id}> ?p1 ?o1;
-                dfc-t:hostedBy ?s2;
-            		dfc-t:hasPivot ?s3;
-                dfc-p:hasUnit ?s6.
-            ?s2 ?p2 ?o2.
-            ?s3 ?p3 ?o3;
-                dfc-t:represent ?s4.
-            ?s4 ?p4 ?o4;
-               	dfc-t:hostedBy ?s5;
-                dfc-p:hasUnit ?s7.
-            ?s5 ?p5 ?o5.
-            ?s6 ?p6 ?o6.
-            ?s7 ?p7 ?o7.
-
-          }
-          `,
+        // console.log('ID',id);
+        const item = await (await fetch(id, {
+          method: 'GET',
           headers: {
             'accept': 'application/ld+json'
           }
-        });
-        let items = await response.json();
-        // console.log(platformServiceSingleton.DFCPlaform['@id']);
-        // console.log('getOneItem',items);
-        let framed = await jsonld.frame(items, {
-          "@context": {
-            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-          },
-          "@type": "dfc-b:CatalogItem",
-          "dfc-t:hostedBy":{
-            "@id":(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']
+        })).json() ;
+
+        const pivot = await (await fetch(item['dfc-t:hasPivot']['@id'], {
+          method: 'GET',
+          headers: {
+            'accept': 'application/ld+json'
           }
-        });
-        // console.log('getOneItem framed',framed);
-        // const root = framed['@graph']?framed['@graph'].filter(p=>p['dfc-t:hostedBy']&&p['dfc-t:hostedBy']['rdfs:label'])[0]:{}
-        // // console.log('root',root);
+        })).json() ;
 
-        framed={
-          '@context':framed['@context'],
-          '@graph':framed['@graph']?framed['@graph'].filter(p=>p['dfc-t:hostedBy']&&p['dfc-t:hostedBy']['rdfs:label']):[]
-        }
+        item['dfc-t:hasPivot']=pivot;
 
-        framed['@graph'].forEach(f=>{
-          const represent=f['dfc-t:hasPivot']['dfc-t:represent']
-          represent.forEach(r=>{
-            if(r['@id']&&r['dfc-p:hasUnit']){
-              let unitId=r['dfc-p:hasUnit']['@id']||r['dfc-p:hasUnit']
-              let unit = catalogs['@graph'].find(s2=>s2['@id']===unitId);
-              if(unit){
-                if (unit['label']&&!unit['rdfs:label']){
-                  unit['rdfs:label']=unit['label'];
-                }
-                r['dfc-p:hasUnit']= unit;
-              }
+        let represents = Array.isArray(pivot['dfc-t:represent'])?pivot['dfc-t:represent']:[pivot['dfc-t:represent']];
+        represents = represents.filter(r=>r['@id']!=item['@id']);
+        pivot['dfc-t:represent']=[];
+        for (let represent of represents) {
+          const representObj =  await (await fetch(represent['@id'], {
+            method: 'GET',
+            headers: {
+              'accept': 'application/ld+json'
             }
-          })
-        })
-
-        framed={
-          '@context':framed['@context'],
-          ...framed['@graph'][0]
+          })).json() ;
+          pivot['dfc-t:represent'].push(representObj);
         }
 
-        resolve(framed);
+
+
+        resolve(item);
 
 
       } catch (e) {
@@ -403,11 +301,11 @@ class CatalogService {
     })
   }
 
-  getupdateOneItem(item) {
+  updateOneItem(item) {
     return new Promise(async (resolve, reject) => {
       try {
 
-        let oldItem= await this.getOneItem(catalog['@id']);
+        let oldItem= await this.getOneItem(item['@id']);
         // console.log('product["dfc-t:hasPivot"]["dfc-t:represent"]',product["dfc-t:hasPivot"]["dfc-t:represent"]);
         let oldRepresent = oldItem["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
           if (i["@id"] == oldItem["@id"]) {
@@ -456,7 +354,7 @@ class CatalogService {
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },
-            "dfc-t:represent": catalog["dfc-t:hasPivot"]["dfc-t:represent"]
+            "dfc-t:represent": item["dfc-t:hasPivot"]["dfc-t:represent"]
           }),
           headers: {
             'accept': 'application/ld+json',
@@ -477,9 +375,9 @@ class CatalogService {
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },
-            'dfc-b:description' : item['dfc-b:description'],
-            'dfc-b:quantity' : item['dfc-b:quantity'],
-            'dfc-p:hasUnit' : item['dfc-p:hasUnit'],
+            'dfc-b:references' : item['dfc-b:references'],
+            'dfc-b:sku' : item['dfc-b:sku'],
+            'dfc-b:stockLimitation' : item['dfc-b:stockLimitation'],
             // product['dfc-b:hasUnit'] : catalog['dfc-b:hasUnit'];
           }),
           headers: {
@@ -488,7 +386,7 @@ class CatalogService {
           }
         });
 
-        resolve(catalog);
+        resolve(item);
       } catch (e) {
         reject(e);
       }
@@ -516,7 +414,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       let importItem = await this.getOneImport(importId);
 
-      let reconciled = await this.getOneItem(reconciledId);
+      let reconciled = reconciledId?await this.getOneItem(reconciledId):undefined;
       // console.log('convertImportIdToCatalogId', importItem, catalogItem);
 
       let newItem = await this.convertImportToReconciled(importItem, reconciled, user);
@@ -817,7 +715,7 @@ class CatalogService {
           });
           let everExistDfcItems = await response.json();
           let existing = false;
-          if (everExistDfcItems['@graph'] && everExistDfcItems['@graph'].length > 0) {
+          if (everExistDfcItems['@id'] || (everExistDfcItems['@graph'] && everExistDfcItems['@graph'].length > 0)) {
             existing = true;
           }
           // console.log('existing',existing);

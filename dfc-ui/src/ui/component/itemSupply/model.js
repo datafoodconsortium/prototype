@@ -13,8 +13,12 @@ export default class ItemSupply extends GenericElement {
     this.elements = {
       description: this.shadowRoot.querySelector('[name="description"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
+      type : this.shadowRoot.querySelector('[name="type"]'),
       quantity: this.shadowRoot.querySelector('[name="quantity"]'),
       source: this.shadowRoot.querySelector('[name="source"]'),
+      sku: this.shadowRoot.querySelector('[name="sku"]'),
+      stockLimitation: this.shadowRoot.querySelector('[name="stockLimitation"]'),
+      totalTheoriticalStock: this.shadowRoot.querySelector('[name="totalTheoriticalStock"]'),
       id: this.shadowRoot.querySelector('[name="id"]'),
     };
 
@@ -53,12 +57,32 @@ export default class ItemSupply extends GenericElement {
             width: 300
           },
           {
+              field: 'type',
+              title: 'type',
+              width: 300
+          },
+          {
             field: 'quantity',
             title: 'quantity',
             width: 100
           }, {
             field: 'unit',
             title: 'unit',
+            width: 100
+          },
+          {
+            field: 'sku',
+            title: 'sku',
+            width: 100
+          },
+          {
+            field: 'stockLimitation',
+            title: 'stock limitation (catalog)',
+            width: 100
+          },
+          {
+            field: 'totalTheoriticalStock',
+            title: 'total theoritical stock (supply)',
             width: 100
           },
           {
@@ -121,9 +145,13 @@ export default class ItemSupply extends GenericElement {
         id: counter,
         source: d['dfc-t:hostedBy']['rdfs:label'],
         raw:d,
-        description: d['dfc-b:description'],
-        quantity: d['dfc-b:quantity'],
-        unit: d['dfc-b:hasUnit']['rdfs:label'],
+        description: d['dfc-b:references']['dfc-b:description'],
+        quantity: d['dfc-b:references']['dfc-b:quantity'],
+        unit: d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
+        type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+        sku: d['dfc-b:sku'],
+        stockLimitation: d['dfc-b:stockLimitation'],
+        totalTheoriticalStock: d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
         '@id': d['@id']
       }
     })
@@ -132,14 +160,21 @@ export default class ItemSupply extends GenericElement {
   }
 
   setData(data) {
-    // console.log(data);
+    console.log(data);
     this.item = data
-    this.elements.description.textContent = data['dfc-b:description'];
+    this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
-    this.elements.quantity.textContent = data['dfc-b:quantity'];
+    this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.id.textContent = data['@id'];
-    this.setDataGrid(data["dfc-t:hasPivot"]["dfc-t:represent"].filter(c=>c['@type']!=undefined))
-    this.elements.unit.textContent = data['dfc-b:hasUnit']['rdfs:label'];
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
+    this.elements.stockLimitation.textContent = data['dfc-b:stockLimitation'];
+    this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
+    this.elements.sku.textContent = data['dfc-b:sku'];
+    // const represents = Array.isArray(data['dfc-t:hasPivot']['dfc-t:represent'])?data['dfc-b:references']:[data['dfc-b:references']]
+    // console.log(represents);
+    this.setDataGrid(data['dfc-t:hasPivot']['dfc-t:represent']);
+
     // this.elements.quantity.textContent = data['dfc:quantity'];
     // this.elements.source.textContent = data['source'];
   }
@@ -157,16 +192,20 @@ export default class ItemSupply extends GenericElement {
 
   referer(){
       if(this.selectedImport!=undefined){
-        this.item['dfc-b:description']=this.selectedImport['dfc-b:description'];
-        this.item['dfc-b:quantity']=this.selectedImport['dfc-b:quantity'];
-        this.item['dfc-b:hasUnit']=this.selectedImport['dfc-b:hasUnit'];
+        const {'@id':id,'@context':context,...cleanReferences} = this.selectedImport['dfc-b:references'];
+        console.log(cleanReferences);
+        this.item['dfc-b:references']=cleanReferences;
+        this.item['dfc-b:sku']=this.selectedImport['dfc-b:sku'];
+        this.item['dfc-p:stockLimitation']=this.selectedImport['dfc-p:stockLimitation'];
+
+        this.publish({
+          channel: 'supply',
+          topic: 'update',
+          data : this.item
+        });
       }
 
-      this.publish({
-        channel: 'supply',
-        topic: 'update',
-        data : this.item
-      });
+
   }
 }
 window.customElements.define('x-item-supply', ItemSupply);

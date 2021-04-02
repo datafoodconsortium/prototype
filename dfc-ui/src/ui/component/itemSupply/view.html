@@ -7,22 +7,44 @@
     </tr>
     <tr style="height:100px">
       <td>
-        <div class="containerH">
-          <div class="field">
-            <label>description</label>
-            <div class="value" name="description"></div>
+        <div class="containerV">
+          <div class="containerH">
+            <div class="field">
+              <label>identifiant</label>
+              <div class="value" name="id"></div>
+            </div>
           </div>
-          <div class="field">
-            <label>quantité</label>
-            <div class="value" name="quantity"></div>
-          </div>
-          <div class="field">
-            <label>unité</label>
-            <div class="value" name="unit"></div>
-          </div>
-          <div class="field">
-            <label>identifiant</label>
-            <div class="value" name="id"></div>
+          <div>
+            <div class="containerH">
+              <div class="field">
+                <label>description</label>
+                <div class="value" name="description"></div>
+              </div>
+              <div class="field">
+                <label>type</label>
+                <div class="value" name="type"></div>
+              </div>
+              <div class="field">
+                <label>quantité</label>
+                <div class="value" name="quantity"></div>
+              </div>
+              <div class="field">
+                <label>unité</label>
+                <div class="value" name="unit"></div>
+              </div>
+              <div class="field">
+                <label>sku</label>
+                <div class="value" name="sku"></div>
+              </div>
+              <div class="field">
+                <label>total theoritical stock (supply)</label>
+                <div class="value" name="totalTheoriticalStock"></div>
+              </div>
+              <div class="field">
+                <label>stock limitation (catalog)</label>
+                <div class="value" name="stockLimitation"></div>
+              </div>
+            </div>
           </div>
         </div>
       </td>
@@ -48,6 +70,10 @@
 </div>
 <style>
   .field {
-    padding: 20px
+    padding: 20px;
+  }
+
+  label {
+    height : 2em;
   }
 </style>

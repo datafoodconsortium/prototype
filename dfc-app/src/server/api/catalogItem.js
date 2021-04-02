@@ -27,6 +27,13 @@ module.exports = function(router) {
       res.json(out)
     }
   })
+
+  router.get('/catalog/import/:id(*)', async (req, res, next) => {
+    let out = await catalogItem_supply_offer.getOneImport(req.params.id);
+    res.json(out)
+  })
+
+
   router.post('/catalog/import/:idImport(*)/convert/:idReconciled(*)?', async (req, res, next) => {
     // console.log('API',req.params);
     let idImport = req.params.idImport;
@@ -34,15 +41,9 @@ module.exports = function(router) {
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
-      let out = await supplyAndImport.convertImportIdToSupplyId(idImport, idSupply, req.user);
+      let out = await catalogItem_supply_offer.convertImportIdToReconciledId(idImport, idReconciled, req.user);
       res.json(out)
     }
-
-  })
-
-  router.get('/catalog/import/:id(*)', async (req, res, next) => {
-    let out = await supplyAndImport.getOneImport(req.params.id);
-    res.json(out)
   })
 
   router.get('/catalog/reconciled', async (req, res, next) => {
@@ -58,7 +59,7 @@ module.exports = function(router) {
 
   router.post('/catalog/reconciled', async (req, res, next) => {
     try {
-      let out = await supplyAndImport.updateOneSupply(req.body);
+      let out = await catalogItem_supply_offer.updateOneItem(req.body);
       res.json(out);
     } catch (e) {
       next(e)
@@ -66,7 +67,7 @@ module.exports = function(router) {
   })
 
   router.get('/catalog/reconciled/:id', async (req, res, next) => {
-    let out = await supplyAndImport.getOneSupply(req.params.id);
+    let out = await catalogItem_supply_offer.getOneItem(req.params.id);
     res.json(out);
   })
 

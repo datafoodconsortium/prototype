@@ -115,7 +115,7 @@ export default class Catalog extends GenericElement {
   }
 
   convertImportToSupply(importId, supplyId) {
-    let url = `${url_server}/data/core/import/${importId}/convert/${supplyId==undefined?'':supplyId}`;
+    let url = `${url_server}/data/core/catalog/import/${importId}/convert/${supplyId==undefined?'':supplyId}`;
     let option = {
       method: 'POST'
     };
@@ -145,20 +145,21 @@ export default class Catalog extends GenericElement {
     this.util.ajaxCall(url).then(data => {
 
       let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
-        return {
-          '@id': record['@id'],
-          'source': record['source']||record.source,
-          'dfc-b:description': record['dfc-b:references']['dfc-b:description']||record.description,
-          'dfc-b:quantity': record['dfc-b:quantity']||record.quantity,
-          'dfc-b:hasUnit': record['dfc-b:hasUnit']||record.hasUnit,
-          'dfc-t:hostedBy': record['dfc-t:hostedBy']||record.hostedBy,
-        }
+        // return {
+        //   '@id': record['@id'],
+        //   'source': record['source']||record.source,
+        //   'dfc-b:description': record['dfc-b:references']['dfc-b:description']||record.description,
+        //   'dfc-b:quantity': record['dfc-b:quantity']||record.quantity,
+        //   'dfc-b:hasUnit': record['dfc-b:hasUnit']||record.hasUnit,
+        //   'dfc-t:hostedBy': record['dfc-t:hostedBy']||record.hostedBy,
+        // }
+        return {...record}
       })
       console.log('newRecords',newRecords);
       this.catalogs = newRecords;
       this.catalogs.sort((a, b) => {
         // console.log(a['dfc:description'],'---',b['dfc:description']);
-        let dif = a['dfc-b:description'].localeCompare(b['dfc-b:description']);
+        let dif = a['dfc-b:references']['dfc-b:description'].localeCompare(b['dfc-b:references']['dfc-b:description']);
         // console.log(dif);
         return dif;
       });
@@ -173,7 +174,7 @@ export default class Catalog extends GenericElement {
   }
 
   loadOneImport(id) {
-    let url = `${url_server}/data/core/import/${id}`;
+    let url = `${url_server}/data/core/catalog/import/${id}`;
     this.util.ajaxCall(url).then(data => {
       this.selectedImport = data.body;
       // console.log('loadOneImport', this.selectedImport);
@@ -236,7 +237,7 @@ export default class Catalog extends GenericElement {
   }
 
   loadOneSupply(id) {
-    let url = `${url_server}/data/core/supply/${id}`;
+    let url = `${url_server}/data/core/catalog/reconciled/${id}`;
     this.util.ajaxCall(url).then(data => {
       this.selectedSupply = data.body;
       // console.log('loadOneSupply',this.selectedSupply);
@@ -251,7 +252,7 @@ export default class Catalog extends GenericElement {
   unlinkSupply(supply, importItem) {
     console.log('supply',supply);
     supply["dfc-t:hasPivot"]["dfc-t:represent"] = supply["dfc-t:hasPivot"]["dfc-t:represent"].filter(r => r['@id'] != importItem['@id']);
-    let url = `${url_server}/data/core/supply/`;
+    let url = `${url_server}/data/core/catalog/reconciled/`;
     let option = {
       method: 'POST',
       body: JSON.stringify(supply)
@@ -268,7 +269,7 @@ export default class Catalog extends GenericElement {
   }
 
   updateSupply(supply) {
-    let url = `${url_server}/data/core/supply/`;
+    let url = `${url_server}/data/core/catalog/reconciled/`;
     let option = {
       method: 'POST',
       body: JSON.stringify(supply)
