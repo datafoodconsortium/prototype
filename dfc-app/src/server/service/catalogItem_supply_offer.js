@@ -669,7 +669,8 @@ class CatalogService {
 
           if (sourceObject.version == "1.5") {
             itemsToImport = sourceResponseObject['dfc-b:affiliates'][0]['dfc-b:manages'].map(i=>{
-              const supply = sourceResponseObject['dfc-b:affiliates'][0]['dfc-b:supplies'].find(sp=>sp['@id']==i['dfc-b:references'])
+              const idSupply = i['dfc-b:references']['@id']||i['dfc-b:references']
+              const supply = sourceResponseObject['dfc-b:affiliates'][0]['dfc-b:supplies'].find(sp=>sp['@id']==idSupply)
               // console.log('supply',supply);
               return {
                 ...i,
@@ -786,6 +787,8 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
         console.log('import item',item);
+        //TODO : deleted this. only for webinar
+        item['dfc-b:offeredThrough']=undefined;
 
         const responsePost = await fetch('http://dfc-middleware:3000/ldp/catalogItem', {
           method: 'POST',
