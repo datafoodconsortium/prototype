@@ -142,7 +142,7 @@ export default class CatalogSupply extends GenericElement {
 
   filter(value) {
     let filteredData = this.rawSupplies.filter(record => {
-      return this.normalize(record['dfc-b:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
+      return this.normalize(record['dfc-b:references']['dfc-b:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
     })
     this.setDataGrid(filteredData)
   }
