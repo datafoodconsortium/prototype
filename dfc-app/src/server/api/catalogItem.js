@@ -86,4 +86,34 @@ module.exports = function(router) {
     }
   })
 
+  router.get('/catalog/link/:id', async (req, res, next) => {
+    let source = decodeURI(req.query.source);
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        let out = await catalogItem_supply_offer.getOneLinkedItem(req.params.id);
+        res.json(out);
+      } catch (e) {
+        res.statusCode=409;
+        next(e);
+      }
+    }
+  })
+
+  router.get('/catalog/linkSimple/:id', async (req, res, next) => {
+    let source = decodeURI(req.query.source);
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        let out = await catalogItem_supply_offer.getOneLinkedItemSimple(req.params.id);
+        res.json(out);
+      } catch (e) {
+        res.statusCode=409;
+        next(e);
+      }
+    }
+  })
+
 }

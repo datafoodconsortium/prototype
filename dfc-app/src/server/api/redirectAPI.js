@@ -21,6 +21,7 @@ module.exports = function(router) {
           }
         }, (err, result, body) => {
           if (err == undefined) {
+            console.log('result',result.statusCode);
             res.json(result.body);
           }
         })
