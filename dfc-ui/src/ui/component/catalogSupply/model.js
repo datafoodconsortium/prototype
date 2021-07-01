@@ -127,12 +127,22 @@ export default class CatalogSupply extends GenericElement {
   }
 
   edit() {
-    // console.log(this.selectedSupply);
-    this.publish({
-      channel: 'main',
-      topic: 'navigate',
-      data: '/x-item-supply/' + encodeURIComponent(this.selectedSupply['@id'])
-    })
+    console.log(this.selectedSupply);
+    console.log('label',this.selectedSupply['dfc-t:hostedBy']['rdfs:label']);
+    if (this.selectedSupply['dfc-t:hostedBy']['rdfs:label']=='Data Food Consortium'){
+      this.publish({
+        channel: 'main',
+        topic: 'navigate',
+        data: '/x-item-supply/' + encodeURIComponent(this.selectedSupply['@id'])
+      })
+    }else{
+      this.publish({
+        channel: 'main',
+        topic: 'navigate',
+        data: '/x-item-supply-platform/' + encodeURIComponent(this.selectedSupply['@id'])
+      })
+    }
+
   }
 
   normalize(value) {
@@ -177,7 +187,8 @@ export default class CatalogSupply extends GenericElement {
             quantity: c['dfc-b:references']['dfc-b:quantity'],
             unit: c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
             type: c['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
-            raw: d,
+            raw: c,
+            parent: d,
           }
         })
       }

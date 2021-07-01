@@ -9,6 +9,7 @@ import catalogImport from '../catalogImport/model.js';
 import catalogSupply from '../catalogSupply/model.js';
 import itemImport from '../itemImport/model.js';
 import itemSupply from '../itemSupply/model.js';
+import itemSupplyPlatform from '../itemSupplyPlatform/model.js';
 import profil from '../profil/model.js';
 import importCatalog from '../importCatalog/model.js';
 import oidc_test from '../OIDC-test/model.js';

@@ -36,9 +36,12 @@ a:hover{
   border-bottom-style: solid;
   border-width: 1px;
 }
+.field input.value{
+  width: 100%
+}
 
 .field {
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
 }

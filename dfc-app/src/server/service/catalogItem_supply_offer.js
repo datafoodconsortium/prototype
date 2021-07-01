@@ -41,7 +41,7 @@ class CatalogService {
         // console.log(datas);
         if(datas['@graph']){
           for(const data of datas['@graph']){
-            console.log(data['@id']);
+            // console.log(data['@id']);
             if(data['@id'].includes('http')){
               const responseDelete = await fetch(data['@id'], {
                 method: 'DELETE',
@@ -119,7 +119,7 @@ class CatalogService {
           '@context':responseObject['@context'],
           '@graph':graph
         }
-        console.log('out',out);
+        // console.log('out',out);
 
         resolve(out);
       } catch (e) {
@@ -383,6 +383,7 @@ class CatalogService {
 
         let oldItem= await this.getOneItem(item['@id']);
         // console.log('product["dfc-t:hasPivot"]["dfc-t:represent"]',product["dfc-t:hasPivot"]["dfc-t:represent"]);
+
         let oldRepresent = oldItem["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
           if (i["@id"] == oldItem["@id"]) {
             return false;
@@ -438,7 +439,35 @@ class CatalogService {
           }
         });
 
-        const responseItemPlatform = await fetch(item['@id'], {
+        // const responseItemPlatform = await fetch(item['@id'], {
+        //   method: 'Patch',
+        //   body: JSON.stringify({
+        //     "@context": {
+        //       "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+        //       "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+        //       "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+        //       "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+        //       "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+        //       "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
+        //       "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        //       "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+        //     },
+        //     'dfc-b:references' : item['dfc-b:references'],
+        //     // 'dfc-b:desription' : item['dfc-b:desription'],
+        //     'dfc-b:sku' : item['dfc-b:sku'],
+        //     'dfc-b:stockLimitation' : item['dfc-b:stockLimitation'],
+        //     // product['dfc-b:hasUnit'] : catalog['dfc-b:hasUnit'];
+        //   }),
+        //   headers: {
+        //     'accept': 'application/ld+json',
+        //     'content-type': 'application/ld+json'
+        //   }
+        // });
+        //
+
+        console.log('url',item['dfc-b:references']['dfc-t:sameAs']['@id']);
+
+        const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['dfc-t:sameAs']['@id'], {
           method: 'Patch',
           body: JSON.stringify({
             "@context": {
@@ -451,16 +480,15 @@ class CatalogService {
               "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
               "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
             },
-            'dfc-b:references' : item['dfc-b:references'],
-            'dfc-b:sku' : item['dfc-b:sku'],
-            'dfc-b:stockLimitation' : item['dfc-b:stockLimitation'],
-            // product['dfc-b:hasUnit'] : catalog['dfc-b:hasUnit'];
+            'dfc-b:desription' : item['dfc-b:references']['dfc-b:desription'],
           }),
           headers: {
             'accept': 'application/ld+json',
             'content-type': 'application/ld+json'
           }
         });
+        console.log(responseSupplyPlatformSource);
+        console.log(await responseSupplyPlatformSource.text());
 
         resolve(item);
       } catch (e) {
@@ -488,6 +516,7 @@ class CatalogService {
 
   convertImportIdToReconciledId(importId, reconciledId, user) {
     return new Promise(async (resolve, reject) => {
+      console.log("convertImportIdToReconciledId",convertImportIdToReconciledId);
       let importItem = await this.getOneImport(importId);
 
       let reconciled = reconciledId?await this.getOneItem(reconciledId):undefined;
@@ -737,16 +766,16 @@ class CatalogService {
           })
 
           let sourceResponseRaw = await sourceResponse.text();
-          // console.log(sourceResponseRaw);
+          // console.log('sourceResponseRaw',sourceResponseRaw);
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
           // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
           let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
-          const {'@base':base,...noBaseContext}= context;
-          sourceResponseObject = await jsonld.compact(sourceResponseObject,noBaseContext)
-          console.log('compactedItem',sourceResponseObject);
+          // const {'@base':base,...noBaseContext}= context;
+          sourceResponseObject = await jsonld.compact(sourceResponseObject,context)
+          // console.log('compactedItem',sourceResponseObject);
           let itemsToImport;
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
 
@@ -763,7 +792,7 @@ class CatalogService {
                   "dfc-t:hostedBy": platform['@id'],
                   "dfc:owner": user['@id'],
                   //embended data instead references
-                  "@id":undefined
+                  "@id":idSupply
                 }
               }
             });
@@ -880,10 +909,11 @@ class CatalogService {
 
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('import item',item);
+        console.log('import item',item['@id']);
         //TODO : deleted this. only for webinar
         item['dfc-b:offeredThrough']=undefined;
         item['dfc-t:sameAs']=item['@id'];
+        item['dfc-b:references']['dfc-t:sameAs']=item['dfc-b:references']['@id'];
 
         const responsePost = await fetch('http://dfc-middleware:3000/ldp/catalogItem', {
           method: 'POST',

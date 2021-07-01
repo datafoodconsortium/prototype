@@ -1,0 +1,72 @@
+<div class="panelContainer" style="flex:1">
+  <table style="width:98%">
+    <tr style="height:30px">
+      <td>
+        <h1>Produit consolidé Plateforme</h1>
+      </td>
+    </tr>
+    <tr style="height:100px">
+      <td>
+        <div class="containerV">
+          <div style="border-style:solid;border-width:thin;">
+            <div class="field">
+              <label>identifiant du catalog item</label>
+              <div class="value" name="id_catalog"></div>
+            </div>
+            <div class="field">
+              <label>stock limitation (catalog item)</label>
+              <input class="value" name="totalTheoriticalStock"/>
+            </div>
+            <div class="field">
+              <label>sku</label>
+              <input class="value" name="sku"/>
+            </div>
+          </div>
+          <div style="border-style:solid;border-width:thin;">
+            <div class="field">
+              <label>identifiant du supply product</label>
+              <div class="value" name="id_supply"></div>
+            </div>
+
+            <div class="field">
+              <label>description</label>
+              <input class="value" name="description"/>
+            </div>
+            <div class="field">
+              <label>type</label>
+              <div class="value" name="type"></div>
+            </div>
+            <div class="field">
+              <label>quantité</label>
+              <input class="value" name="quantity"/>
+            </div>
+            <div class="field">
+              <label>unité</label>
+              <div class="value" name="unit"></div>
+            </div>
+
+            <div class="field">
+              <label>total theoritical stock (supply)</label>
+              <input class="value" name="stockLimitation"/>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="containerH space-between">
+          <h2>Modifier les données sur la plateforme source de l'information</h2>
+          <div class="containerH">
+            <button id="update">Modifier</button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<style>
+  label {
+    height : 2em;
+  }
+</style>
