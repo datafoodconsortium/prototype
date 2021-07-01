@@ -516,7 +516,7 @@ class CatalogService {
 
   convertImportIdToReconciledId(importId, reconciledId, user) {
     return new Promise(async (resolve, reject) => {
-      console.log("convertImportIdToReconciledId",convertImportIdToReconciledId);
+      // console.log("convertImportIdToReconciledId",convertImportIdToReconciledId);
       let importItem = await this.getOneImport(importId);
 
       let reconciled = reconciledId?await this.getOneItem(reconciledId):undefined;
