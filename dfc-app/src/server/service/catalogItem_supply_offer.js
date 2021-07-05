@@ -465,30 +465,38 @@ class CatalogService {
         // });
         //
 
-        console.log('url',item['dfc-b:references']['dfc-t:sameAs']['@id']);
+        try {
+          if(item['dfc-b:references']['dfc-t:sameAs']){
+            console.log('url',item['dfc-b:references']['dfc-t:sameAs']['@id']);
 
-        const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['dfc-t:sameAs']['@id'], {
-          method: 'Patch',
-          body: JSON.stringify({
-            "@context": {
-              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-              "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-              "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-            },
-            'dfc-b:desription' : item['dfc-b:references']['dfc-b:desription'],
-          }),
-          headers: {
-            'accept': 'application/ld+json',
-            'content-type': 'application/ld+json'
+            const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['dfc-t:sameAs']['@id'], {
+              method: 'Patch',
+              body: JSON.stringify({
+                "@context": {
+                  "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+                  "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+                  "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+                  "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+                  "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+                  "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
+                  "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                  "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+                },
+                'dfc-b:desription' : item['dfc-b:references']['dfc-b:desription'],
+              }),
+              headers: {
+                'accept': 'application/ld+json',
+                'content-type': 'application/ld+json'
+              }
+            });
+            console.log(responseSupplyPlatformSource);
+            console.log(await responseSupplyPlatformSource.text());
           }
-        });
-        console.log(responseSupplyPlatformSource);
-        console.log(await responseSupplyPlatformSource.text());
+        } catch (e) {
+          console.error(e);
+        }
+
+
 
         resolve(item);
       } catch (e) {
