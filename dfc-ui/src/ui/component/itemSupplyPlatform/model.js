@@ -165,17 +165,18 @@ export default class ItemSupplyPlatform extends GenericElement {
     console.log(data);
     this.item = data
 
-    this.elements.id_catalog.textContent = data['dfc-t:sameAs']['@id'];
+
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
+    this.elements.id_catalog.textContent = data['dfc-t:sameAs'] && data['dfc-t:sameAs']['@id'];
 
-    this.elements.id_supply.textContent = data['dfc-b:references']['dfc-t:sameAs']['@id'];
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
     this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
     this.elements.totalTheoriticalStock.value = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
+    this.elements.id_supply.textContent = data['dfc-b:references']['dfc-t:sameAs'] && data['dfc-b:references']['dfc-t:sameAs']['@id'];
 
   }
 
