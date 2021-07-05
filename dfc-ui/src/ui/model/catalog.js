@@ -108,8 +108,9 @@ export default class Catalog extends GenericElement {
     };
     this.util.ajaxCall(url, option).then(data => {
       // console.log('resolve ajaxCall', data);
-      alert(name + ' bien importé')
+      alert(name + ' import is completed')
     }).catch(e=>{
+      alert(name + ' import has failed')
       alert(e)
     });
   }
