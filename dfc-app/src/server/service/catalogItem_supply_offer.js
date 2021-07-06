@@ -304,7 +304,7 @@ class CatalogService {
   getOneLinkedItem(id) {
     return new Promise(async (resolve, reject) => {
       try {
-          console.log('id',id);
+          // console.log('id',id);
          let item = await (await fetch('http://dfc-middleware:3000/sparql', {
            method: 'POST',
            body : `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -335,7 +335,7 @@ class CatalogService {
              'accept': 'application/ld+json'
            }
          })).json() ;
-         console.log('item before',item);
+         // console.log('item before',item);
          item = await jsonld.frame(item, {
            "@context": {
              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
@@ -781,8 +781,9 @@ class CatalogService {
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
           // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
           let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
-          // const {'@base':base,...noBaseContext}= context;
-          sourceResponseObject = await jsonld.compact(sourceResponseObject,context)
+          // console.log('CONTEXT',context);
+          const {'@base':base,...noBaseContext}= context;
+          sourceResponseObject = await jsonld.compact(sourceResponseObject,noBaseContext)
           // console.log('compactedItem',sourceResponseObject);
           let itemsToImport;
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
@@ -917,11 +918,13 @@ class CatalogService {
 
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('import item',item['@id']);
+
         //TODO : deleted this. only for webinar
         item['dfc-b:offeredThrough']=undefined;
         item['dfc-t:sameAs']=item['@id'];
         item['dfc-b:references']['dfc-t:sameAs']=item['dfc-b:references']['@id'];
+
+// console.log('import item',item);
 
         const responsePost = await fetch('http://dfc-middleware:3000/ldp/catalogItem', {
           method: 'POST',

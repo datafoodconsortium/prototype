@@ -39,7 +39,7 @@
     "express-session": "^1.16.2",
     "install": "^0.13.0",
     "jquery": "^3.4.1",
-    "jsonld": "^3.1.1",
+    "jsonld": "^5.2.0",
     "ldflex": "^2.6.1",
     "ldflex-comunica": "^3.1.0",
     "mongodb": "^3.2.7",
