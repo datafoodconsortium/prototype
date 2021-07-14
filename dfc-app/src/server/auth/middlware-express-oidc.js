@@ -24,7 +24,7 @@ async function middlware_express_oidc (req,res,next) {
 
       try {
         // console.log('token',token);
-        let publicKey="-----BEGIN PUBLIC KEY-----"+config.OIDC.lesCommuns.public_key+"-----END PUBLIC KEY-----"
+        let publicKey=config.OIDC.lesCommuns.public_key; // should include key type (BEGIN...)
         // console.log('publicKey', publicKey);
         const key = await jose.JWK.asKey(publicKey, 'pem');
         const verifier = jose.JWS.createVerify(key);
