@@ -95,7 +95,7 @@ Version 1.5.3
  * form: Add the tagbox to the form fields.
  * tagbox: Add the 'reset' method.
  * progress: Increase the response time to open and close the progress message window.
- 
+
 Version 1.5.2
 -------------
 * Bug
@@ -354,7 +354,7 @@ Version 1.3.3
  * datagrid: IE 31 stylesheet limit. fixed.
  * treegrid: Some style features are not supported by column styler function. fixed.
  * menu: The auto width of menu item displays incorrect in ie6. fixed.
- * combo: The 'onHidePanel' event can not fire when clicked outside the combo area. fixed. 
+ * combo: The 'onHidePanel' event can not fire when clicked outside the combo area. fixed.
 * Improvement
  * datagrid: Add 'scrollTo' and 'highlightRow' methods.
  * treegrid: Enable treegrid to parse data from <tbody> element.
@@ -367,7 +367,7 @@ Version 1.3.3
  * layout: The 'minWidth','maxWidth','minHeight','maxHeight' and 'collapsible' properties are available for region panel.
 * New Plugins
  * tooltip: Display a popup message when moving mouse over an element.
- 
+
 Version 1.3.2
 -------------
 * Bug
@@ -403,7 +403,7 @@ Version 1.3.2
  * slider: Add 'reversed' property to determine if the min value and max value will switch their positions.
  * progressbar: Add 'height' property to allow users to define the height of progressbar.
 
-Version 1.3.1
+Version 1.3.2
 -------------
 * Bug
  * datagrid: Setting the 'pageNumber' property is not valid. fixed.
@@ -453,14 +453,14 @@ Version 1.2.6
 * Bug
  * tabs: Call 'add' method with 'selected:false' option, the added tab panel is always selected. fixed.
  * treegrid: The 'onSelect' and 'onUnselect' events can't be triggered. fixed.
- * treegrid: Cannot display zero value field. fixed. 
+ * treegrid: Cannot display zero value field. fixed.
 * Improvement
  * propertygrid: Add 'expandGroup' and 'collapseGroup' methods.
  * layout: Allow users to create collapsed layout panels by assigning 'collapsed' property to true.
  * layout: Add 'add' and 'remove' methods that allow users to dynamically add or remove region panel.
  * layout: Additional tool icons can be added on region panel header.
  * calendar: Add 'firstDay' option that allow users to set first day of week. Sunday is 0, Monday is 1, ...
- * tree: Add 'lines' option, true to display tree lines. 
+ * tree: Add 'lines' option, true to display tree lines.
  * tree: Add 'loadFilter' option that allow users to change data format before loading into the tree.
  * tree: Add 'loader' option that allow users to define how to load data from remote server.
  * treegrid: Add 'onClickCell' and 'onDblClickCell' callback function options.
@@ -507,7 +507,7 @@ Version 1.2.4
 * New Plugins
  * searchbox: Allow users to type words into box and do searching operation.
  * progressbar: To display the progress of a task.
- 
+
 Version 1.2.3
 -------------
 * Bug
@@ -525,7 +525,7 @@ Version 1.2.3
  * validatebox: Add 'remote' validation type.
  * combobox: Add 'method' option.
 * New Plugins
- * propertygrid: Allow users to edit property value in datagrid. 
+ * propertygrid: Allow users to edit property value in datagrid.
 
 Version 1.2.2
 -------------
@@ -544,7 +544,7 @@ Version 1.2.2
  * datagrid: Users can use the footer row to display summary information.
 * New Plugins
  * datetimebox: Combines datebox with timespinner component.
-  
+
 Version 1.2.1
 -------------
 * Bug
@@ -562,7 +562,7 @@ Version 1.2.1
  * datagrid: Add onHeaderContextMenu and onRowContextMenu callback functions.
  * datagrid: Custom view is supported.
  * treegrid: Add onContextMenu callback function and append,remove methods.
-  
+
 Version 1.2
 -------------
 * Improvement
@@ -578,7 +578,7 @@ Version 1.2
  * spinner: The basic plugin to create numberspinner,timespinner,etc.
  * numberspinner: The numberbox that allow user to change value by clicking up and down spin buttons.
  * timespinner: The time selector that allow user to quickly inc/dec a time.
- 
+
 Version 1.1.2
 -------------
 * Bug
@@ -593,7 +593,7 @@ Version 1.1.2
  * accordion: Add crud methods.
  * linkbutton: Accept an id option to set the id attribute.
  * tree: Enhance tree node operation.
- 
+
 Version 1.1.1
 -------------
 * Bug
@@ -604,7 +604,7 @@ Version 1.1.1
  * datebox: Add destroy method.
  * combobox: Add destroy and clear method.
  * combotree: Add destroy and clear method.
- 
+
 Version 1.1
 -------------
 * Bug
@@ -625,7 +625,7 @@ Version 1.1
  * calendar: A calendar plugin that can either be embedded within a page or popup.
  * datebox: Combines a textbox with a calendar that let users to select date.
  * easyloader: A JavaScript loader that allows you to load plugin and their dependencies into your page.
- 
+
 Version 1.0.5
 * Bug
  * panel: The fit property of panel performs incorrectly. fixed.
@@ -634,8 +634,8 @@ Version 1.0.5
  * form: Add a validate method to do validation for validatebox component.
  * dialog: The dialog can read collapsible,minimizable,maximizable and resizable attribute from markup.
 * New Plugins
- * validatebox: A validation plugin that checks to make sure the user's input value is valid. 
- 
+ * validatebox: A validation plugin that checks to make sure the user's input value is valid.
+
 Version 1.0.4
 -------------
 * Bug
@@ -650,7 +650,7 @@ Version 1.0.4
  * combotree: Add method 'getValue'.
  * combobox: Add method 'getValue'.
  * form: The 'load' method can load data and fill combobox and combotree field correctly.
- 
+
 Version 1.0.3
 -------------
 * Bug
