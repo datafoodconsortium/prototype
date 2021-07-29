@@ -468,6 +468,7 @@ class CatalogService {
         try {
           if(item['dfc-b:references']['dfc-t:sameAs']){
             console.log('url',item['dfc-b:references']['dfc-t:sameAs']['@id']);
+            console.log(item['dfc-b:references']['dfc-b:description']);
 
             const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['dfc-t:sameAs']['@id'], {
               method: 'Patch',
@@ -482,14 +483,15 @@ class CatalogService {
                   "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
                   "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
                 },
-                'dfc-b:desription' : item['dfc-b:references']['dfc-b:desription'],
+                'dfc-b:description' : item['dfc-b:references']['dfc-b:description'],
               }),
               headers: {
                 'accept': 'application/ld+json',
-                'content-type': 'application/ld+json'
+                'content-type': 'application/ld+json',
+                'Authorization' : 'JWT eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJVNXpSenhWMmZpaHpkWXkzNVl2ZkJSajVFX0h1UmpRRENOc29vc1J1RzU4In0.eyJqdGkiOiI5NjllYzAyMi02Njc4LTQ3OWMtOTA5MS02MGU3NjEwOGQwOWQiLCJleHAiOjE2NTY2NjQ4ODAsIm5iZiI6MCwiaWF0IjoxNjI1MTI4ODgwLCJpc3MiOiJodHRwczovL2xvZ2luLmxlc2NvbW11bnMub3JnL2F1dGgvcmVhbG1zL21hc3RlciIsInN1YiI6IjUwNDM1ZjQ5LThmZTctNDViNy04MjA2LWJmNWZiMDJkODcyOSIsInR5cCI6IkJlYXJlciIsImF6cCI6IjQ0NjE3NDYxMjA0NjZmNmY2NDIwNDM2ZjZlNzM2ZjcyNzQ2OTc1NmQiLCJhdXRoX3RpbWUiOjE2MjUxMjg4ODAsInNlc3Npb25fc3RhdGUiOiIzMmE2OGZmMC0wYjcxLTRlNDUtOWM2OS03N2UwZTNmYWY4MzkiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQiLCJuYW1lIjoidGVzdCB0ZXN0IiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdGRmY0Bwcm90b25tYWlsLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0ZGZjQHByb3Rvbm1haWwuY29tIn0.jFNmuQdji3Fvs_gFT31r_bmPkDVngL8nNQMejiIvKQiRN74OCOQCbslbwypsdUQkRap5Pe9zmBamUMAuzqvra9s4uSBJG-0Ul9Ua69X6-By-WOsnPbjcjQn_fZrnbalhcpM5YedBv8J1spwHBLUMtWFCwOOXVHxw_7tj1-KEdViD96sF2bMwa-h--zUw59KHErRg5aW-1iADIRC7N009fctefNn04IN_TfK3dutSmLGM05G31haLNsKfXsm-SIE0qm3hVXxtXAe_SPWWGNXe2Rkah2eEvGinxdfR52hUFvUr9wMK704p28QNVC8Ahk64lCABuOOyDI0RzqtUno9K8Q'
               }
             });
-            console.log(responseSupplyPlatformSource);
+            // console.log(responseSupplyPlatformSource);
             console.log(await responseSupplyPlatformSource.text());
           }
         } catch (e) {
