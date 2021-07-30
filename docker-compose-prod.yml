@@ -62,7 +62,7 @@ services:
       dockerfile: ./Dockerfile.dev
     container_name: dfc-ui
     environment:
-      - URL_SERVER=http://141.94.104.150:8080
+      - URL_SERVER=http://proto.datafoodconsortium.org/
     volumes:
       - ./dfc-ui/src:/app/src
     networks:
