@@ -27,7 +27,7 @@ services:
       - SEMAPPS_MAIN_DATASET=localData
       - SEMAPPS_JENA_USER=admin
       - SEMAPPS_JENA_PASSWORD=admin
-      - SEMAPPS_HOME_URL=http://141.94.104.150:3000/
+      - SEMAPPS_HOME_URL=http://proto.datafoodconsortium.org:3000/
     volumes:
       - ./dfc-semapps:/server/app
     networks:
@@ -62,7 +62,7 @@ services:
       dockerfile: ./Dockerfile.dev
     container_name: dfc-ui
     environment:
-      - URL_SERVER=http://proto.datafoodconsortium.org/
+      - URL_SERVER=http://proto.datafoodconsortium.org:8080
     volumes:
       - ./dfc-ui/src:/app/src
     networks:
