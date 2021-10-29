@@ -7,6 +7,7 @@ const config = require('./../../../configuration.js');
 const fetch = require('node-fetch');
 const jsonld = require('jsonld');
 const {PlatformService,platformServiceSingleton} = require ('./platform.js')
+const LDPNavigator = require('./../ldpUtil/LDPNavigator')
 
 class CatalogService {
   constructor() {}
@@ -766,8 +767,9 @@ class CatalogService {
 
 
           let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
-          // console.log('SOURCE',sourceObject);
-          // console.log('TOKEN',user.token);
+          console.log('SOURCE',sourceObject);
+          console.log('TOKEN',user.token);
+
           const sourceResponse = await fetch(source, {
             method: 'GET',
             headers: {
@@ -775,23 +777,50 @@ class CatalogService {
             }
           })
 
+          const ldpNavigator = new LDPNavigator({});
+
           let sourceResponseRaw = await sourceResponse.text();
-          // console.log('sourceResponseRaw',sourceResponseRaw);
+          console.log('sourceResponseRaw',sourceResponseRaw);
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
-          // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
+          // console.log('sourceResponseObject',sourceResponseObject);
           let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
           // console.log('CONTEXT',context);
           const {'@base':base,...noBaseContext}= context;
-          sourceResponseObject = await jsonld.compact(sourceResponseObject,noBaseContext)
+
+          const computingContext={
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+          }
+
+
+          sourceResponseObject = await jsonld.compact(sourceResponseObject,computingContext)
           // console.log('compactedItem',sourceResponseObject);
+
+
+          // if (sourceResponseObject['@graph']){
+          //   let person = sourceResponseObject['@graph'].find(r=>r['@type'].includes('Person'));
+          //   console.log('person',person);
+          // }
+
+
           let itemsToImport;
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
 
           if (sourceObject.version == "1.5") {
-            const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
+            // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
+            const user = await ldpNavigator.find({'@type':'dfc-b:Person'},sourceResponseObject);
+            const affiliates= await ldpNavigator.get(user,sourceResponseObject,'dfc-b:affiliates');
+
+            console.log('DODO',affiliates);
             itemsToImport = affiliates['dfc-b:manages'].map(i=>{
               const idSupply = i['dfc-b:references']['@id']||i['dfc-b:references']
               const supply = affiliates['dfc-b:supplies'].find(sp=>sp['@id']==idSupply)

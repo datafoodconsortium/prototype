@@ -90,7 +90,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     failureRedirect: '/ui/login.html',
     session: false
   }), (req, res) => {
-
+    // console.log('----------------- CALLBACK');
     // console.log('/auth/cb',res,req);
     // console.log('req.session.referer',req.session.referer);
     let redirect_url = req.session.referer + '?token=' + res.req.user.accesstoken;

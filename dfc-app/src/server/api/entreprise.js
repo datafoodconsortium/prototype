@@ -4,8 +4,8 @@
 const request = require('request');
 const SupplyAndImport = require('./../service/supplyAndImport.js');
 const Entreprise = require('./../service/entreprise.js');
-const json_ldSerializer =require('./../serializer/JSON-LD.js');
-const ldpSerializer =require('./../serializer/LDP.js');
+// const json_ldSerializer =require('./../serializer/JSON-LD.js');
+// const ldpSerializer =require('./../serializer/LDP.js');
 
 module.exports = function(router) {
   // this.config = require('./../../configuration.js');

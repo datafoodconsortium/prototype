@@ -12,13 +12,15 @@
     "start": "moleculer-runner --env --instances=max services"
   },
   "dependencies": {
-    "@semapps/fuseki-admin": "^0.1.45",
-    "@semapps/ldp": "^0.1.45",
-    "@semapps/sparql-endpoint": "^0.1.45",
-    "@semapps/triplestore": "^0.1.45",
+    "@semapps/fuseki-admin": "^0.3.17",
+    "@semapps/ldp": "0.3.17",
+    "@semapps/sparql-endpoint": "^0.3.17",
+    "@semapps/triplestore": "^0.3.17",
+    "@semapps/auth": "^0.3.17",
+    "@semapps/jsonld": "^0.3.17",
     "dotenv": "^8.2.0",
     "moleculer": "^0.14.4",
     "moleculer-repl": "^0.6.3",
-    "moleculer-web": "^0.9.1"
+    "moleculer-web": "^0.10.3"
   }
 }
