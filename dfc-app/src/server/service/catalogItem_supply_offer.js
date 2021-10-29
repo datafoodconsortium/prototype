@@ -771,7 +771,8 @@ class CatalogService {
           const sourceResponse = await fetch(source, {
             method: 'GET',
             headers: {
-              'authorization': 'JWT ' + user.token
+              'authorization': 'JWT ' + user.token,
+              'accept': 'application/ld+json'
             }
           })
 
