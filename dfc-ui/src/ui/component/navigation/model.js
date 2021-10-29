@@ -84,6 +84,7 @@ export default class Navigation extends GenericElement {
         }
       });
       let urlToken = params.filter(r => r.key == 'token')[0];
+      console.log('ALLO TOKEN ',urlToken);
 
       if (urlToken != undefined) {
         // console.log('urlToken', urlToken.value);
