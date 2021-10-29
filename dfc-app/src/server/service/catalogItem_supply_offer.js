@@ -767,7 +767,7 @@ class CatalogService {
 
           let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
           // console.log('SOURCE',sourceObject);
-          // console.log('TOKEN',user.token);
+          console.log('TOKEN',user.token);
           const sourceResponse = await fetch(source, {
             method: 'GET',
             headers: {
@@ -775,8 +775,10 @@ class CatalogService {
             }
           })
 
+
+
           let sourceResponseRaw = await sourceResponse.text();
-          // console.log('sourceResponseRaw',sourceResponseRaw);
+          console.log('sourceResponseRaw',sourceResponseRaw);
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
