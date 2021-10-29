@@ -779,7 +779,7 @@ class CatalogService {
 
 
           let sourceResponseRaw = await sourceResponse.text();
-          console.log('sourceResponseRaw',sourceResponseRaw);
+          // console.log('sourceResponseRaw',sourceResponseRaw);
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 

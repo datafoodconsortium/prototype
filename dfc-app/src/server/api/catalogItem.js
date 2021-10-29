@@ -72,6 +72,7 @@ module.exports = function(router) {
   })
 
   router.post('/catalog/importSource', async (req, res, next) => {
+    console.log('IMPORT');
     let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
