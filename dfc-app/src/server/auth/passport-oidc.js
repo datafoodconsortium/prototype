@@ -90,7 +90,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     failureRedirect: 'http://proto.datafoodconsortium.org/#/x-profil',
     session: false
   }), (req, res) => {
-
+    console.log('TOKEN ACCES CB',res.req.user.accesstoken);
     // console.log('/auth/cb',res,req);
     console.log('req.session.referer',req.session.referer);
     let redirect_url = req.session.referer + '?token=' + res.req.user.accesstoken;
