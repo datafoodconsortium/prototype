@@ -56,7 +56,7 @@ class UserService {
             this.UserCreationByConnect=true;
             user = await this.createOneUser({
               'login': login,
-              'accessToken': accessToken
+              'ontosec:token': accessToken
             });
             this.UserCreationByConnect=false;
           }
