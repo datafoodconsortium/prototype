@@ -253,6 +253,7 @@ class CatalogService {
         resolve(framed);
 
       } catch (e) {
+        console.log(e);
         reject(e);
       }
     })
@@ -378,7 +379,7 @@ class CatalogService {
     })
   }
 
-  updateOneItem(item) {
+  updateOneItem(item, user) {
     return new Promise(async (resolve, reject) => {
       try {
 
@@ -468,8 +469,8 @@ class CatalogService {
 
         try {
           if(item['dfc-b:references']['dfc-t:sameAs']){
-            console.log('url',item['dfc-b:references']['dfc-t:sameAs']['@id']);
-            console.log(item['dfc-b:references']['dfc-b:description']);
+            // console.log('url',item['dfc-b:references']['dfc-t:sameAs']['@id']);
+            // console.log(item['dfc-b:references']['dfc-b:description']);
 
             const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['dfc-t:sameAs']['@id'], {
               method: 'Patch',
@@ -489,11 +490,11 @@ class CatalogService {
               headers: {
                 'accept': 'application/ld+json',
                 'content-type': 'application/ld+json',
-                'Authorization' : 'JWT eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJVNXpSenhWMmZpaHpkWXkzNVl2ZkJSajVFX0h1UmpRRENOc29vc1J1RzU4In0.eyJqdGkiOiI5NjllYzAyMi02Njc4LTQ3OWMtOTA5MS02MGU3NjEwOGQwOWQiLCJleHAiOjE2NTY2NjQ4ODAsIm5iZiI6MCwiaWF0IjoxNjI1MTI4ODgwLCJpc3MiOiJodHRwczovL2xvZ2luLmxlc2NvbW11bnMub3JnL2F1dGgvcmVhbG1zL21hc3RlciIsInN1YiI6IjUwNDM1ZjQ5LThmZTctNDViNy04MjA2LWJmNWZiMDJkODcyOSIsInR5cCI6IkJlYXJlciIsImF6cCI6IjQ0NjE3NDYxMjA0NjZmNmY2NDIwNDM2ZjZlNzM2ZjcyNzQ2OTc1NmQiLCJhdXRoX3RpbWUiOjE2MjUxMjg4ODAsInNlc3Npb25fc3RhdGUiOiIzMmE2OGZmMC0wYjcxLTRlNDUtOWM2OS03N2UwZTNmYWY4MzkiLCJhY3IiOiIxIiwic2NvcGUiOiJvcGVuaWQiLCJuYW1lIjoidGVzdCB0ZXN0IiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdGRmY0Bwcm90b25tYWlsLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0ZGZjQHByb3Rvbm1haWwuY29tIn0.jFNmuQdji3Fvs_gFT31r_bmPkDVngL8nNQMejiIvKQiRN74OCOQCbslbwypsdUQkRap5Pe9zmBamUMAuzqvra9s4uSBJG-0Ul9Ua69X6-By-WOsnPbjcjQn_fZrnbalhcpM5YedBv8J1spwHBLUMtWFCwOOXVHxw_7tj1-KEdViD96sF2bMwa-h--zUw59KHErRg5aW-1iADIRC7N009fctefNn04IN_TfK3dutSmLGM05G31haLNsKfXsm-SIE0qm3hVXxtXAe_SPWWGNXe2Rkah2eEvGinxdfR52hUFvUr9wMK704p28QNVC8Ahk64lCABuOOyDI0RzqtUno9K8Q'
+                'Authorization' : 'JWT ' + user['ontosec:token']
               }
             });
             // console.log(responseSupplyPlatformSource);
-            console.log(await responseSupplyPlatformSource.text());
+            // console.log(await responseSupplyPlatformSource.text());
           }
         } catch (e) {
           console.error(e);
@@ -767,43 +768,46 @@ class CatalogService {
 
 
           let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
-          console.log('SOURCE',sourceObject);
-          console.log('TOKEN',user.token);
-
+          // console.log('SOURCE',sourceObject);
+          // console.log('TOKEN',user.token);
           const sourceResponse = await fetch(source, {
             method: 'GET',
             headers: {
-              'authorization': 'JWT ' + user.token
+              'authorization': 'JWT ' + user['ontosec:token'],
+              'accept': 'application/ld+json'
             }
           })
 
-          const ldpNavigator = new LDPNavigator({});
+
 
           let sourceResponseRaw = await sourceResponse.text();
-          console.log('sourceResponseRaw',sourceResponseRaw);
+          // console.log('sourceResponseRaw',sourceResponseRaw);
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
-          // console.log('sourceResponseObject',sourceResponseObject);
+          // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
           let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
           // console.log('CONTEXT',context);
           const {'@base':base,...noBaseContext}= context;
 
-          const computingContext={
-            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-          }
+          // const computingContext={
+          //   "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+          //   "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+          //   "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+          //   "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+          //   "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+          //   "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
+          //   "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+          //   "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+          // }
 
 
-          sourceResponseObject = await jsonld.compact(sourceResponseObject,computingContext)
-          // console.log('compactedItem',sourceResponseObject);
+          sourceResponseObject = await jsonld.compact(sourceResponseObject,noBaseContext)
+
+          console.log('sourceResponseObject',sourceResponseObject);
+
+          const ldpNavigator = new LDPNavigator(sourceResponseObject);
 
 
           // if (sourceResponseObject['@graph']){
@@ -812,33 +816,32 @@ class CatalogService {
           // }
 
 
-          let itemsToImport;
+          let itemsToImport=[];
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
 
-          if (sourceObject.version == "1.5") {
+          if (sourceObject.version == "1.5" || sourceObject.version == "1.6" || sourceObject.version == "1.7") {
             // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
-            const user = await ldpNavigator.find({'@type':'dfc-b:Person'},sourceResponseObject);
-            const affiliates= await ldpNavigator.get(user,sourceResponseObject,'dfc-b:affiliates');
+            const platformUser = await ldpNavigator.find({'@type':'dfc-b:Person'});
+            // console.log("user",user);
+            const affiliates= await ldpNavigator.get(platformUser,'dfc-b:affiliates',true);
 
-            console.log('DODO',affiliates);
-            itemsToImport = affiliates['dfc-b:manages'].map(i=>{
-              const idSupply = i['dfc-b:references']['@id']||i['dfc-b:references']
-              const supply = affiliates['dfc-b:supplies'].find(sp=>sp['@id']==idSupply)
-              // console.log('supply',supply);
-              return {
-                ...i,
-                'dfc-b:references': {
-                  ...supply,
-                  "dfc-t:hostedBy": platform['@id'],
-                  "dfc:owner": user['@id'],
-                  //embended data instead references
-                  "@id":idSupply
-                }
+            // console.log('affiliates',affiliates);
+            for (var affilate of affiliates) {
+              let manages = await ldpNavigator.get(affilate,'dfc-b:manages',true);
+              for (var manage of manages) {
+                itemsToImport.push( {
+                    ...manage,
+                    // "dfc-t:hostedBy": platform['@id'],
+                    // "dfc:owner": user['@id'],
+                  }
+                )
               }
-            });
+            }
           } else {
             throw new Error("version not supported")
           }
+
+          // console.log('ITEM TO IMPORT',itemsToImport);
 
           // console.log(JSON.stringify(itemsToImport));
 
@@ -872,22 +875,12 @@ class CatalogService {
           if (everExistDfcItems['@id'] || (everExistDfcItems['@graph'] && everExistDfcItems['@graph'].length > 0)) {
             existing = true;
           }
-          // console.log('existing',existing);
+          // console.log('catalog existing ?',existing);
 
 
           let out=[];
-          // let promises=[]
           try {
-            // let compacted=[];
-            //
-            // for (var item of itemsToImport) {
-            //               console.log('item',item);
-            //   const compactedItem = await jsonld.compact(item,context)
-            //   compacted.push(compactedItem);
-            // }
-            // const compacted= itemsToImport.map(async s=>{return await jsonld.compact(s,context)});
-            // console.log('COMPACTED',compacted);
-            let promises = itemsToImport.map(s=>this.importItem(s,user,sourceObject,existing));
+            let promises = itemsToImport.map(item=>this.importItem(item,user,platform,existing,ldpNavigator));
             out = await Promise.all(promises);
           } catch (e) {
             console.log(e);
@@ -945,52 +938,45 @@ class CatalogService {
     })
   }
 
-  importItem(item, user, plateformConfig, convert) {
+  importItem(item, user, platform, convert, ldpNavigator) {
 
     return new Promise(async (resolve, reject) => {
       try {
 
-        //TODO : deleted this. only for webinar
+        //TODO : convert to Generic
         item['dfc-b:offeredThrough']=undefined;
-        item['dfc-t:sameAs']=item['@id'];
-        item['dfc-b:references']['dfc-t:sameAs']=item['dfc-b:references']['@id'];
+        // let references = item['dfc-b:references'];
+        // console.log('item',item);
+        let references= await ldpNavigator.get(item,'dfc-b:references',true);
+        if(references){
+          // console.log('references',references);
+          // references= Array.isArray(references)?references:[references];
+          const newReferences =[];
+          for (var reference of references) {
+            // console.log('reference',reference);
+            // reference['@id']=undefined;
 
-// console.log('import item',item);
+            let newReference = await this.importItem(reference,user,platform,false,ldpNavigator);
+            // console.log('newReference',newReference);
+            newReferences.push(newReference);
+          }
+          item['dfc-b:references']=newReferences;
+        }
+
+
+
+        // console.log('import item',item);
 
         const responsePost = await fetch('http://dfc-middleware:3000/ldp/catalogItem', {
           method: 'POST',
           body: JSON.stringify({
             ...item,
-            "@context": {
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-              "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-              "dfc-t:hostedBy": {
-                "@type": "@id",
-              },
-              "dfc-t:sameAs": {
-                "@type": "@id",
-              },
-              "dfc:owner": {
-                "@type": "@id"
-              },
-              "dfc-p:hasUnit": {
-                "@type": "@id"
-              },
-              "dfc-p:hasType": {
-                "@type": "@id"
-              },
-              "dfc-b:references": {
-                "@type": "@id"
-              },
-            },
-            "@type": "dfc-b:CatalogItem",
-            "dfc-t:hostedBy": (await platformServiceSingleton.getOnePlatformBySlug(plateformConfig.slug))['@id'],
-            "dfc:owner": user['@id']
+            "@id":undefined,
+            "dfc-t:hostedBy": platform['@id'],
+            "dfc:owner": user['@id'],
+            "@context": ldpNavigator.context,
+            // "dfc-t:hostedBy": (await platformServiceSingleton.getOnePlatformBySlug(plateformConfig.slug))['@id'],
+            // "dfc:owner": user['@id']
           }),
           headers: {
             'accept': 'application/ld+json',
@@ -998,32 +984,38 @@ class CatalogService {
           }
         });
 
-        const responseGet = await fetch(responsePost.headers.get('location'), {
+
+        const location = responsePost.headers.get('location');
+        console.log('location',location,responsePost.status);
+        const responseGet = await fetch(location, {
           method: 'GET',
           headers: {
             'accept': 'application/ld+json'
           }
         });
         let importedItem=await responseGet.json()
-        importedItem = await jsonld.frame(importedItem, {
-          "@context": {
-            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-          },
-          "@type": "dfc-b:CatalogItem"
-        });
+
+        // importedItem = await jsonld.frame(importedItem, {
+        //   "@context": {
+        //     "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+        //     "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
+        //     "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
+        //     "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
+        //     "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
+        //     "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
+        //     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        //     "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+        //   },
+        //   "@type": "dfc-b:CatalogItem"
+        // });
+
+        console.log('importedItem',importedItem);
 
         if (convert === false) {
           await this.convertImportToReconciled(importedItem,undefined, user);
         }
 
-        resolve(responseGet);
+        resolve(importedItem);
       } catch (e) {
         reject(e)
       }

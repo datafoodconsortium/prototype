@@ -42,15 +42,13 @@ docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
 log:
-	$(DOCKER_COMPOSE) logs -f dfc-app 
+	$(DOCKER_COMPOSE) logs -f dfc-app
 
 # Start
 start:
-	rm -rf ./dfc-semapps/node_modules
 	make docker-start
 start-prod: docker-start-prod
 start-dev:
-	rm -rf ./dfc-semapps/node_modules
 	make docker-start-dev
 
 stop: docker-stop

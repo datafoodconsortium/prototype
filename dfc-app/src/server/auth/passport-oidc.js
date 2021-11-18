@@ -87,10 +87,10 @@ let addOidcLesCommunsPassportToApp = async function(router) {
   }));
 
   router.get('/auth/cb', passport.authenticate('oidc', {
-    failureRedirect: '/ui/login.html',
+    failureRedirect: 'http://proto.datafoodconsortium.org/#/x-profil',
     session: false
   }), (req, res) => {
-    // console.log('----------------- CALLBACK');
+
     // console.log('/auth/cb',res,req);
     // console.log('req.session.referer',req.session.referer);
     let redirect_url = req.session.referer + '?token=' + res.req.user.accesstoken;

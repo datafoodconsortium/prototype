@@ -58,7 +58,10 @@ request(url, {
         resources: [
           'http-get://dfc-middleware:3000/ldp/platform',
           'http-get://dfc-fuseki:3030',
-        ]}
+        ],
+        delay: 1000, // initial delay in ms, default 0
+        simultaneous: 1, // limit to 1 connection per resource at a time
+        }
         await waitOn(opts);
         await platformServiceSingleton.updatePlatformsFromConfig();
         await unitServiceSingleton.updateUnitsFromConfig();

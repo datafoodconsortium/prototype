@@ -59,7 +59,7 @@ module.exports = function(router) {
 
   router.post('/catalog/reconciled', async (req, res, next) => {
     try {
-      let out = await catalogItem_supply_offer.updateOneItem(req.body);
+      let out = await catalogItem_supply_offer.updateOneItem(req.body,req.user);
       res.json(out);
     } catch (e) {
       next(e)
@@ -72,6 +72,8 @@ module.exports = function(router) {
   })
 
   router.post('/catalog/importSource', async (req, res, next) => {
+    // console.log('IMPORT',req)
+    // console.log('USER',req.user);
     let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
