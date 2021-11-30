@@ -197,28 +197,12 @@ export default class Catalog extends GenericElement {
       // console.log(data);
       if(data.body['@graph']){
         let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
-          // return {
-          //   '@id': record['@id'],
-          //   'imports': record['imports'],
-          //   'dfc-b:references': record['dfc-b:references'],
-          //   'dfc-t:hasPivot': record['dfc-t:hasPivot'],
-          //   'dfc-t:hostedBy': record['dfc-t:hostedBy'],
-          //
-          //   // 'dfc-b:hasUnit': record['dfc-b:hasUnit'],
-          //   // 'dfc-b:quantity': record['dfc-b:quantity'],
-          //
-          // }
           return {...record}
         })
         // console.log('newRecords',newRecords);
 
         this.catalogs = newRecords;
-        // console.log('newRecords',newRecords);
-        // this.catalogs.sort((a, b) => {
-        //   let dif = a['dfc-b:description']?a['dfc-b:description'].localeCompare(b['dfc-b:description']):0;
-        //   // console.log(dif);
-        //   return dif;
-        // });
+
 
         console.log('this.catalogs',this.catalogs);
         this.publish({

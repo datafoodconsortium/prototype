@@ -52,15 +52,19 @@ request(url, {
         const {PlatformService,platformServiceSingleton} = require ('./service/platform.js')
         const {UnitService,unitServiceSingleton} = require ('./service/unit.js')
         const {ProductTypeService,productTypeServiceSingleton} = require ('./service/productType.js')
+        // const contextResponse = await fetch(config.context);
+        // const context = await contextResponse.json();
+
+        // console.log('CONTEXT',context);
         // console.log('catalogAPI',catalogAPI);
         // console.log('config',config);
         var opts = {
-        resources: [
-          'http-get://dfc-middleware:3000/ldp/platform',
-          'http-get://dfc-fuseki:3030',
-        ],
-        delay: 1000, // initial delay in ms, default 0
-        simultaneous: 1, // limit to 1 connection per resource at a time
+          resources: [
+            'http-get://dfc-middleware:3000/ldp/platform',
+            'http-get://dfc-fuseki:3030',
+          ],
+          delay: 1000, // initial delay in ms, default 0
+          simultaneous: 1, // limit to 1 connection per resource at a time
         }
         await waitOn(opts);
         await platformServiceSingleton.updatePlatformsFromConfig();

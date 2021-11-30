@@ -140,7 +140,7 @@ export default class CatalogImport extends GenericElement {
         stockLimitation : d['dfc-b:stockLimitation'],
         totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
         unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-        type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
         description: d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']['dfc-b:quantity'],
         raw:d,

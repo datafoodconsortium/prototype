@@ -1,22 +1,14 @@
-FROM node:12.16-alpine
+FROM node:17-alpine
 
 WORKDIR /app
 
-RUN apk add --update --no-cache git bash
+RUN apk add --update --no-cache autoconf libtool automake alpine-sdk openssh-keygen
 
-RUN apk add --update --no-cache autoconf libtool automake alpine-sdk
+RUN apk add --update --no-cache nano
 
 #install nodemon to dev (support hot realoading) (need specific command in compose)
-RUN npm install nodemon -g
-
-# Install app dependencies
-ADD package.json .
-
-RUN npm cache clean --force && npm install
-
+RUN yarn global add nodemon
+RUN yarn global add yalc
 
 # overide by compose if volume targeted src
 ADD src  ./src
-
-# overide by compose if command set
-CMD npm start

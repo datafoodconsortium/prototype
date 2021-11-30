@@ -147,8 +147,8 @@ export default class ItemSupply extends GenericElement {
         raw:d,
         description: d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']['dfc-b:quantity'],
-        unit: d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
-        type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
         sku: d['dfc-b:sku'],
         stockLimitation: d['dfc-b:stockLimitation'],
         totalTheoriticalStock: d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
@@ -163,11 +163,11 @@ export default class ItemSupply extends GenericElement {
     console.log(data);
     this.item = data
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']?data['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'';
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
     this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.id.textContent = data['@id'];
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']?data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'';
     this.elements.stockLimitation.textContent = data['dfc-b:stockLimitation'];
     this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     this.elements.sku.textContent = data['dfc-b:sku'];

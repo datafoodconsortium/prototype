@@ -188,8 +188,8 @@ export default class ItemImport extends GenericElement {
         raw:d,
         description: d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']['dfc-b:quantity'],
-        unit: d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
-        type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
         sku: d['dfc-b:sku'],
         stockLimitation: d['dfc-b:stockLimitation'],
         totalTheoriticalStock: d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
@@ -205,8 +205,8 @@ export default class ItemImport extends GenericElement {
             totalTheoriticalStock : c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             description: c['dfc-b:references']['dfc-b:description'],
             quantity: c['dfc-b:references']['dfc-b:quantity'],
-            unit: c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
-            type: c['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+            unit: c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+            type: c['dfc-b:references']['dfc-p:hasType']?c['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
 
           }
         })
@@ -219,8 +219,8 @@ export default class ItemImport extends GenericElement {
     console.log('setData',data);
     this.item = data
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']?data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'';
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']?data['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'';
     this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.source.textContent = data['dfc-t:hostedBy']['rdfs:label'];
     this.elements.stockLimitation.textContent = data['dfc-b:stockLimitation'];

@@ -49,7 +49,7 @@ services:
         - NODE_ENV=development_docker
         - CONFIG_URL=$CONFIG_URL
     volumes:
-      - ./dfc-app/src:/app/src
+      - ./dfc-app:/app
     depends_on:
       - dfc-middleware
     networks:
@@ -58,7 +58,7 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    command: bash -c "npm rebuild && npm install && npm run dev"
+    command: bash -c "yarn install && yarn run dev"
   dfc-ui:
     build:
       context: ./dfc-ui
