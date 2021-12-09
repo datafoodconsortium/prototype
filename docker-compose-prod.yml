@@ -46,7 +46,7 @@ services:
         - NODE_ENV=development_docker
         - CONFIG_URL=$CONFIG_URL
     volumes:
-      - ./dfc-app/src:/app/src
+      - ./dfc-app:/app
     depends_on:
       - dfc-middleware
     networks:
