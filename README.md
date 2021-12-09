@@ -1,5 +1,7 @@
 # dfc-prototype-V3
 
+force push
+
 ## About The Project
 
 [![DFC Project Logo][logo]](http://www.datafoodconsortium.org/img/bwg.png)
