@@ -47,7 +47,7 @@
     "jsonld": "^5.2.0",
     "ldflex": "^2.6.1",
     "ldflex-comunica": "^3.1.0",
-    "ldp-navigator": "^1.1.0",
+    "ldp-navigator": "^1.2.0",
     "mongodb": "^3.2.7",
     "mongoose": "^5.5.14",
     "navigo": "^7.1.2",
@@ -59,6 +59,8 @@
     "postal": "^2.0.5",
     "request": "^2.88.0",
     "sift": "^7.0.1",
+    "sparqljs": "^3.5.1",
+    "url-join": "^4.0.1",
     "wait-on": "^5.2.0"
   }
 }

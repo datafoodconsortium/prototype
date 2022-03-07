@@ -8,6 +8,7 @@ RUN apk add --update --no-cache nano
 
 #install nodemon to dev (support hot realoading) (need specific command in compose)
 RUN yarn global add nodemon
+#install yalc to dev (link) (need specific command in compose)
 RUN yarn global add yalc
 
 # overide by compose if volume targeted src

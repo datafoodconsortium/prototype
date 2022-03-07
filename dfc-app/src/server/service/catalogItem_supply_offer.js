@@ -7,20 +7,40 @@ const request = require('request');
 const config = require('./../../../configuration.js');
 const fetch = require('node-fetch');
 const jsonld = require('jsonld');
-const {PlatformService,platformServiceSingleton} = require ('./platform.js')
+const {
+  PlatformService,
+  platformServiceSingleton
+} = require('./platform.js')
 // const LDPNavigator_SparqlAndFetch_Factory = require('./../ldpUtil/LDPNavigator_SparqlAndFetch_Factory')
-const {LDPNavigator_SparqlAndFetch_Factory} = require("fix-esm").require('ldp-navigator')
+const {
+  SparqlAdapter,
+  FetchAdapter,
+  LDPNavigator,
+  LDPNavigator_SparqlAndFetch_Factory
+} = require("fix-esm").require('ldp-navigator')
 // import {LDPNavigator_SparqlAndFetch_Factory} from 'ldp-navigator'
 // const FetchAdapter = require('./../ldpUtil/adapter/FetchAdapter');
 // const SparqlAdapter = require('./../ldpUtil/adapter/SparqlAdapter');
+const SparqlTools = require('./../util/sparqlTools.js')
 
 
 class CatalogService {
-  constructor() {}
+  constructor() {
+    this.init();
+  }
+
+  async init() {
+    if (!this.context) {
+      let contextConfigRaw = config.context;
+      let contextConfigResponse = await fetch(contextConfigRaw);
+      this.context = (await contextConfigResponse.json())['@context'];
+    }
+  }
 
   cleanImport(user) {
     return new Promise(async (resolve, reject) => {
       try {
+        await this.init();
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
           body: `
@@ -46,17 +66,14 @@ class CatalogService {
 
         let datas = await response.json();
         // console.log(datas);
-        if(datas['@graph']){
-          for(const data of datas['@graph']){
+        const sparqlTools = new SparqlTools({
+          context: this.context
+        });
+        if (datas['@graph']) {
+          for (const data of datas['@graph']) {
             // console.log(data['@id']);
-            if(data['@id'].includes('http')){
-              const responseDelete = await fetch(data['@id'], {
-                method: 'DELETE',
-                headers: {
-                  'accept': 'application/ld+json',
-                  'content-type': 'application/ld+json'
-                }
-              });
+            if (data['@id'].includes('http')) {
+              sparqlTools.remove(data['@id']);
             }
 
           }
@@ -103,59 +120,70 @@ class CatalogService {
             'accept': 'application/ld+json'
           }
         });
+
+        // console.log('------------1');
         let items = await response.json();
 
-        items = await jsonld.compact(items,contextConfig)
+        items = await jsonld.compact(items, contextConfig)
 
-        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory(
-          {
-            sparql:{
-              endpoint:'http://dfc-middleware:3000/sparql',
-              prefix:`
-              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-              PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-              PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-              PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-              PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-              PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-              PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-              `,
-              headers:{
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
                 'accept': 'application/ld+json'
+              },
+              prefix: `
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                `
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             }
-          }
-        ).make();
+          },
+          forceArray: ['dfc-t:represent']
+        }).make();
         await ldpNavigator.init(items);
         const importItemsRaw = await ldpNavigator.filterInMemory({});
-        let importItems=[];
+        // console.log('importItemsRaw',importItemsRaw);
+        let importItems = [];
         for (var importItem of importItemsRaw) {
           // console.log('before',importItem);
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
-          importItem = await ldpNavigator.dereference(importItem,[
-            {
-              p:'dfc-t:hostedBy'
+          importItem = await ldpNavigator.dereference(importItem, [{
+              p: 'dfc-t:hostedBy'
             },
             {
-              p:'dfc-b:references',
-              n: [
-                {
-                  p:'dfc-p:hasUnit'
+              p: 'dfc-b:references',
+              n: [{
+                  p: 'dfc-p:hasUnit'
                 },
                 {
-                  p:'dfc-p:hasType'
+                  p: 'dfc-p:hasType'
                 }
               ]
             }
-            ]);
+          ]);
 
           importItems.push(importItem);
         }
+        // console.log('------------2');
+        // console.log('importItems',importItems);
 
-        const out={
-          '@context':items['@context'],
-          '@graph':importItems
+        const out = {
+          '@context': items['@context'],
+          '@graph': importItems
         }
         // console.log('out',out);
 
@@ -170,50 +198,61 @@ class CatalogService {
   getOneImport(id) {
     return new Promise(async (resolve, reject) => {
       try {
-        let item = await (await fetch(id, {
-          method: 'GET',
-          headers: {
-            'accept': 'application/ld+json'
-          }
-        })).json() ;
-        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory(
-          {
-            sparql:{
-              endpoint:'http://dfc-middleware:3000/sparql',
-              prefix:`
-              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-              PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-              PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-              PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-              PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-              PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-              PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-              `,
-              headers:{
+        await this.init();
+        // let item;
+        // let item = await (await fetch(id, {
+        //   method: 'GET',
+        //   headers: {
+        //     'accept': 'application/ld+json'
+        //   }
+        // })).json() ;
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
                 'accept': 'application/ld+json'
+              },
+              prefix: `
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                `
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             }
-          }
-        ).make();
-        await ldpNavigator.init(item);
-        item = await ldpNavigator.dereference(item,[
-          {
-            p:'dfc-t:hostedBy'
+          },
+          forceArray: ['dfc-t:represent'],
+          context: this.context
+        }).make();
+        console.log('ldpNavigator init', id);
+        let item = await ldpNavigator.resolveById(id);
+        console.log('item', item);
+        item = await ldpNavigator.dereference(item, [{
+            p: 'dfc-t:hostedBy'
           },
           {
-            p:'dfc-b:references',
-            n: [
-              {
-                p:'dfc-p:hasUnit'
+            p: 'dfc-b:references',
+            n: [{
+                p: 'dfc-p:hasUnit'
               },
               {
-                p:'dfc-p:hasType'
+                p: 'dfc-p:hasType'
               }
             ]
           }
         ]);
-
+        console.log('item', item);
         resolve(item);
 
 
@@ -226,118 +265,127 @@ class CatalogService {
   getAllItem(user) {
     return new Promise(async (resolve, reject) => {
       try {
-
-        const uriDfcPlatform =  (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
-        let contextConfigRaw = config.context;
-        let contextConfigResponse = await fetch(contextConfigRaw);
-        let contextConfig = await contextConfigResponse.json();
+        await this.init();
+        const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
+        const query = ` PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+                        PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+                        PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+                        PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+                        PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+                        PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+                        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                        CONSTRUCT  {
+                          ?sDFC ?p ?o.
+                        }
+                        WHERE {
+                            ?sDFC a dfc-b:CatalogItem ;
+                                dfc-t:hostedBy <${uriDfcPlatform}> ;
+                                dfc:owner <${user['@id']}>;
+                                ?p ?o.
+                        }
+                        `
+        // console.log('query',query);
         // console.log('uriDfcPlatform',uriDfcPlatform);
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
-          body: `
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          CONSTRUCT  {
-            ?sDFC ?p ?o.
-          }
-          WHERE {
-              ?sDFC a dfc-b:CatalogItem ;
-                  dfc-t:hostedBy <${uriDfcPlatform}> ;
-                  dfc:owner <${user['@id']}>;
-                  ?p ?o.
-          }
-          `,
+          body: query,
           headers: {
             'accept': 'application/ld+json'
           }
         });
         let items = await response.json();
 
-        items = await jsonld.compact(items,contextConfig)
+        // console.log('items',items);
 
-        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory(
-          {
-            sparql:{
-              endpoint:'http://dfc-middleware:3000/sparql',
-              prefix:`
-              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-              PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-              PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-              PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-              PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-              PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-              PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-              `,
-              headers:{
+        items = await jsonld.compact(items, this.context)
+
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
                 'accept': 'application/ld+json'
+              },
+              prefix: `
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                `
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             }
-          }
-        ).make();
+          },
+          forceArray: ['dfc-t:represent']
+        }).make();
         await ldpNavigator.init(items);
         const catalogItemsRaw = await ldpNavigator.filterInMemory({});
-        let catalogItems=[];
+        let catalogItems = [];
         for (var catalogItem of catalogItemsRaw) {
           // console.log('before',catalogItem);
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
-          catalogItem = await ldpNavigator.dereference(catalogItem,[
-            {
-              p:'dfc-t:hostedBy'
+          catalogItem = await ldpNavigator.dereference(catalogItem, [{
+              p: 'dfc-t:hostedBy'
             },
             {
-              p:'dfc-t:hasPivot',
+              p: 'dfc-t:hasPivot',
               n: {
-                    p:'dfc-t:represent',
-                    n:[
-                      {
-                        p:'dfc-t:hostedBy'
+                p: 'dfc-t:represent',
+                n: [{
+                    p: 'dfc-t:hostedBy'
+                  },
+                  {
+                    p: 'dfc-b:references',
+                    n: [{
+                        p: 'dfc-p:hasUnit'
                       },
                       {
-                        p:'dfc-b:references',
-                        n: [
-                          {
-                            p:'dfc-p:hasUnit'
-                          },
-                          {
-                            p:'dfc-p:hasType'
-                          }
-                        ]
+                        p: 'dfc-p:hasType'
                       }
                     ]
                   }
+                ]
+              }
             },
             {
-              p:'dfc-b:references',
-              n: [
-                {
-                  p:'dfc-p:hasUnit'
+              p: 'dfc-b:references',
+              n: [{
+                  p: 'dfc-p:hasUnit'
                 },
                 {
-                  p:'dfc-p:hasType'
+                  p: 'dfc-p:hasType'
                 }
               ]
             }
-            ]);
+          ]);
 
           catalogItems.push(catalogItem);
         }
 
         for (let ci of catalogItems) {
-          ci['dfc-t:hasPivot']['dfc-t:represent']=ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r=>{
-            return r['dfc-t:hostedBy']['@id']!= uriDfcPlatform
-          })
+
+          // console.log(ci['dfc-t:hasPivot']['dfc-t:represent']);
+          if (ci['dfc-t:hasPivot']) {
+            ci['dfc-t:hasPivot']['dfc-t:represent'] = ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
+              // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
+              return r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+            })
+          }
         }
 
-        resolve ({
-          '@context':items['@context'],
-          '@graph':catalogItems
+        resolve({
+          '@context': items['@context'],
+          '@graph': catalogItems
         })
 
       } catch (e) {
@@ -350,79 +398,74 @@ class CatalogService {
   getOneItem(id) {
     return new Promise(async (resolve, reject) => {
       try {
-        const uriDfcPlatform =  (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
+        await this.init();
+        const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
         // console.log('ID',id);
-        let item = await (await fetch(id, {
-          method: 'GET',
-          headers: {
-            'accept': 'application/ld+json'
-          }
-        })).json() ;
+        // let item = await (await fetch(id, {
+        //   method: 'GET',
+        //   headers: {
+        //     'accept': 'application/ld+json'
+        //   }
+        // })).json() ;
+        // console.log('getOneItem',id);
 
-        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory(
-          {
-            sparql:{
-              endpoint:'http://dfc-middleware:3000/sparql',
-              prefix:`
-              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-              PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-              PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-              PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-              PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-              PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-              PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-              `,
-              headers:{
-                'accept': 'application/ld+json'
-              }
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            queryEndpoint: 'http://dfc-middleware:3000/sparql',
+            headers: {
+              'accept': 'application/ld+json'
             }
-          }
-        ).make();
-        await ldpNavigator.init(item);
+          },
+          context: this.context,
+          forceArray: ['dfc-t:represent']
+        }).make();
+        // console.log('resolveById', id);
+        let item = await ldpNavigator.resolveById(id);
 
-        item = await ldpNavigator.dereference(item,[
-          {
-            p:'dfc-t:hostedBy'
+        item = await ldpNavigator.dereference(item, [{
+            p: 'dfc-t:hostedBy'
           },
           {
-            p:'dfc-t:hasPivot',
+            p: 'dfc-t:hasPivot',
             n: {
-                  p:'dfc-t:represent',
-                  n:[
-                    {
-                      p:'dfc-t:hostedBy'
+              p: 'dfc-t:represent',
+              n: [{
+                  p: 'dfc-t:hostedBy'
+                },
+                {
+                  p: 'dfc-b:references',
+                  n: [{
+                      p: 'dfc-p:hasUnit'
                     },
                     {
-                      p:'dfc-b:references',
-                      n: [
-                        {
-                          p:'dfc-p:hasUnit'
-                        },
-                        {
-                          p:'dfc-p:hasType'
-                        }
-                      ]
+                      p: 'dfc-p:hasType'
                     }
                   ]
                 }
+              ]
+            }
           },
           {
-            p:'dfc-b:references',
-            n: [
-              {
-                p:'dfc-p:hasUnit'
+            p: 'dfc-b:references',
+            n: [{
+                p: 'dfc-p:hasUnit'
               },
               {
-                p:'dfc-p:hasType'
+                p: 'dfc-p:hasType'
               }
             ]
           }
         ]);
 
-        item['dfc-t:hasPivot']['dfc-t:represent']=item['dfc-t:hasPivot']['dfc-t:represent'].filter(r=>{
-          return r['dfc-t:hostedBy']['@id']!= uriDfcPlatform
-        })
+        // console.log('item',item['dfc-t:hasPivot']);
+
+        if (item['dfc-t:hasPivot'] && item['dfc-t:hasPivot']['dfc-t:represent'] && item['dfc-t:hasPivot']['dfc-t:represent'].filter) {
+          item['dfc-t:hasPivot']['dfc-t:represent'] = item['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
+            // console.log(r);
+            return r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+          })
+        }
+
 
         resolve(item);
 
@@ -432,90 +475,16 @@ class CatalogService {
       }
     })
   }
-  //
-  // getOneLinkedItem(id) {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //         // console.log('id',id);
-  //        let item = await (await fetch('http://dfc-middleware:3000/sparql', {
-  //          method: 'POST',
-  //          body : `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-  //           PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-  //           PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-  //           PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-  //           PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-  //           PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-  //           PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-  //           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-  //           CONSTRUCT {
-  //             ?s1 dfc-t:sameAs <${id}>;
-  //                 dfc-t:hasPivot ?s2.
-  //             ?s2 dfc-t:represent ?s3.
-  //             ?s3 dfc-t:sameAs ?s4.
-  //             ?s3 dfc-t:hostedBy ?s5.
-  //             ?s5 rdfs:label ?s6.
-  //           }
-  //           WHERE {
-  //             ?s1 dfc-t:sameAs <${id}>;
-  //                 dfc-t:hasPivot ?s2.
-  //             ?s2 dfc-t:represent ?s3.
-  //             ?s3 dfc-t:sameAs ?s4.
-  //             ?s3 dfc-t:hostedBy ?s5.
-  //             ?s5 rdfs:label ?s6.
-  //           }`,
-  //          headers: {
-  //            'accept': 'application/ld+json'
-  //          }
-  //        })).json() ;
-  //        // console.log('item before',item);
-  //        item = await jsonld.frame(item, {
-  //          "@context": {
-  //            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-  //            "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-  //            "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-  //            "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-  //            "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-  //            "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-  //            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-  //            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-  //            "dfc-t:sameAs": {
-  //             "@id": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#sameAs",
-  //             "@type": "@id"
-  //            },
-  //
-  //          },
-  //          "dfc-t:sameAs":id
-  //        });
-  //        resolve(item);
-  //     } catch (e) {
-  //       reject(e);
-  //     }
-  //   })
-  // }
-  //
-  // getOneLinkedItemSimple(id) {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       const item = await this.getOneLinkedItem(id);
-  //       let sameAs = item['dfc-t:hasPivot']['dfc-t:represent'].map(r=>r['dfc-t:sameAs']).filter(r=>r!=undefined);
-  //       console.log('sameAs',sameAs);
-  //       item['dfc-t:sameAs']=sameAs;
-  //       item['dfc-t:hasPivot']=undefined;
-  //       item['dfc-t:hostedBy']=undefined;
-  //       resolve(item);
-  //     } catch (e) {
-  //       reject(e);
-  //     }
-  //   })
-  // }
 
   updateOneItem(item, user) {
     return new Promise(async (resolve, reject) => {
       try {
-
-        let oldItem= await this.getOneItem(item['@id']);
+        await this.init();
+        // console.log('item',item);
+        let oldItem = await this.getOneItem(item['@id']);
         // console.log('product["dfc-t:hasPivot"]["dfc-t:represent"]',product["dfc-t:hasPivot"]["dfc-t:represent"]);
-
+        // console.log('oldRepresent BEFORE',oldItem["dfc-t:hasPivot"]["dfc-t:represent"]);
+        // console.log('oldItem',oldItem);
         let oldRepresent = oldItem["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
           if (i["@id"] == oldItem["@id"]) {
             return false;
@@ -525,83 +494,70 @@ class CatalogService {
           }
         });
 
+        //TOO NEXT update by sparql instead ldp
+        const sparqlTools = new SparqlTools({
+          context: this.context
+        });
         // console.log('oldRepresent',oldRepresent);
         oldRepresent.forEach(async r => {
-          const responseItemPlatform = await fetch(r['@id'], {
-            method: 'Put',
-            body: JSON.stringify({
-              ...r,
-              "@context": {
-                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-                "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-              },
-              "dfc-t:hasPivot": undefined
-            }),
-            headers: {
-              'accept': 'application/ld+json',
-              'content-type': 'application/ld+json'
-            }
-          });
+          // console.log('REMOVE Triples',r['@id'],'dfc-t:hasPivot');
+          sparqlTools.removeTriples(r['@id'], ['dfc-t:hasPivot'])
         })
 
+        let newRepresent = item["dfc-t:hasPivot"]["dfc-t:represent"];
+        newRepresent = Array.isArray(newRepresent) ? newRepresent : [newRepresent];
+        newRepresent = newRepresent.map(r => r['@id'] ? r['@id'] : r);
+        // console.log('newRepresent',newRepresent);
+        // console.log(item["dfc-t:hasPivot"]['@id']);
+        // console.log({
+        //   "@context": this.context,
+        //   "dfc-t:represent": newRepresent
+        // });
+
+        const updatePivotBody = {
+          ...item["dfc-t:hasPivot"],
+          "@context": this.context,
+          "dfc-t:represent": newRepresent.map(r => ({
+            '@id': r,
+            '@type': '@id'
+          }))
+        }
+        // console.log('updatePivotBody',item["dfc-t:hasPivot"]['@id'],updatePivotBody);
+
         const responsePivotPatch = await fetch(item["dfc-t:hasPivot"]['@id'], {
-          method: 'Patch',
-          body: JSON.stringify({
-            "@context": {
-              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-              "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-              "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-            },
-            "dfc-t:represent": item["dfc-t:hasPivot"]["dfc-t:represent"]
-          }),
+          method: 'Put',
+          body: JSON.stringify(updatePivotBody),
           headers: {
             'accept': 'application/ld+json',
             'content-type': 'application/ld+json'
           }
         });
 
+        // console.log('RESPONSE', responsePivotPatch.status);
 
         try {
-          if(item['dfc-b:references']['dfc-t:sameAs']){
-
-            const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['dfc-t:sameAs']['@id'], {
+          if (item['dfc-b:references']) {
+            //update local Cache
+            sparqlTools.remove(item['dfc-b:references']['@id]'])
+            sparqlTools.insert(item['dfc-b:references'])
+            //update remote data
+            console.log('UPDATE', item['dfc-b:references']['@id']);
+            const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['@id'], {
               method: 'Patch',
               body: JSON.stringify({
-                "@context": {
-                  "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                  "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                  "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                  "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                  "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                  "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-                  "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-                  "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-                },
-                'dfc-b:description' : item['dfc-b:references']['dfc-b:description'],
+                "@context": this.context,
+                'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
               }),
               headers: {
                 'accept': 'application/ld+json',
                 'content-type': 'application/ld+json',
-                'Authorization' : 'JWT ' + user['ontosec:token']
+                'Authorization': 'JWT ' + user['ontosec:token']
               }
             });
-
           }
         } catch (e) {
           console.error(e);
         }
-
 
 
         resolve(item);
@@ -611,29 +567,12 @@ class CatalogService {
     })
   }
 
-  // convertAllImportToReconciled(importsToConvert, user) {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //
-  //       let promisesConvert = importsToConvert.map(async importToConvert => {
-  //         await this.convertImportToReconciled(importToConvert, undefined, user);
-  //       })
-  //       let inserted = await Promise.all(promisesConvert);
-  //
-  //
-  //       resolve(inserted)
-  //     } catch (e) {
-  //       reject(e);
-  //     }
-  //   })
-  // }
-
   convertImportIdToReconciledId(importId, reconciledId, user) {
     return new Promise(async (resolve, reject) => {
       // console.log("convertImportIdToReconciledId",convertImportIdToReconciledId);
       let importItem = await this.getOneImport(importId);
 
-      let reconciled = reconciledId?await this.getOneItem(reconciledId):undefined;
+      let reconciled = reconciledId ? await this.getOneItem(reconciledId) : undefined;
       // console.log('convertImportIdToCatalogId', importItem, catalogItem);
 
       let newItem = await this.convertImportToReconciled(importItem, reconciled, user);
@@ -645,20 +584,14 @@ class CatalogService {
     // console.log('convertImportToCatalog',importToConvert,reconciled);
     return new Promise(async (resolve, reject) => {
       try {
+        await this.init();
         if (reconciled == undefined || reconciled == null) {
           // console.log('NOT reconciled');
           // let representationPivotInstance = await representationPivotModel.model.create({
           //   "dfc-t:represent": [importToConvert._id]
           // });
           const body = {
-            '@context': {
-              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-              "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-            },
+            '@context': this.context,
             '@type': 'dfc-t:RepresentationPivot',
             "dfc:owner": {
               "@id": user['@id'],
@@ -674,50 +607,28 @@ class CatalogService {
             }
           });
 
-          const dfcPlaform=await platformServiceSingleton.getOnePlatformBySlug('dfc');
+          const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
+          const {
+            '@id': uri,
+            ...noUriImportToConvert
+          } = importToConvert;
           let dfcItem = {
-            ...importToConvert,
-            "@context": {
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-              "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-              "dfc-t:hostedBy": {
-                "@type": "@id",
-              },
-              "dfc-t:sameAs": {
-                "@type": "@id",
-              },
-              "dfc:owner": {
-                "@type": "@id"
-              },
-              "dfc-p:hasUnit": {
-                "@type": "@id"
-              },
-              "dfc-p:hasType": {
-                "@type": "@id"
-              },
-              "dfc-t:hasPivot": {
-                "@type": "@id"
-              },
-              "dfc-b:references": {
-                "@type": "@id"
-              }
-            },
-            "dfc-t:sameAs":undefined,
-            "dfc-b:references":{
-              ...importToConvert['dfc-b:references'],
-              "dfc-t:hostedBy": dfcPlaform['@id'],
-              "dfc:owner":user['@id']
-            },
+            ...noUriImportToConvert,
+            "@context": this.context,
             "dfc-t:hostedBy": dfcPlaform['@id'],
-            "dfc:owner":user['@id'],
+            "dfc:owner": user['@id'],
             "dfc-t:hasPivot": responsePivot.headers.get('location'),
-
           };
+
+          // if(importToConvert['dfc-b:references']){
+          //   dfcItem['dfc-b:references']{
+          //     ...importToConvert['dfc-b:references'],
+          //     "dfc-t:hostedBy": dfcPlaform['@id'],
+          //     "dfc:owner":user['@id']
+          //   }
+          // }
+
+          // console.log('dfcItem',dfcItem);
 
           const responseItemDFC = await fetch('http://dfc-middleware:3000/ldp/catalogItem', {
             method: 'POST',
@@ -728,39 +639,12 @@ class CatalogService {
             }
           })
 
+          // console.log('responseItemDFC',responseItemDFC.status);
           const responsePivotPatch = await fetch(responsePivot.headers.get('location'), {
             method: 'Patch',
             body: JSON.stringify({
-              "@context": {
-                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-              },
-              "dfc-t:represent": [
-                { "@id": importToConvert['@id'], "@type": "@id" },
-                { "@id": responseItemDFC.headers.get('location'), "@type": "@id" }
-              ]
-            }),
-            headers: {
-              'accept': 'application/ld+json',
-              'content-type': 'application/ld+json'
-            }
-          });
-          const responseItemPlatform = await fetch(importToConvert['@id'], {
-            method: 'Patch',
-            body: JSON.stringify({
-              "@context": {
-                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-              },
-              "dfc-t:hasPivot": { "@id": responsePivot.headers.get('location'), "@type": "@id" }
+              "@context": this.context,
+              "dfc-t:represent": [importToConvert['@id'], responseItemDFC.headers.get('location')]
             }),
             headers: {
               'accept': 'application/ld+json',
@@ -768,29 +652,44 @@ class CatalogService {
             }
           });
 
+          const sparqlTools = new SparqlTools({
+            context: this.context
+          });
+
+          console.log('* service insert hasPivot');
+          await sparqlTools.insert({
+            "@context": this.context,
+            "@id": importToConvert['@id'],
+            "dfc-t:hasPivot": {
+              "@id": responsePivot.headers.get('location'),
+              "@type": "@id"
+            }
+          });
+
+
           const out = {
-            "dfc-t:hasPivot": { "@id": responsePivot.headers.get('location')},
+            "dfc-t:hasPivot": {
+              "@id": responsePivot.headers.get('location')
+            },
             ...importToConvert
           };
 
 
-          resolve(out);
+          resolve(responseItemDFC.headers.get('location'));
 
         } else {
           let pivot = reconciled["dfc-t:hasPivot"];
-          pivot["dfc-t:represent"].push({ "@id":  importToConvert['@id'], "@type": "@id" });
+          // console.log('pivot BEFORE',pivot);
+          pivot["dfc-t:represent"].push({
+            "@id": importToConvert['@id'],
+            "@type": "@id"
+          });
+          // console.log('pivot AFTER',pivot);
           const responsePivotPatch = await fetch(pivot['@id'], {
             method: 'Patch',
             body: JSON.stringify({
-              "@context": {
-                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-              },
-              "dfc-t:represent":pivot["dfc-t:represent"]
+              "@context": this.context,
+              "dfc-t:represent": pivot["dfc-t:represent"]
             }),
             headers: {
               'accept': 'application/ld+json',
@@ -798,30 +697,42 @@ class CatalogService {
             }
           });
 
-          const responseReconciledPlatform = await fetch(importToConvert['@id'], {
-            method: 'Patch',
-            body: JSON.stringify({
-              "@context": {
-                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-              },
-              "dfc-t:hasPivot": { "@id": pivot['@id'], "@type": "@id" }
-            }),
-            headers: {
-              'accept': 'application/ld+json',
-              'content-type': 'application/ld+json'
+          // const importToConvertBody= {
+          //   "@context": this.context,
+          //   "dfc-t:hasPivot": { "@id": pivot['@id'], "@type": "@id" }
+          // };
+          // console.log('importToConvertBody',importToConvertBody);
+          //
+          // // const responseReconciledPlatform = await fetch(importToConvert['@id'], {
+          //   method: 'Patch',
+          //   body: JSON.stringify(importToConvertBody),
+          //   headers: {
+          //     'accept': 'application/ld+json',
+          //     'content-type': 'application/ld+json'
+          //   }
+          // });
+
+          const sparqlTools = new SparqlTools({
+            context: this.context
+          });
+          console.log('* service insert hasPivot');
+          await sparqlTools.insert({
+            "@context": this.context,
+            "@id": importToConvert['@id'],
+            "dfc-t:hasPivot": {
+              "@id": pivot['@id'],
+              "@type": "@id"
             }
           });
 
-          importToConvert["dfc-t:hasPivot"] = { "@id": pivot['@id'], "@type": "@id" };
+          importToConvert["dfc-t:hasPivot"] = {
+            "@id": pivot['@id'],
+            "@type": "@id"
+          };
           // await pivot.save();
 
           // await importToConvert.save();
-          resolve(importToConvert);
+          resolve();
         }
       } catch (e) {
         reject(e);
@@ -834,23 +745,16 @@ class CatalogService {
       // console.log(user);
       // console.log(await platformServiceSingleton.getOnePlatformBySlug('dfc'))
       try {
+        await this.init();
         // console.log(user['dfc:importInProgress']);
-        if(user['dfc:importInProgress']==true){
+        if (user['dfc:importInProgress'] == true) {
           reject(new Error("import in progress. Not possible to process an other"))
-        }else {
+        } else {
           const responseProgressOn = await fetch(user['@id'], {
             method: 'PATCH',
             body: JSON.stringify({
-              "@context": {
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-              },
-              "dfc:importInProgress":true
+              "@context": this.context,
+              "dfc:importInProgress": true
             }),
             headers: {
               'accept': 'application/ld+json',
@@ -870,7 +774,7 @@ class CatalogService {
             }
           })
 
-          if (sourceResponse.status!=200){
+          if (sourceResponse.status != 200) {
             throw new Error(`connexion to serveur return status ${sourceResponse.status}, try new authentification`)
           }
 
@@ -879,83 +783,138 @@ class CatalogService {
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
-          console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
+          // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
 
           let contextConfigRaw = config.context;
           let contextConfigResponse = await fetch(contextConfigRaw);
           let contextConfig = await contextConfigResponse.json();
 
 
-          sourceResponseObject['@context']={...sourceResponseObject['@context'],...contextConfig['@context']}
+          sourceResponseObject['@context'] = {
+            ...sourceResponseObject['@context'],
+            ...contextConfig['@context']
+          }
 
-          sourceResponseObject = await jsonld.compact(sourceResponseObject,contextConfig)
+          sourceResponseObject = await jsonld.compact(sourceResponseObject, contextConfig)
 
-          console.log('sourceResponseObject',sourceResponseObject);
+          // console.log('sourceResponseObject',sourceResponseObject);
 
           // console.log('NEW for IMPORT');
-          const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory(
-            {
-              sparql:{
-                endpoint:'http://dfc-middleware:3000/sparql',
-                prefix:`
-                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                `,
-                headers:{
+
+
+
+          const ldpNavigator = new LDPNavigator({
+            forceArray: [
+              'dfc-b:manages',
+              'dfc-t:represent'
+            ]
+          });
+          ldpNavigator.setAdapters([
+            new SparqlAdapter({
+              query: {
+                endpoint: 'http://dfc-middleware:3000/sparql',
+                headers: {
                   'accept': 'application/ld+json'
+                },
+                prefix: `
+                  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                  PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+                  PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+                  PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+                  PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+                  PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+                  PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+                  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                  `
+              },
+              update: {
+                endpoint: 'http://dfc-fuseki:3030/localData/update',
+                headers: {
+                  'Content-Type': 'application/sparql-update',
+                  Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
                 }
-              }
-            ,
-            fetch:{
-              headers:{
+              },
+              skeepResolveById: true
+            }),
+            new FetchAdapter({
+              headers: {
                 'authorization': 'JWT ' + user['ontosec:token'],
                 'accept': 'application/ld+json'
               }
-            },
-            forceArray:[
-              'dfc-b:manages'
-            ]
-          }).make();
-          ldpNavigator.init(sourceResponseObject)
+            })
+          ]);
 
 
+
+          // const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          //   sparql: {
+          //     endpoint: 'http://dfc-middleware:3000/sparql',
+          //     prefix: `
+          //       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          //       PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+          //       PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+          //       PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+          //       PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+          //       PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+          //       PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+          //       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          //       `,
+          //     headers: {
+          //       'accept': 'application/ld+json'
+          //     }
+          //   },
+          //   fetch: {
+          //     headers: {
+          //       'authorization': 'JWT ' + user['ontosec:token'],
+          //       'accept': 'application/ld+json'
+          //     }
+          //   },
+          //   forceArray: [
+          //     'dfc-b:manages',
+          //     'dfc-t:represent'
+          //   ]
+          // }).make();
+          await ldpNavigator.init(sourceResponseObject)
+          // console.log('persist BEFORE');
+          await ldpNavigator.persist();
+          // console.log('persist AFTER');
           // if (sourceResponseObject['@graph']){
           //   let person = sourceResponseObject['@graph'].find(r=>r['@type'].includes('Person'));
           //   console.log('person',person);
           // }
 
 
-          let itemsToImport=[];
+          let itemsToImport = [];
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
 
           if (sourceObject.version == "1.5" || sourceObject.version == "1.6" || sourceObject.version == "1.7") {
             // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
-            const platformUser = await ldpNavigator.findInMemory({'@type':'dfc-b:Person'});
-            console.log('platformUser',platformUser);
-            const platformUserDereferences = await ldpNavigator.dereference(platformUser,{
+            const platformUser = await ldpNavigator.findInMemory({
+              '@type': 'dfc-b:Person'
+            });
+            // console.log('platformUser',platformUser);
+            // console.log('dereference BEFORE');
+            const platformUserDereferences = await ldpNavigator.dereference(platformUser, {
               p: 'dfc-b:affiliates',
               n: {
                 p: 'dfc-b:manages',
-                n:{
-                  p :'dfc-b:references'
+                n: {
+                  p: 'dfc-b:references'
                 }
               }
             })
+            // console.log('dereference AFTER');
 
-            console.log(platformUserDereferences);
+            // console.log(platformUserDereferences);
 
             for (var manage of platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']) {
-              console.log('manage',manage);
-              itemsToImport.push( {
-                      ...manage,
+              // console.log('manage',manage);
+              itemsToImport.push({
+                ...manage,
               })
             }
+
+            // console.log('itemsToImport',itemsToImport);
 
           } else {
             throw new Error("version not supported")
@@ -987,14 +946,17 @@ class CatalogService {
             }
           });
           let everExistDfcItems = await response.json();
+          // console.log('everExistDfcItems',everExistDfcItems);
           let existing = false;
           if (everExistDfcItems['@id'] || (everExistDfcItems['@graph'] && everExistDfcItems['@graph'].length > 0)) {
             existing = true;
           }
 
-          let out=[];
+          let out = [];
           try {
-            let promises = itemsToImport.map(item=>this.importItem(item,user,platform,existing,ldpNavigator));
+            // existing = true;
+
+            let promises = itemsToImport.map(item => this.importItem(item, user, platform, existing));
             out = await Promise.all(promises);
           } catch (e) {
             console.log(e);
@@ -1003,16 +965,8 @@ class CatalogService {
             const responseProgressOff = await fetch(user['@id'], {
               method: 'PATCH',
               body: JSON.stringify({
-                "@context": {
-                  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                  "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-                  "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-                  "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-                  "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-                  "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-                  "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-                },
-                "dfc:importInProgress":false
+                "@context": this.context,
+                "dfc:importInProgress": false
               }),
               headers: {
                 'accept': 'application/ld+json',
@@ -1027,16 +981,8 @@ class CatalogService {
         const responseProgressOn = await fetch(user['@id'], {
           method: 'PATCH',
           body: JSON.stringify({
-            "@context": {
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-              "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
-              "dfc-b": "http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#",
-              "dfc-p": "http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#",
-              "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
-              "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
-              "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
-            },
-            "dfc:importInProgress":false
+            "@context": this.context,
+            "dfc:importInProgress": false
           }),
           headers: {
             'accept': 'application/ld+json',
@@ -1048,63 +994,167 @@ class CatalogService {
     })
   }
 
-  importItem(item, user, platform, convert, ldpNavigator) {
+  importItem(item, user, platform, convert) {
 
     return new Promise(async (resolve, reject) => {
       try {
 
+        await this.init();
+
         //TODO : convert to Generic
-        item['dfc-b:offeredThrough']=undefined;
-        // let references = item['dfc-b:references'];
-        console.log('item',item);
-        // let references= await ldpNavigator.get(item,'dfc-b:references',true);
-        let references=item['dfc-b:references']
-        if(references){
-          let newReference = await this.importItem(references,user,platform,false,ldpNavigator);
-          item['dfc-b:references']=newReference;
+        item['dfc-b:offeredThrough'] = undefined;
+
+
+
+        const sparqlTools = new SparqlTools({
+          context: this.context
+        });
+
+        item = {
+          ...item,
+          "dfc-t:hostedBy": platform['@id'],
+          "dfc:owner": user['@id'],
+          "@context": this.context,
         }
 
+        // console.log('* service insert owner and hostedBy');
+        let importedItem = await sparqlTools.insert(item)
 
-
-        // console.log('import item',item);
-
-        const responsePost = await fetch('http://dfc-middleware:3000/ldp/catalogItem', {
-          method: 'POST',
-          body: JSON.stringify({
-            ...item,
-            "@id":undefined,
-            "dfc-t:hostedBy": platform['@id'],
-            "dfc:owner": user['@id'],
-            "@context": ldpNavigator.context,
-          }),
-          headers: {
-            'accept': 'application/ld+json',
-            'content-type': 'application/ld+json'
-          }
-        });
-
-
-        const location = responsePost.headers.get('location');
-        // console.log('location',location,responsePost.status);
-        const responseGet = await fetch(location, {
-          method: 'GET',
-          headers: {
-            'accept': 'application/ld+json'
-          }
-        });
-        let importedItem=await responseGet.json()
-
-        // console.log('importedItem',importedItem);
-
+        let references = item['dfc-b:references']
+        let dfcReferences;
+        if (references) {
+          dfcReferences = await this.importItem(references, user, platform, convert);
+          // console.log('dfcReferences',dfcReferences);
+          // item['dfc-b:references']=newReference;
+        }
+        let idDFC;
         if (convert === false) {
-          await this.convertImportToReconciled(importedItem,undefined, user);
+          if (dfcReferences) {
+            importedItem['dfc-b:references'] = dfcReferences
+          }
+          idDFC = await this.convertImportToReconciled(importedItem, undefined, user);
         }
 
-        resolve(importedItem);
+        resolve(idDFC);
       } catch (e) {
         reject(e)
       }
     })
+  }
+
+  async refreshItem(id, user) {
+    await this.init();
+    const ldpNavigator = new LDPNavigator({
+      forceArray: [
+        'dfc-b:manages',
+        'dfc-t:represent'
+      ],
+      context: this.context
+    });
+    ldpNavigator.setAdapters([
+      new SparqlAdapter({
+        query: {
+          endpoint: 'http://dfc-middleware:3000/sparql',
+          headers: {
+            'accept': 'application/ld+json'
+          },
+          prefix: `
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+            PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+            PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+            PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+            PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+            PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            `
+        },
+        update: {
+          endpoint: 'http://dfc-fuseki:3030/localData/update',
+          headers: {
+            'Content-Type': 'application/sparql-update',
+            Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+          }
+        },
+        skeepResolveById: true
+      }),
+      new FetchAdapter({
+        headers: {
+          'authorization': 'JWT ' + user['ontosec:token'],
+          'accept': 'application/ld+json'
+        }
+      })
+    ]);
+    console.log('RESOLVE', id);
+    let result = await ldpNavigator.resolveById(id);
+    if (result) {
+      console.log('BEFORE dereference', result);
+      result = await ldpNavigator.dereference(result, {
+        p: 'dfc-b:references'
+      })
+      console.log('AFTER dereference', result);
+      return result;
+    } else {
+      throw new Error("refresh error")
+    }
+
+
+  }
+
+  async getOneLinkedItem(id, user) {
+    let contextConfigRaw = config.context;
+    let contextConfigResponse = await fetch(contextConfigRaw);
+    let contextConfig = await contextConfigResponse.json();
+    const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+      sparql: {
+        query: {
+          endpoint: 'http://dfc-middleware:3000/sparql',
+          headers: {
+            'accept': 'application/ld+json'
+          },
+          prefix: `
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+            PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+            PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+            PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+            PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+            PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            `
+        },
+        update: {
+          endpoint: 'http://dfc-fuseki:3030/localData/update',
+          headers: {
+            'Content-Type': 'application/sparql-update',
+            Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+          }
+        }
+      },
+      context: contextConfig,
+      forceArray: ['dfc-t:represent']
+    }).make();
+    // await ldpNavigator.init(id);
+    const root = await ldpNavigator.resolveById(id);
+    let linked = await ldpNavigator.dereference(root, [{
+      p: 'dfc-t:hasPivot',
+      n: [{
+        p: 'dfc-t:represent'
+      }]
+    }]);
+    linked['@context'] = contextConfig;
+    return linked;
+  }
+
+  async getOneLinkedItemSimple(id, user) {
+    const linked = await this.getOneLinkedItem(id, user);
+    // console.log(linked);
+    const shorter = {
+      '@id': linked['@id'],
+      'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(r => r['@id']).filter(r => !(r.includes(linked['@id'])))
+    }
+    return shorter;
+
   }
 }
 

@@ -46,6 +46,7 @@ module.exports = function(router) {
     }
   })
 
+
   router.get('/catalog/reconciled', async (req, res, next) => {
     if (req.user == undefined) {
       next(new Error('user not defined'))
@@ -59,7 +60,7 @@ module.exports = function(router) {
 
   router.post('/catalog/reconciled', async (req, res, next) => {
     try {
-      let out = await catalogItem_supply_offer.updateOneItem(req.body,req.user);
+      let out = await catalogItem_supply_offer.updateOneItem(req.body, req.user);
       res.json(out);
     } catch (e) {
       next(e)
@@ -69,6 +70,22 @@ module.exports = function(router) {
   router.get('/catalog/reconciled/:id', async (req, res, next) => {
     let out = await catalogItem_supply_offer.getOneItem(req.params.id);
     res.json(out);
+  })
+
+  router.post('/catalog/reconciled/:idImport(*)/refresh', async (req, res, next) => {
+    // console.log('API',req.params);
+    try {
+      let idImport = req.params.idImport;
+      // let idReconciled = req.params.idReconciled;
+      if (req.user == undefined) {
+        next(new Error('user not defined'))
+      } else {
+        let out = await catalogItem_supply_offer.refreshItem(idImport, req.user);
+        res.json(out)
+      }
+    } catch (e) {
+      next(e)
+    }
   })
 
   router.post('/catalog/importSource', async (req, res, next) => {
@@ -82,40 +99,40 @@ module.exports = function(router) {
         let out = await catalogItem_supply_offer.importSource(source, req.user);
         res.json(out);
       } catch (e) {
-        res.statusCode=409;
+        res.statusCode = 409;
         next(e);
       }
     }
   })
 
-  // router.get('/catalog/link/:id', async (req, res, next) => {
-  //   let source = decodeURI(req.query.source);
-  //   if (req.user == undefined) {
-  //     next(new Error('user not defined'))
-  //   } else {
-  //     try {
-  //       let out = await catalogItem_supply_offer.getOneLinkedItem(req.params.id);
-  //       res.json(out);
-  //     } catch (e) {
-  //       res.statusCode=409;
-  //       next(e);
-  //     }
-  //   }
-  // })
-  //
-  // router.get('/catalog/linkSimple/:id', async (req, res, next) => {
-  //   let source = decodeURI(req.query.source);
-  //   if (req.user == undefined) {
-  //     next(new Error('user not defined'))
-  //   } else {
-  //     try {
-  //       let out = await catalogItem_supply_offer.getOneLinkedItemSimple(req.params.id);
-  //       res.json(out);
-  //     } catch (e) {
-  //       res.statusCode=409;
-  //       next(e);
-  //     }
-  //   }
-  // })
+  router.get('/catalog/link/:id', async (req, res, next) => {
+    let source = decodeURI(req.query.source);
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        let out = await catalogItem_supply_offer.getOneLinkedItem(req.params.id, req.user);
+        res.json(out);
+      } catch (e) {
+        res.statusCode = 409;
+        next(e);
+      }
+    }
+  })
+
+  router.get('/catalog/linkSimple/:id', async (req, res, next) => {
+    let source = decodeURI(req.query.source);
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        let out = await catalogItem_supply_offer.getOneLinkedItemSimple(req.params.id);
+        res.json(out);
+      } catch (e) {
+        res.statusCode = 409;
+        next(e);
+      }
+    }
+  })
 
 }

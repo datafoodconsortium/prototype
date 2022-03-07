@@ -38,6 +38,14 @@ export default class Catalog extends GenericElement {
     });
 
     this.subscribe({
+      channel: 'supply',
+      topic: 'refresh',
+      callback: (data) => {
+        this.refreshSupply(data);
+      }
+    });
+
+    this.subscribe({
       channel: 'import',
       topic: 'convert',
       callback: (data) => {
@@ -267,6 +275,24 @@ export default class Catalog extends GenericElement {
         topic: 'changeOne',
         data: this.selectedSupply
       });
+    })
+  }
+
+  refreshSupply(supply) {
+    let url = `${url_server}/data/core/catalog/reconciled/${supply['@id']}/refresh`;
+    let option = {
+      method: 'POST',
+    };
+    this.util.ajaxCall(url, option).then(data => {
+      // console.log('refreshSupply',data);
+      if(data['@id'] || data['@graph']){
+        this.selectedSupply = data.body;
+        this.publish({
+          channel: 'supply',
+          topic: 'changeOne',
+          data: this.selectedSupply
+        });
+      }
     })
   }
 

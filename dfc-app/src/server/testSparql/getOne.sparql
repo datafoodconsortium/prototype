@@ -1,0 +1,9 @@
+PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+
+CONSTRUCT{
+  ?subject ?predicate ?object
+}
+WHERE {
+  BIND(<https://dfc.lecoqlibre.fr/api/dfc/suppliedProduct/617432beda56d67eb07d1190> AS ?subject) .
+  ?subject ?predicate ?object .
+}

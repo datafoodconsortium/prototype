@@ -1,26 +1,43 @@
 .DEFAULT_GOAL := help
-.PHONY: link link-yarn unlink unlink-yarn
+.PHONY: link unlink install push allo
 SEMAPPS_PATH=./../../semapps
+PACKAGES=jsonld inference auth webid ldp middlewares
+
+
+clean :
+	sudo rm -rf .yalc
+	sudo rm -rf node_modules
+	rm -f yarn.lock
+	rm -f yalc.lock
+	rm -f package-lock.json
+	rm -f yarn-error.log
 
 
 install :
-	npm install --force
+	make clean
+	yarn install
 
 link:
+	$(foreach package,$(PACKAGES),$(call link-package,$(package)))
+	make hotlink
 
+hotlink:
+	nodemon -w $(SEMAPPS_PATH)/src/middleware/packages -x "make push"
 
-link-yarn:
-	cd $(SEMAPPS_PATH)/src/middleware/packages/ldp && yarn link
-	yarn link @semapps/ldp
-	cd $(SEMAPPS_PATH)/src/middleware/packages/triplestore && yarn link
-	yarn link @semapps/triplestore
-
+push:
+	$(foreach package,$(PACKAGES),$(call push-package,$(package)))
 
 unlink:
+	yalc installations clean
+	yalc remove --all
+	make install
 
+define link-package
+	yalc publish $(SEMAPPS_PATH)/src/middleware/packages/$(1);
+	yalc link @semapps/$(1);
+	yarn --cwd .yalc/@semapps/$(1) install;
+endef
 
-unlink-yarn:
-	yarn unlink @semapps/ldp  --no-save
-	cd $(SEMAPPS_PATH)/src/middleware/packages/ldp  && yarn unlink
-	yarn unlink @semapps/triplestore  --no-save
-	cd $(SEMAPPS_PATH)/src/middleware/packages/triplestore  && yarn unlink
+define push-package
+	yalc push $(SEMAPPS_PATH)/src/middleware/packages/$(1) --changed;
+endef

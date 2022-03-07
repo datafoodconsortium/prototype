@@ -129,7 +129,8 @@ export default class CatalogSupply extends GenericElement {
   edit() {
     console.log(this.selectedSupply);
     console.log('label',this.selectedSupply['dfc-t:hostedBy']['rdfs:label']);
-    if (this.selectedSupply['dfc-t:hostedBy']['rdfs:label']=='Data Food Consortium'){
+    let label = this.selectedSupply['dfc-t:hostedBy']['rdfs:label']
+    if (Array.isArray(label)?label.includes('Data Food Consortium'):label=='Data Food Consortium'){
       this.publish({
         channel: 'main',
         topic: 'navigate',
@@ -179,7 +180,7 @@ export default class CatalogSupply extends GenericElement {
           counter++;
           return {
             id: counter,
-            source: c['dfc-t:hostedBy']['rdfs:label'],
+            source: c['dfc-t:hostedBy']?c['dfc-t:hostedBy']['rdfs:label']:'',
             sku: c['dfc-b:sku'],
             stockLimitation : c['dfc-b:stockLimitation'],
             totalTheoriticalStock : c['dfc-b:references']['dfc-b:totalTheoriticalStock'],

@@ -22,6 +22,8 @@ export default class ItemSupplyPlatform extends GenericElement {
       id: this.shadowRoot.querySelector('[name="id"]'),
       id_catalog: this.shadowRoot.querySelector('[name="id_catalog"]'),
       id_supply: this.shadowRoot.querySelector('[name="id_supply"]'),
+      update: this.shadowRoot.querySelector('#update'),
+      refresh: this.shadowRoot.querySelector('#refresh'),
     };
 
     this.subscribe({
@@ -36,9 +38,15 @@ export default class ItemSupplyPlatform extends GenericElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.shadowRoot.querySelector('#update').addEventListener('click', e => {
+    this.elements.update.addEventListener('click', e => {
       this.update();
     })
+    this.elements.refresh.addEventListener('click', e => {
+      this.refresh();
+    })
+    // this.shadowRoot.querySelector('#update').addEventListener('click', e => {
+    //   this.update();
+    // })
     // this.shadowRoot.querySelector('#referer').addEventListener('click', e => {
     //   this.referer();
     // })
@@ -168,7 +176,7 @@ export default class ItemSupplyPlatform extends GenericElement {
 
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
-    this.elements.id_catalog.textContent = data['dfc-t:sameAs'] && data['dfc-t:sameAs']['@id'];
+    this.elements.id_catalog.textContent = data['@id'];
 
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
     this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
@@ -176,14 +184,14 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
     this.elements.totalTheoriticalStock.value = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
-    this.elements.id_supply.textContent = data['dfc-b:references']['dfc-t:sameAs'] && data['dfc-b:references']['dfc-t:sameAs']['@id'];
+    this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 
   }
 
   update(){
 
       // console.log(this.elements.description.value);
-      // console.log(this.item);
+      console.log('this.item',this.item);
       const updated ={...(this.item),...{
         'dfc-b:stockLimitation':this.elements.stockLimitation.value,
         'dfc-b:sku':this.elements.sku.value,
@@ -198,6 +206,26 @@ export default class ItemSupplyPlatform extends GenericElement {
         data :updated
       });
   }
+
+  refresh(){
+
+      // console.log(this.elements.description.value);
+      console.log('this.item',this.item);
+      // const updated ={...(this.item),...{
+      //   'dfc-b:stockLimitation':this.elements.stockLimitation.value,
+      //   'dfc-b:sku':this.elements.sku.value,
+      //   'dfc-b:references':{...(this.item['dfc-b:references']),...{
+      //     'dfc-b:description':this.elements.description.value
+      //   }}
+      // }}
+      // console.log(updated);
+      this.publish({
+        channel: 'supply',
+        topic: 'refresh',
+        data :this.item
+      });
+  }
+
   //
   // referer(){
   //     if(this.selectedImport!=undefined){

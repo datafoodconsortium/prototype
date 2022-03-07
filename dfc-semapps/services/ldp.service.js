@@ -1,5 +1,6 @@
 const { LdpService } = require('@semapps/ldp');
 const ontologies = require('../ontologies');
+const urlJoin = require('url-join');
 
 module.exports = {
   mixins: [LdpService],
@@ -10,7 +11,7 @@ module.exports = {
       'product',
       {
         path: '/catalogItem',
-        acceptedTypes: ['dfc-b:CatalogItem'],
+        // acceptedTypes: ['dfc-b:CatalogItem'],
         // dereference: ['dfc-b:references/dfc-p:hasType','dfc-b:references/dfc-p:hasUnit','dfc-t:hostedBy'],
         // dereference: ['dfc-b:references/dfc-p:hasType','dfc-b:references/dfc-p:hasUnit','dfc-t:hostedBy'],
         // disassembly: [{path:'dfc-b:references',container:process.env.SEMAPPS_HOME_URL + 'ldp/product'}]
@@ -20,6 +21,7 @@ module.exports = {
       'platform'
     ],
     defaultContainerOptions: {
+      jsonContext: urlJoin(process.env.SEMAPPS_HOME_URL, 'context.json'),
       allowAnonymousEdit: true,
       allowAnonymousDelete: true
     }

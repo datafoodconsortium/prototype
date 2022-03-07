@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   dfc-fuseki:
-    image: stain/jena-fuseki
+    image: semapps/jena-fuseki-webacl
     container_name: dfc-fuseki
     environment:
       - ADMIN_PASSWORD=admin
@@ -20,8 +20,6 @@ services:
       context: ./dfc-semapps
       dockerfile: Dockerfile
     container_name: dfc-middleware
-    depends_on:
-      - dfc-fuseki
     environment:
       - SEMAPPS_SPARQL_ENDPOINT=http://dfc-fuseki:3030/
       - SEMAPPS_MAIN_DATASET=localData
@@ -45,6 +43,7 @@ services:
       context: ./dfc-app
       dockerfile: ./Dockerfile.dev
     container_name: dfc-app
+    restart: always
     environment:
         - APP_PORT=8080
         - NODE_ENV=development_docker

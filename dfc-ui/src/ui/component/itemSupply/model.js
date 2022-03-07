@@ -172,8 +172,11 @@ export default class ItemSupply extends GenericElement {
     this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     this.elements.sku.textContent = data['dfc-b:sku'];
     // const represents = Array.isArray(data['dfc-t:hasPivot']['dfc-t:represent'])?data['dfc-b:references']:[data['dfc-b:references']]
-    // console.log(represents);
-    this.setDataGrid(data['dfc-t:hasPivot']['dfc-t:represent']);
+    console.log(data['dfc-t:hasPivot']['dfc-t:represent']);
+    let represent= data['dfc-t:hasPivot']['dfc-t:represent'];
+    represent=Array.isArray(represent)?represent:[represent];
+    represent= represent.filter(r=>r['@id']!=data['@id'])
+    this.setDataGrid(represent);
 
     // this.elements.quantity.textContent = data['dfc:quantity'];
     // this.elements.source.textContent = data['source'];

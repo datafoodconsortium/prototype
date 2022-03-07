@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   dfc-fuseki:
-    image: stain/jena-fuseki
+    image: semapps/jena-fuseki-webacl
     container_name: dfc-fuseki
     environment:
       - ADMIN_PASSWORD=admin
@@ -44,6 +44,7 @@ services:
       context: ./dfc-app
       dockerfile: ./Dockerfile.dev
     container_name: dfc-app
+    restart: always
     environment:
         - APP_PORT=8080
         - NODE_ENV=development_docker
