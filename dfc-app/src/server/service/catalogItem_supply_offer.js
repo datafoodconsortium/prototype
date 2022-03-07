@@ -411,9 +411,28 @@ class CatalogService {
 
         const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
           sparql: {
-            queryEndpoint: 'http://dfc-middleware:3000/sparql',
-            headers: {
-              'accept': 'application/ld+json'
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
+                'accept': 'application/ld+json'
+              },
+              prefix: `
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                `
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+              }
             }
           },
           context: this.context,
