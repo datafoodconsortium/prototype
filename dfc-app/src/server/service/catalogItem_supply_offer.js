@@ -853,7 +853,7 @@ class CatalogService {
                   Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
                 }
               },
-              skeepResolveById: true
+              skipResolveById: true
             }),
             new FetchAdapter({
               headers: {
@@ -1095,7 +1095,7 @@ class CatalogService {
             Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
           }
         },
-        skeepResolveById: true
+        skipResolveById: true
       }),
       new FetchAdapter({
         headers: {
