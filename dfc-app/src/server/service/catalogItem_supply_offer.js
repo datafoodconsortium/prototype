@@ -568,6 +568,7 @@ class CatalogService {
               body: JSON.stringify({
                 "@context": this.context,
                 'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
+                'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
               }),
               headers: {
                 'accept': 'application/ld+json',
@@ -785,6 +786,8 @@ class CatalogService {
 
 
           let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
+
+          console.log('sourceObject',sourceObject);
 
 
           const sourceResponse = await fetch(source, {
