@@ -34,6 +34,7 @@ class CatalogService {
       let contextConfigRaw = config.context;
       let contextConfigResponse = await fetch(contextConfigRaw);
       this.context = (await contextConfigResponse.json())['@context'];
+      console.log('this.context',this.context);
     }
   }
 
@@ -334,6 +335,7 @@ class CatalogService {
         for (var catalogItem of catalogItemsRaw) {
           // console.log('before',catalogItem);
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
+          console.log('BEFORE');
           catalogItem = await ldpNavigator.dereference(catalogItem, [{
               p: 'dfc-t:hostedBy'
             },
@@ -368,7 +370,7 @@ class CatalogService {
               ]
             }
           ]);
-
+          console.log('AFTER',catalogItem);
           catalogItems.push(catalogItem);
         }
 

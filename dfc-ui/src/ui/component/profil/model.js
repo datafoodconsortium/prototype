@@ -4,8 +4,10 @@ export default class Profil extends GenericElement {
   constructor() {
     super(view);
     this.elements = {
-      email: this.shadowRoot.querySelector('[name="email"]'),
+        email: this.shadowRoot.querySelector('[name="email"]'),
+        token: this.shadowRoot.querySelector('[name="token"]'),
         logout: this.shadowRoot.querySelector('#logout'),
+
     };
     this.subscribe({
       channel: 'user',
@@ -46,7 +48,9 @@ export default class Profil extends GenericElement {
   }
 
   setUser(user) {
+
     this.elements.email.textContent = user.email;
+    this.elements.token.value = user.token;
   }
 }
 window.customElements.define('x-profil', Profil);

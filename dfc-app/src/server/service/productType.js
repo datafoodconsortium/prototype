@@ -22,20 +22,17 @@ class ProductType {
             'accept':'application/ld+json'
           },
           body:`
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
           PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
           CONSTRUCT  {
-          	?s1 ?p1 ?o1 .
+            ?s1 ?p1 ?o1 .
           }
           WHERE {
-          	?s1 a dfc-p:ProductType ;
-              ?s1 ?p1 ?o1 .
+            GRAPH ?g {
+              ?s1 a skos:Concept ;
+                        ?p1 ?o1 .
+            }
           }
           `
         });
@@ -49,12 +46,11 @@ class ProductType {
             "dfc-t": "http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#",
             "dfc-u": "http://static.datafoodconsortium.org/data/units.rdf#",
             "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#",
-            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+            "skos": "http://www.w3.org/2004/02/skos/core#"
+
           }
         });
         // const out=framed
-
         resolve(framed);
 
       } catch (e) {
@@ -128,58 +124,60 @@ class ProductType {
     })
   }
 
-  createOne(data) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch("http://dfc-fuseki:3030/localData/update", {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Basic YWRtaW46YWRtaW4=',
-            'Content-Type':'application/sparql-update'
-          },
-          body:`
-          INSERT DATA {
-            <${data['@id']}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
-            <${data['@id']}> <http://www.w3.org/2000/01/rdf-schema#label> "${data['rdfs:label']}" .
-          }
-          `
-        });
-
-        if(!response.ok){
-          throw new Error(`SPARQL INSERT PRODUCT FAILED : ${await response.text()}`)
-        }
-        resolve(data['@id']);
-
-      } catch (e) {
-        reject(e);
-      }
-    })
-  }
+  // createOne(data) {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const response = await fetch("http://dfc-fuseki:3030/localData/update", {
+  //         method: 'POST',
+  //         headers: {
+  //           'Authorization': 'Basic YWRtaW46YWRtaW4=',
+  //           'Content-Type':'application/sparql-update'
+  //         },
+  //         body:`
+  //         INSERT DATA {
+  //           <${data['@id']}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://static.datafoodconsortium.org/ontologies/DFC_ProductGlossary.owl#ProductType> .
+  //           <${data['@id']}> <http://www.w3.org/2000/01/rdf-schema#label> "${data['rdfs:label']}" .
+  //         }
+  //         `
+  //       });
+  //
+  //       if(!response.ok){
+  //         throw new Error(`SPARQL INSERT PRODUCT FAILED : ${await response.text()}`)
+  //       }
+  //       resolve(data['@id']);
+  //
+  //     } catch (e) {
+  //       reject(e);
+  //     }
+  //   })
+  // }
 
   updateProductsFromReference() {
     return new Promise(async (resolve, reject) => {
       try {
 
-        const typesResponse = await fetch('http://static.datafoodconsortium.org/data/productTypes.json');
-        const types= (await typesResponse.json())['@graph'];
-
-        for (let productTypeConf of types){
-          let frLabel = productTypeConf['rdfs:label'].find(l=>l['@language']==='fr')['@value'];
-          if(frLabel){
-            productTypeConf['rdfs:label']=frLabel
-          }
-          // console.log(productTypeConf);
-          try {
-            // console.log(productTypeConf['@id']);
-            let productType =await this.getOneById(productTypeConf['@id']);
-            // console.log('exist type');
-            // console.log('productType',unit);
-          } catch (e){
-            // console.log(e);
-            await this.createOne(productTypeConf);
-            // console.log('create type');
-          }
-        }
+        // const typesResponse = await fetch('http://static.datafoodconsortium.org/data/productTypes.json');
+        // const types= (await typesResponse.json())['@graph'];
+        // // console.log('types',types);
+        //
+        // for (let productTypeConf of types){
+        //   console.log('productTypeConf',productTypeConf);
+        //   let frLabel = productTypeConf['description'].find(l=>l['@language']==='fr')['@value'];
+        //   if(frLabel){
+        //     productTypeConf['rdfs:label']=frLabel
+        //   }
+        //   // console.log(productTypeConf);
+        //   try {
+        //     // console.log(productTypeConf['@id']);
+        //     let productType =await this.getOneById(productTypeConf['@id']);
+        //     // console.log('exist type');
+        //     // console.log('productType',unit);
+        //   } catch (e){
+        //     // console.log(e);
+        //     await this.createOne(productTypeConf);
+        //     // console.log('create type');
+        //   }
+        // }
 
         resolve();
 
