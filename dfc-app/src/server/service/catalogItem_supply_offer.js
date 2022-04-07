@@ -1061,6 +1061,7 @@ class CatalogService {
 
         resolve(idDFC);
       } catch (e) {
+        console.error(e);
         reject(e)
       }
     })
