@@ -1042,8 +1042,9 @@ class CatalogService {
         }
 
         console.log('* service insert owner and hostedBy');
+        console.log(item);
         let importedItem = await sparqlTools.insert(item)
-        console.log('post insert');
+        // console.log('post insert');
 
         let references = item['dfc-b:references']
         let dfcReferences;
