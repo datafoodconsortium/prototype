@@ -176,7 +176,7 @@ export default class CatalogSupply extends GenericElement {
         unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
         type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
         raw: d,
-        children: d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
+        children: d['dfc-t:hasPivot']['dfc-t:represent']==undefined?[]:d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
           counter++;
           return {
             id: counter,

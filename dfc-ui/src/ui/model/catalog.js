@@ -279,14 +279,16 @@ export default class Catalog extends GenericElement {
   }
 
   refreshSupply(supply) {
+    console.log('refreshSupply');
     let url = `${url_server}/data/core/catalog/reconciled/${supply['@id']}/refresh`;
     let option = {
       method: 'POST',
     };
     this.util.ajaxCall(url, option).then(data => {
-      // console.log('refreshSupply',data);
-      if(data['@id'] || data['@graph']){
+      console.log('refreshSupply ajax',data);
+      if(data.body['@id'] || data.body['@graph']){
         this.selectedSupply = data.body;
+        console.log('ALLO',data.body);
         this.publish({
           channel: 'supply',
           topic: 'changeOne',

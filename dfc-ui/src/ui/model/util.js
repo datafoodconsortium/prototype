@@ -11,7 +11,7 @@ export default class Util {
     return new Promise((resolve, reject) => {
       let token = localStorage.getItem('token');
 
-      console.log('ALLLO',token);
+      // console.log('ALLLO',token);
       if (token != undefined && token != 'undefined') {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", 'JWT' + ' ' + token);

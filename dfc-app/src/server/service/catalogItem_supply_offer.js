@@ -34,7 +34,7 @@ class CatalogService {
       let contextConfigRaw = config.context;
       let contextConfigResponse = await fetch(contextConfigRaw);
       this.context = (await contextConfigResponse.json())['@context'];
-      console.log('this.context',this.context);
+      console.log('this.context', this.context);
     }
   }
 
@@ -335,7 +335,7 @@ class CatalogService {
         for (var catalogItem of catalogItemsRaw) {
           // console.log('before',catalogItem);
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
-          console.log('BEFORE');
+          // console.log('BEFORE');
           catalogItem = await ldpNavigator.dereference(catalogItem, [{
               p: 'dfc-t:hostedBy'
             },
@@ -370,7 +370,7 @@ class CatalogService {
               ]
             }
           ]);
-          console.log('AFTER',catalogItem);
+          // console.log('AFTER', catalogItem);
           catalogItems.push(catalogItem);
         }
 
@@ -378,10 +378,15 @@ class CatalogService {
 
           // console.log(ci['dfc-t:hasPivot']['dfc-t:represent']);
           if (ci['dfc-t:hasPivot']) {
-            ci['dfc-t:hasPivot']['dfc-t:represent'] = ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
-              // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
-              return r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
-            })
+            if(ci['dfc-t:hasPivot']['dfc-t:represent']){
+              ci['dfc-t:hasPivot']['dfc-t:represent'] = ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
+                // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
+                return r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+              })
+            }else{
+              console.log('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
+            }
+
           }
         }
 
@@ -503,9 +508,7 @@ class CatalogService {
         await this.init();
         // console.log('item',item);
         let oldItem = await this.getOneItem(item['@id']);
-        // console.log('product["dfc-t:hasPivot"]["dfc-t:represent"]',product["dfc-t:hasPivot"]["dfc-t:represent"]);
-        // console.log('oldRepresent BEFORE',oldItem["dfc-t:hasPivot"]["dfc-t:represent"]);
-        // console.log('oldItem',oldItem);
+
         let oldRepresent = oldItem["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
           if (i["@id"] == oldItem["@id"]) {
             return false;
@@ -515,26 +518,19 @@ class CatalogService {
           }
         });
 
-        //TOO NEXT update by sparql instead ldp
         const sparqlTools = new SparqlTools({
           context: this.context
         });
         // console.log('oldRepresent',oldRepresent);
         oldRepresent.forEach(async r => {
-          // console.log('REMOVE Triples',r['@id'],'dfc-t:hasPivot');
+          console.log('REMOVE Triples',r['@id'],'dfc-t:hasPivot');
           sparqlTools.removeTriples(r['@id'], ['dfc-t:hasPivot'])
         })
 
+        console.log('AFTER remove');
         let newRepresent = item["dfc-t:hasPivot"]["dfc-t:represent"];
         newRepresent = Array.isArray(newRepresent) ? newRepresent : [newRepresent];
         newRepresent = newRepresent.map(r => r['@id'] ? r['@id'] : r);
-        // console.log('newRepresent',newRepresent);
-        // console.log(item["dfc-t:hasPivot"]['@id']);
-        // console.log({
-        //   "@context": this.context,
-        //   "dfc-t:represent": newRepresent
-        // });
-
         const updatePivotBody = {
           ...item["dfc-t:hasPivot"],
           "@context": this.context,
@@ -543,8 +539,7 @@ class CatalogService {
             '@type': '@id'
           }))
         }
-        // console.log('updatePivotBody',item["dfc-t:hasPivot"]['@id'],updatePivotBody);
-
+        console.log('UPDATE PIVOT',updatePivotBody);
         const responsePivotPatch = await fetch(item["dfc-t:hasPivot"]['@id'], {
           method: 'Put',
           body: JSON.stringify(updatePivotBody),
@@ -556,29 +551,45 @@ class CatalogService {
 
         // console.log('RESPONSE', responsePivotPatch.status);
 
-        try {
-          if (item['dfc-b:references']) {
-            //update local Cache
-            sparqlTools.remove(item['dfc-b:references']['@id]'])
-            sparqlTools.insert(item['dfc-b:references'])
-            //update remote data
-            console.log('UPDATE', item['dfc-b:references']['@id']);
-            const responseSupplyPlatformSource = await fetch(item['dfc-b:references']['@id'], {
-              method: 'Patch',
-              body: JSON.stringify({
-                "@context": this.context,
-                'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
-                'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
-              }),
-              headers: {
-                'accept': 'application/ld+json',
-                'content-type': 'application/ld+json',
-                'Authorization': 'JWT ' + user['ontosec:token']
-              }
-            });
+
+        sparqlTools.remove(item['@id]'])
+        sparqlTools.insert(item)
+        //update remote data
+        // console.log('UPDATE product ', item['@id']);
+        await fetch(item['@id'], {
+          method: 'Patch',
+          body: JSON.stringify({
+            "@context": this.context,
+            'dfc-b:stockLimitation': item['dfc-b:stockLimitation'],
+            'dfc-b:sku': item['dfc-b:sku'],
+          }),
+          headers: {
+            'accept': 'application/ld+json',
+            'content-type': 'application/ld+json',
+            'Authorization': 'JWT ' + user['ontosec:token']
           }
-        } catch (e) {
-          console.error(e);
+        });
+
+
+        if (item['dfc-b:references']) {
+          //update local Cache
+          sparqlTools.remove(item['dfc-b:references']['@id]'])
+          sparqlTools.insert(item['dfc-b:references'])
+          //update remote data
+          // console.log('UPDATE catalog item', item['dfc-b:references']['@id']);
+          await fetch(item['dfc-b:references']['@id'], {
+            method: 'Patch',
+            body: JSON.stringify({
+              "@context": this.context,
+              'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
+              'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+            }),
+            headers: {
+              'accept': 'application/ld+json',
+              'content-type': 'application/ld+json',
+              'Authorization': 'JWT ' + user['ontosec:token']
+            }
+          });
         }
 
 
@@ -787,7 +798,7 @@ class CatalogService {
 
           let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
 
-          console.log('sourceObject',sourceObject);
+          console.log('sourceObject', sourceObject);
 
 
           const sourceResponse = await fetch(source, {
@@ -1112,14 +1123,14 @@ class CatalogService {
         }
       })
     ]);
-    console.log('RESOLVE', id);
+    // console.log('RESOLVE', id);
     let result = await ldpNavigator.resolveById(id);
     if (result) {
-      console.log('BEFORE dereference', result);
+      // console.log('BEFORE dereference', result);
       result = await ldpNavigator.dereference(result, {
         p: 'dfc-b:references'
       })
-      console.log('AFTER dereference', result);
+      // console.log('AFTER dereference', result);
       return result;
     } else {
       throw new Error("refresh error")

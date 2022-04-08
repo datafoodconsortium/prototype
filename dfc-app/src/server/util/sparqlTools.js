@@ -44,10 +44,10 @@ class SparqlCrud {
       }
     });
 
-    console.log('response',response);
+    // console.log('response',response);
     const data = await response.text();
-    console.log('data',data);
-    console.log('sparqlTool getOne cause by insert');
+    // console.log('data',data);
+    // console.log('sparqlTool getOne cause by insert');
     const getOneObject = await this.getOne(resource['@id'])
 
     // console.log('getOneObject',getOneObject);

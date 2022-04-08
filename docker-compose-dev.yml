@@ -20,6 +20,8 @@ services:
       context: ./dfc-semapps
       dockerfile: Dockerfile
     container_name: dfc-middleware
+    depends_on:
+      - dfc-fuseki
     environment:
       - SEMAPPS_SPARQL_ENDPOINT=http://dfc-fuseki:3030/
       - SEMAPPS_MAIN_DATASET=localData

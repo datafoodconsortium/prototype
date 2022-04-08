@@ -2,18 +2,17 @@
 a{
   text-decoration: none;
   color: white;
-  border-style: solid;
-  border-color: black;
+  border-radius: 4px;
 }
 
 button{
   text-transform: uppercase;
   font-size: 1.2em;
+  border-style:none;
   background-color: var(--color-orange);
   color: white;
-  border-style: solid;
-  border-color: black;
   margin: 2px;
+  border-radius: 4px;
 }
 
 button:hover{
@@ -21,7 +20,8 @@ button:hover{
 }
 
 a:hover{
-  color: var(--color-orange);
+  /* border-color: var(--color-orange);
+  border-style:solid; */
 }
 
 .box{

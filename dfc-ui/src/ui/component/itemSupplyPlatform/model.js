@@ -30,7 +30,7 @@ export default class ItemSupplyPlatform extends GenericElement {
       channel: 'supply',
       topic: 'changeOne',
       callback: (data) => {
-        // console.log('supply changeOne',data);
+        console.log('supply changeOne',data);
         this.setData(data)
       }
     });
