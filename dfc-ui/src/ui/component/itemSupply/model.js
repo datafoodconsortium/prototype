@@ -141,6 +141,10 @@ export default class ItemSupply extends GenericElement {
     let counter = 0;
     let dataEasyUi = data.map(d => {
       counter++;
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      if(type&&!Array.isArray(type)){
+        type=[type];
+      }
       return {
         id: counter,
         source: d['dfc-t:hostedBy']['rdfs:label'],
@@ -148,7 +152,7 @@ export default class ItemSupply extends GenericElement {
         description: d['dfc-b:references']&& d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
         unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-        type: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
+        type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         sku: d['dfc-b:sku'],
         stockLimitation: d['dfc-b:stockLimitation'],
         totalTheoriticalStock: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
@@ -161,9 +165,13 @@ export default class ItemSupply extends GenericElement {
 
   setData(data) {
     console.log(data);
+    let type = data['dfc-b:references']&&data['dfc-b:references']['dfc-p:hasType'];
+    if(type&&!Array.isArray(type)){
+      type=[type];
+    }
     this.item = data
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']?data['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'';
+    this.elements.type.textContent = type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'';
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
     this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.id.textContent = data['@id'];

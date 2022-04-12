@@ -24,6 +24,9 @@ export default class ItemSupplyPlatform extends GenericElement {
       id_supply: this.shadowRoot.querySelector('[name="id_supply"]'),
       update: this.shadowRoot.querySelector('#update'),
       refresh: this.shadowRoot.querySelector('#refresh'),
+      sameAs: this.shadowRoot.querySelector('#sameAs'),
+      sameAsSimple: this.shadowRoot.querySelector('#sameAsSimple'),
+      curl: this.shadowRoot.querySelector('[name="curl"]'),
     };
 
     this.subscribe({
@@ -32,6 +35,15 @@ export default class ItemSupplyPlatform extends GenericElement {
       callback: (data) => {
         // console.log('supply changeOne',data);
         this.setData(data)
+      }
+    });
+
+    this.subscribe({
+      channel: 'user',
+      topic: 'changeOne',
+      callback: (data) => {
+        // console.log('screen', data);
+        this.setUser(data);
       }
     });
 
@@ -44,6 +56,19 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.refresh.addEventListener('click', e => {
       this.refresh();
     })
+
+    this.elements.sameAs.addEventListener('click', e => {
+      this.sameAs();
+    })
+
+    this.elements.sameAsSimple.addEventListener('click', e => {
+      this.sameAsSimple();
+    })
+
+
+
+
+
     // this.shadowRoot.querySelector('#update').addEventListener('click', e => {
     //   this.update();
     // })
@@ -188,6 +213,11 @@ export default class ItemSupplyPlatform extends GenericElement {
 
   }
 
+  setUser(user) {
+
+    this.token =  user.token;
+  }
+
   update(){
 
       // console.log(this.elements.description.value);
@@ -206,6 +236,33 @@ export default class ItemSupplyPlatform extends GenericElement {
         data :updated
       });
   }
+
+
+  sameAs(){
+    // this.elements.sameAs.setAttribute('href',`${url_server}/data/core/catalog/link/${data['@id']}`);
+    const url=`${url_server}/data/core/catalog/link/${encodeURIComponent(this.item['@id'])}`
+
+    const curl = `curl --request GET \\
+    --url ${url} \\
+    --header 'authorization: JWT ${this.token}'`
+
+    // window.alert(curl);
+
+    this.elements.curl.value = curl;
+  }
+
+  sameAsSimple(){
+    const url=`${url_server}/data/core/catalog/linkSimple/${encodeURIComponent(this.item['@id'])}`
+
+    const curl = `curl --request GET \\
+    --url ${url} \\
+    --header 'authorization: JWT ${this.token}'`
+
+    // window.alert(curl);
+
+    this.elements.curl.value = curl;
+  }
+
 
   refresh(){
 

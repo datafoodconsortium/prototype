@@ -574,6 +574,8 @@ class CatalogService {
               'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
               'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
               'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity'],
+              'dfc-p:hasType': item['dfc-b:references']['dfc-p:hasType'],
+              'dfc-b:hasUnit': item['dfc-b:references']['dfc-b:hasUnit'],
             }),
             headers: {
               'accept': 'application/ld+json',
@@ -1212,7 +1214,12 @@ class CatalogService {
     // console.log(linked);
     const shorter = {
       '@id': linked['@id'],
-      'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(r => r['@id']).filter(r => !(r.includes(linked['@id'])))
+      'dfc-t:hostedBy' : linked['dfc-t:hostedBy'],
+      'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(
+          r => ({"@id":r['@id'],"dfc-t:hostedBy":r['dfc-t:hostedBy']})
+        ).filter(
+          r => !(r['@id'].includes(linked['@id']))
+        )
     }
     return shorter;
 

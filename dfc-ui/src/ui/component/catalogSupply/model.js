@@ -164,7 +164,10 @@ export default class CatalogSupply extends GenericElement {
     let counter = 0;
     let dataEasyUi = data.map(d => {
       counter++;
-      console.log(d);
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      if(type&&!Array.isArray(type)){
+        type=[type];
+      }
       return {
         id: counter,
         description: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:description'],
@@ -174,7 +177,7 @@ export default class CatalogSupply extends GenericElement {
         totalTheoriticalStock : d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
         quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
         unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-        type: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+        type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         raw: d,
         children: d['dfc-t:hasPivot']['dfc-t:represent']==undefined?[]:d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
           counter++;

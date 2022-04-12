@@ -50,6 +50,8 @@ services:
         - APP_PORT=8080
         - NODE_ENV=development_docker
         - CONFIG_URL=$CONFIG_URL
+        - SEMAPPS_JENA_USER=admin
+        - SEMAPPS_JENA_PASSWORD=admin
     volumes:
       - ./dfc-app:/app
       - ./../LDP-navigator:/LDP-navigator

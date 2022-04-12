@@ -69,7 +69,7 @@ class SparqlCrud {
       method: 'POST',
       headers: {
         'Content-Type': 'application/sparql-update',
-        Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+        Authorization: 'Basic ' + Buffer.from(process.env.SEMAPPS_JENA_USER + ':' + process.env.SEMAPPS_JENA_PASSWORD).toString('base64')
       }
     });
 
@@ -109,7 +109,7 @@ class SparqlCrud {
           endpoint: 'http://dfc-fuseki:3030/localData/update',
           headers: {
             'Content-Type': 'application/sparql-update',
-            Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+            Authorization: 'Basic ' + Buffer.from(process.env.SEMAPPS_JENA_USER + ':' + process.env.SEMAPPS_JENA_PASSWORD).toString('base64')
           }
         }
       },
@@ -142,7 +142,7 @@ class SparqlCrud {
       method: 'POST',
       headers: {
         'Content-Type': 'application/sparql-update',
-        Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+        Authorization: 'Basic ' + Buffer.from(process.env.SEMAPPS_JENA_USER + ':' + process.env.SEMAPPS_JENA_PASSWORD).toString('base64')
       }
     });
 
@@ -177,7 +177,7 @@ class SparqlCrud {
       method: 'POST',
       headers: {
         'Content-Type': 'application/sparql-update',
-        Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+        Authorization: 'Basic ' + Buffer.from(process.env.SEMAPPS_JENA_USER + ':' + process.env.SEMAPPS_JENA_PASSWORD).toString('base64')
       }
     });
 
@@ -248,7 +248,7 @@ class SparqlCrud {
       headers: {
         'Content-Type': 'application/sparql-query',
         Accept: "application/ld+json",
-        Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+        Authorization: 'Basic ' + Buffer.from(process.env.SEMAPPS_JENA_USER + ':' + process.env.SEMAPPS_JENA_PASSWORD).toString('base64')
       }
     });
 

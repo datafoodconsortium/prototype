@@ -75,7 +75,6 @@
       <td>
         <div class="containerH space-between">
           <h2>Update data at source platform or refresh from it</h2>
-
           <div class="containerH flex-end">
             <button id="update">Update</button>
             <button id="refresh">Refresh</button
@@ -83,10 +82,28 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <td>
+        <div class="containerH space-between">
+          <h2>test API sameAs</h2>
+          <div class="containerH flex-end">
+            <button id="sameAs">sameAs</button>
+            <button id="sameAsSimple">sameAs simple</button>
+          </div>
+        </div>
+        <textarea cols="100" rows="15" name="curl" ></textarea>
+      </td>
+    </tr>
   </table>
 </div>
 <style>
   label {
     height : 2em;
+  }
+
+  a {
+    background-color: var(--color-orange);
+    margin: 5px;
+    padding: 5px;
   }
 </style>
