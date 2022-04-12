@@ -573,6 +573,7 @@ class CatalogService {
               "@context": this.context,
               'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
               'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+              'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity'],
             }),
             headers: {
               'accept': 'application/ld+json',
