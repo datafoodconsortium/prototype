@@ -30,7 +30,7 @@ export default class ItemSupplyPlatform extends GenericElement {
       channel: 'supply',
       topic: 'changeOne',
       callback: (data) => {
-        console.log('supply changeOne',data);
+        // console.log('supply changeOne',data);
         this.setData(data)
       }
     });
@@ -179,10 +179,10 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.id_catalog.textContent = data['@id'];
 
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&&data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:quantity'];
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']&&data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'];
     this.elements.totalTheoriticalStock.value = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 

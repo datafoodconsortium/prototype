@@ -381,7 +381,8 @@ class CatalogService {
             if(ci['dfc-t:hasPivot']['dfc-t:represent']){
               ci['dfc-t:hasPivot']['dfc-t:represent'] = ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
                 // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
-                return r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+                console.error('undefined represent');
+                return r&&r['dfc-t:hostedBy']&&r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
               })
             }else{
               console.log('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
@@ -448,6 +449,8 @@ class CatalogService {
         // console.log('resolveById', id);
         let item = await ldpNavigator.resolveById(id);
 
+        // console.log('item',item);
+
         item = await ldpNavigator.dereference(item, [{
             p: 'dfc-t:hostedBy'
           },
@@ -486,10 +489,16 @@ class CatalogService {
         // console.log('item',item['dfc-t:hasPivot']);
 
         if (item['dfc-t:hasPivot'] && item['dfc-t:hasPivot']['dfc-t:represent'] && item['dfc-t:hasPivot']['dfc-t:represent'].filter) {
-          item['dfc-t:hasPivot']['dfc-t:represent'] = item['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
-            // console.log(r);
-            return r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
-          })
+
+          if(item['dfc-t:hasPivot']['dfc-t:represent']){
+            item['dfc-t:hasPivot']['dfc-t:represent'] = item['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
+              // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
+              return r&&r['dfc-t:hostedBy']&&r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+            })
+          }else{
+            console.log('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
+          }
+
         }
 
 
@@ -523,11 +532,11 @@ class CatalogService {
         });
         // console.log('oldRepresent',oldRepresent);
         oldRepresent.forEach(async r => {
-          console.log('REMOVE Triples',r['@id'],'dfc-t:hasPivot');
+          // console.log('REMOVE Triples',r['@id'],'dfc-t:hasPivot');
           sparqlTools.removeTriples(r['@id'], ['dfc-t:hasPivot'])
         })
 
-        console.log('AFTER remove');
+        // console.log('AFTER remove');
         let newRepresent = item["dfc-t:hasPivot"]["dfc-t:represent"];
         newRepresent = Array.isArray(newRepresent) ? newRepresent : [newRepresent];
         newRepresent = newRepresent.map(r => r['@id'] ? r['@id'] : r);
@@ -539,7 +548,7 @@ class CatalogService {
             '@type': '@id'
           }))
         }
-        console.log('UPDATE PIVOT',updatePivotBody);
+        // console.log('UPDATE PIVOT',updatePivotBody);
         const responsePivotPatch = await fetch(item["dfc-t:hasPivot"]['@id'], {
           method: 'Put',
           body: JSON.stringify(updatePivotBody),
@@ -551,9 +560,38 @@ class CatalogService {
 
         // console.log('RESPONSE', responsePivotPatch.status);
 
+        const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
 
-        sparqlTools.remove(item['@id]'])
-        sparqlTools.insert(item)
+        const isDfcPlatform=item['dfc-t:hostedBy']['@id']==dfcPlaform['@id'];
+
+        if (item['dfc-b:references']) {
+          //update remote data
+          // console.log('UPDATE catalog item', item['dfc-b:references']['@id']);
+          await fetch(item['dfc-b:references']['@id'], {
+            method: 'Patch',
+            body: JSON.stringify({
+              "@context": this.context,
+              'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
+              'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+            }),
+            headers: {
+              'accept': 'application/ld+json',
+              'content-type': 'application/ld+json',
+              'Authorization': 'JWT ' + user['ontosec:token']
+            }
+          });
+
+          // console.log(item['dfc-b:references']);
+          if(!isDfcPlatform){
+            // console.log('REMOVE CALL');
+            // console.log(referencesSlimplified);
+            await sparqlTools.remove(item['dfc-b:references']['@id'])
+            // console.log('UPDATE supply',item);
+            await sparqlTools.insert(item['dfc-b:references'])
+            // console.log('UPDATE supply DONE');
+          }
+        }
+
         //update remote data
         // console.log('UPDATE product ', item['@id']);
         await fetch(item['@id'], {
@@ -570,26 +608,12 @@ class CatalogService {
           }
         });
 
+        if(!isDfcPlatform){
 
-        if (item['dfc-b:references']) {
-          //update local Cache
-          sparqlTools.remove(item['dfc-b:references']['@id]'])
-          sparqlTools.insert(item['dfc-b:references'])
-          //update remote data
-          // console.log('UPDATE catalog item', item['dfc-b:references']['@id']);
-          await fetch(item['dfc-b:references']['@id'], {
-            method: 'Patch',
-            body: JSON.stringify({
-              "@context": this.context,
-              'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
-              'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-            }),
-            headers: {
-              'accept': 'application/ld+json',
-              'content-type': 'application/ld+json',
-              'Authorization': 'JWT ' + user['ontosec:token']
-            }
-          });
+          await sparqlTools.remove(item['@id'])
+          // console.log('UPDATE item',item);
+          await sparqlTools.insert(item)
+          // console.log('UPDATE item DONE');
         }
 
 
@@ -762,10 +786,8 @@ class CatalogService {
             "@id": pivot['@id'],
             "@type": "@id"
           };
-          // await pivot.save();
 
-          // await importToConvert.save();
-          resolve();
+          resolve(importToConvert['@id']);
         }
       } catch (e) {
         reject(e);

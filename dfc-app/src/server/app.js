@@ -68,8 +68,8 @@ request(url, {
         }
         await waitOn(opts);
         await platformServiceSingleton.updatePlatformsFromConfig();
-        await unitServiceSingleton.updateUnitsFromConfig();
-        await productTypeServiceSingleton.updateProductsFromReference();
+        // await unitServiceSingleton.updateUnitsFromConfig();
+        // await productTypeServiceSingleton.updateProductsFromReference();
         app.use(session({
           secret: config.express.session_secret,
           maxAge: null

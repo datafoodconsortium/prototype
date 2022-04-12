@@ -37,7 +37,7 @@ services:
       - "3000:3000"
     expose:
       - "3000"
-    command: bash -c "yarn install && yarn run devwithlink"
+    command: bash -c "yarn run devwithlink"
 
 
   dfc-app:
@@ -61,7 +61,7 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    command: bash -c "yarn install && yarn run devwithlink"
+    command: bash -c "yarn run devwithlink"
   dfc-ui:
     build:
       context: ./dfc-ui

@@ -2,18 +2,26 @@
 .PHONY: link unlink install push
 NAVIGATOR_PATH=./../../LDP-navigator/
 
-clean :
-	sudo rm -rf .yalc
+hard-clean :
+	make clean
 	sudo rm -rf node_modules
+	sudo rm -rf .yalc
 
+
+clean :
+	sudo rm -rf package-lock.json
+	sudo rm -rf yarn.lock
+	sudo rm -rf yalc.lock
+	sudo rm -f yarn-error.log
 
 install :
-	rm -f yarn.lock
-	rm -f yarn-error.log
 	yarn install
 
 link:
 	make link-package
+	npm install
+
+watch-link :
 	nodemon -w $(NAVIGATOR_PATH) -x "make push";
 
 push:
@@ -22,7 +30,7 @@ push:
 unlink:
 	yalc installations clean
 	yalc remove --all
-	make install
+	npm install
 
 link-package :
 	yalc publish $(NAVIGATOR_PATH);

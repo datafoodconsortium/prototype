@@ -167,14 +167,14 @@ export default class CatalogSupply extends GenericElement {
       console.log(d);
       return {
         id: counter,
-        description: d['dfc-b:references']['dfc-b:description'],
+        description: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:description'],
         source: d['dfc-t:hostedBy']['rdfs:label'],
         sku: d['dfc-b:sku'],
         stockLimitation : d['dfc-b:stockLimitation'],
-        totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-        quantity: d['dfc-b:references']['dfc-b:quantity'],
-        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+        totalTheoriticalStock : d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+        quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
+        unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        type: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
         raw: d,
         children: d['dfc-t:hasPivot']['dfc-t:represent']==undefined?[]:d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
           counter++;
@@ -183,11 +183,11 @@ export default class CatalogSupply extends GenericElement {
             source: c['dfc-t:hostedBy']?c['dfc-t:hostedBy']['rdfs:label']:'',
             sku: c['dfc-b:sku'],
             stockLimitation : c['dfc-b:stockLimitation'],
-            totalTheoriticalStock : c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-            description: c['dfc-b:references']['dfc-b:description'],
-            quantity: c['dfc-b:references']['dfc-b:quantity'],
-            unit: c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-            type: c['dfc-b:references']['dfc-p:hasType']?c['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+            totalTheoriticalStock : c['dfc-b:references']&&c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+            description: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:description'],
+            quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:quantity'],
+            unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+            type: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasType']?c['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
             raw: c,
             parent: d,
           }

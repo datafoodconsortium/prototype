@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "nodemon --exec yarn start -e js,html,css --watch src --watch .yalc --ignore configuration.js",
-    "devwithlink": "make link & sleep 5 && npm run dev",
+    "devwithlink": "make link && npm run dev & make watch-link",
     "start": "node ./src/server/app.js"
   },
   "author": "",
@@ -43,11 +43,12 @@
     "express-session": "^1.16.2",
     "fix-esm": "^1.0.1",
     "install": "^0.13.0",
+    "isobject": "^4.0.0",
     "jquery": "^3.4.1",
     "jsonld": "^5.2.0",
     "ldflex": "^2.6.1",
     "ldflex-comunica": "^3.1.0",
-    "ldp-navigator": "^1.2.4",
+    "ldp-navigator": "^1.2.5",
     "mongodb": "^3.2.7",
     "mongoose": "^5.5.14",
     "navigo": "^7.1.2",

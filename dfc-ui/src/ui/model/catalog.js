@@ -212,7 +212,7 @@ export default class Catalog extends GenericElement {
         this.catalogs = newRecords;
 
 
-        console.log('this.catalogs',this.catalogs);
+        // console.log('this.catalogs',this.catalogs);
         this.publish({
           channel: 'supply',
           topic: 'changeAll',
@@ -288,7 +288,7 @@ export default class Catalog extends GenericElement {
       console.log('refreshSupply ajax',data);
       if(data.body['@id'] || data.body['@graph']){
         this.selectedSupply = data.body;
-        console.log('ALLO',data.body);
+        // console.log('ALLO',data.body);
         this.publish({
           channel: 'supply',
           topic: 'changeOne',
