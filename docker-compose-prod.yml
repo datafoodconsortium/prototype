@@ -56,7 +56,7 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    command: bash -c "yarn install && yarn run dev"
+    command: bash -c "yarn install && yarn start"
   dfc-ui:
     build:
       context: ./dfc-ui
