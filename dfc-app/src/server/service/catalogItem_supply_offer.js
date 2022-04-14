@@ -548,7 +548,7 @@ class CatalogService {
             '@type': '@id'
           }))
         }
-        // console.log('UPDATE PIVOT',updatePivotBody);
+        // console.log('UPDATE Catalog Item',updatePivotBody);
         const responsePivotPatch = await fetch(item["dfc-t:hasPivot"]['@id'], {
           method: 'Put',
           body: JSON.stringify(updatePivotBody),
@@ -563,10 +563,11 @@ class CatalogService {
         const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
 
         const isDfcPlatform=item['dfc-t:hostedBy']['@id']==dfcPlaform['@id'];
+        console.log('IS DFC PLATFORM',isDfcPlatform);
 
         if (item['dfc-b:references']) {
           //update remote data
-          // console.log('UPDATE catalog item', item['dfc-b:references']['@id']);
+          console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
           await fetch(item['dfc-b:references']['@id'], {
             method: 'Patch',
             body: JSON.stringify({
@@ -596,7 +597,7 @@ class CatalogService {
         }
 
         //update remote data
-        // console.log('UPDATE product ', item['@id']);
+        console.log('UPDATE product ', item['@id']);
         await fetch(item['@id'], {
           method: 'Patch',
           body: JSON.stringify({
