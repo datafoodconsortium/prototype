@@ -164,7 +164,7 @@ export default class ItemSupply extends GenericElement {
   }
 
   setData(data) {
-    console.log(data);
+    // console.log(data);
     let type = data['dfc-b:references']&&data['dfc-b:references']['dfc-p:hasType'];
     if(type&&!Array.isArray(type)){
       type=[type];
@@ -180,7 +180,7 @@ export default class ItemSupply extends GenericElement {
     this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     this.elements.sku.textContent = data['dfc-b:sku'];
     // const represents = Array.isArray(data['dfc-t:hasPivot']['dfc-t:represent'])?data['dfc-b:references']:[data['dfc-b:references']]
-    console.log(data['dfc-t:hasPivot']['dfc-t:represent']);
+    // console.log(data['dfc-t:hasPivot']['dfc-t:represent']);
     let represent= data['dfc-t:hasPivot']['dfc-t:represent'];
     represent=Array.isArray(represent)?represent:[represent];
     represent= represent.filter(r=>r['@id']!=data['@id'])

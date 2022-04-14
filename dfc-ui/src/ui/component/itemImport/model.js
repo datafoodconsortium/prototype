@@ -182,6 +182,10 @@ export default class ItemImport extends GenericElement {
     let dataEasyUi = data.map(d => {
       counter++;
       // console.log(d);
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      if(type&&!Array.isArray(type)){
+        type=[type];
+      }
       return {
         id: counter,
         source: d['dfc-t:hostedBy']['rdfs:label'],
@@ -189,7 +193,7 @@ export default class ItemImport extends GenericElement {
         description: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
         unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-        type: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+        type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         sku: d['dfc-b:sku'],
         stockLimitation: d['dfc-b:stockLimitation'],
         totalTheoriticalStock: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
