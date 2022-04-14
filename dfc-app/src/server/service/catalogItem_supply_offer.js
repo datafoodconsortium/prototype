@@ -578,7 +578,7 @@ class CatalogService {
           }
 
 
-          // NOT supported by socleo 
+          // NOT supported by socleo
           if (isDfcPlatform){
             data={
               'dfc-p:hasType': item['dfc-b:references']['dfc-p:hasType'],
@@ -586,7 +586,7 @@ class CatalogService {
               ...data
             }
           }
-
+          // console.log('data',data);
 
           await fetch(item['dfc-b:references']['@id'], {
             method: 'Patch',
