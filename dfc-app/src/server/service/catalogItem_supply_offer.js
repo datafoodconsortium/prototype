@@ -236,9 +236,9 @@ class CatalogService {
           forceArray: ['dfc-t:represent'],
           context: this.context
         }).make();
-        console.log('ldpNavigator init', id);
+        // console.log('ldpNavigator init', id);
         let item = await ldpNavigator.resolveById(id);
-        console.log('item', item);
+        // console.log('item', item);
         item = await ldpNavigator.dereference(item, [{
             p: 'dfc-t:hostedBy'
           },
@@ -253,7 +253,7 @@ class CatalogService {
             ]
           }
         ]);
-        console.log('item', item);
+        // console.log('item', item);
         resolve(item);
 
 
@@ -381,11 +381,14 @@ class CatalogService {
             if(ci['dfc-t:hasPivot']['dfc-t:represent']){
               ci['dfc-t:hasPivot']['dfc-t:represent'] = ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
                 // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
-                console.error('undefined represent');
+                if(r==undefined){
+                  console.error('Pivot with un represents',ci['dfc-t:hasPivot']);
+                }
+
                 return r&&r['dfc-t:hostedBy']&&r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
               })
             }else{
-              console.log('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
+              console.error('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
             }
 
           }
@@ -563,11 +566,11 @@ class CatalogService {
         const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
 
         const isDfcPlatform=item['dfc-t:hostedBy']['@id']==dfcPlaform['@id'];
-        console.log('IS DFC PLATFORM',isDfcPlatform);
+        // console.log('IS DFC PLATFORM',isDfcPlatform);
 
         if (item['dfc-b:references']) {
           //update remote data
-          console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
+          // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
           await fetch(item['dfc-b:references']['@id'], {
             method: 'Patch',
             body: JSON.stringify({
@@ -597,7 +600,7 @@ class CatalogService {
         }
 
         //update remote data
-        console.log('UPDATE catalog item ', item['@id']);
+        // console.log('UPDATE product ', item['@id']);
         await fetch(item['@id'], {
           method: 'Patch',
           body: JSON.stringify({
@@ -717,7 +720,7 @@ class CatalogService {
             context: this.context
           });
 
-          console.log('* service insert hasPivot');
+          // console.log('* service insert hasPivot');
           await sparqlTools.insert({
             "@context": this.context,
             "@id": importToConvert['@id'],
@@ -776,7 +779,7 @@ class CatalogService {
           const sparqlTools = new SparqlTools({
             context: this.context
           });
-          console.log('* service insert hasPivot');
+          // console.log('* service insert hasPivot');
           await sparqlTools.insert({
             "@context": this.context,
             "@id": importToConvert['@id'],
@@ -824,7 +827,7 @@ class CatalogService {
 
           let sourceObject = config.sources.filter(so => source.includes(so.url))[0];
 
-          console.log('sourceObject', sourceObject);
+          // console.log('sourceObject', sourceObject);
 
 
           const sourceResponse = await fetch(source, {
@@ -1078,8 +1081,8 @@ class CatalogService {
           "@context": this.context,
         }
 
-        console.log('* service insert owner and hostedBy');
-        console.log(item);
+        // console.log('* service insert owner and hostedBy');
+        // console.log(item);
         let importedItem = await sparqlTools.insert(item)
         // console.log('post insert');
 
