@@ -205,9 +205,17 @@ export default class ItemSupply extends GenericElement {
       if(this.selectedImport!=undefined){
         const {'@id':idReference,'@context':contextReference,'dfc-t:hasPivot':pivotReference,'dfc-t:hostedBy':hostedReference,...cleanReferences} = this.selectedImport['dfc-b:references'];
         console.log("cleanReferences",cleanReferences);
-        this.item['dfc-b:references']={...cleanReferences,"@id":this.item['dfc-b:references']["@id"]};
         console.log("this.item['dfc-b:references']",this.item['dfc-b:references']);
+        console.log({
+          ...this.item['dfc-b:references'],
+          ...cleanReferences
+        });
+        // this.item['dfc-b:references']={...cleanReferences,"@id":this.item['dfc-b:references']["@id"]};
+
         const {'@id':id,'@context':context,'dfc-t:hasPivot':pivot,'dfc-t:hostedBy':hosted,...cleanItem} = this.selectedImport;
+
+
+        // console.log("this.item['dfc-b:references']",this.item['dfc-b:references']);
         this.item={
           ...this.item,
           ...cleanItem,
@@ -216,6 +224,7 @@ export default class ItemSupply extends GenericElement {
             ...cleanReferences
           }
         };
+        console.log('final item', this.item);
         // this.item['dfc-b:sku']=this.selectedImport['dfc-b:sku'];
         // this.item['dfc-p:stockLimitation']=this.selectedImport['dfc-p:stockLimitation'];
 

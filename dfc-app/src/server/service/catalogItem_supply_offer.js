@@ -597,7 +597,7 @@ class CatalogService {
         }
 
         //update remote data
-        console.log('UPDATE product ', item['@id']);
+        console.log('UPDATE catalog item ', item['@id']);
         await fetch(item['@id'], {
           method: 'Patch',
           body: JSON.stringify({
