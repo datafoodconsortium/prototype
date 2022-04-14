@@ -571,15 +571,28 @@ class CatalogService {
         if (item['dfc-b:references']) {
           //update remote data
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
+          let data= {
+            'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
+            'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+            'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity']
+          }
+
+
+          // NOT supported by socleo 
+          if (isDfcPlatform){
+            data={
+              'dfc-p:hasType': item['dfc-b:references']['dfc-p:hasType'],
+              'dfc-b:hasUnit': item['dfc-b:references']['dfc-b:hasUnit'],
+              ...data
+            }
+          }
+
+
           await fetch(item['dfc-b:references']['@id'], {
             method: 'Patch',
             body: JSON.stringify({
               "@context": this.context,
-              'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
-              'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-              'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity'],
-              'dfc-p:hasType': item['dfc-b:references']['dfc-p:hasType'],
-              'dfc-b:hasUnit': item['dfc-b:references']['dfc-b:hasUnit'],
+              ...data
             }),
             headers: {
               'accept': 'application/ld+json',
