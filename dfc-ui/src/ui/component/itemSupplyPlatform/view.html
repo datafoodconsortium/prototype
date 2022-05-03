@@ -1,74 +1,72 @@
 <div class="panelContainer" style="flex:1">
-  <table style="width:98%">
-    <tr style="height:30px">
-      <td>
-        <h1>Reconciled Platform product</h1>
-      </td>
-    </tr>
-    <tr style="height:100px">
-      <td>
+
+  <h1>Reconciled Platform product</h1>
+
+  <div class="containerV">
+    <div style="border-style:solid;border-width:thin;">
+      <div class="field">
+        <label>Supply product id</label>
+        <div class="value" name="id_supply"></div>
+      </div>
+      <div class="field">
+        <label>description</label>
+        <input class="value" name="description" />
+      </div>
+      <div class="field">
+        <label>type</label>
+        <div class="value" name="type"></div>
+      </div>
+      <div class="field">
+        <label>quantity</label>
+        <input class="value" name="quantity" />
+      </div>
+      <div class="field">
+        <label>unit</label>
+        <div class="value" name="unit"></div>
+      </div>
+      <div class="field">
+        <label>stock limitation</label>
+        <input class="value" name="stockLimitation" />
+      </div>
+      <div class="field">
+        <label>sku</label>
+        <input class="value" name="sku" />
+      </div>
+    </div>
+  </div>
+  <div class="containerV">
+    <div class="containerH space-between">
+      <h2>Update data at source platform or refresh from it</h2>
+      <div class="containerH flex-end">
+        <button id="update"><img src="https://img.icons8.com/pastel-glyph/48/000000/upload--v1.png" /></button>
+      </div>
+    </div>
+    <div class="containerH space-between">
+      <h2>Refresh data from it</h2>
+      <div class="containerH flex-end">
+        <button id="refresh"><img src="https://img.icons8.com/pastel-glyph/48/000000/download--v1.png" /></button>
+      </div>
+    </div>
+
+
+
+    <div class="containerV">
+      <h2>test API sameAs</h2>
+      <div class="containerH">
+        <textarea cols="140" rows="15" name="curl"></textarea>
         <div class="containerV">
-          <div style="border-style:solid;border-width:thin;">
-            <div class="field">
-              <label>Supply product id</label>
-              <div class="value" name="id_supply"></div>
-            </div>
-            <div class="field">
-              <label>description</label>
-              <input class="value" name="description"/>
-            </div>
-            <div class="field">
-              <label>type</label>
-              <div class="value" name="type"></div>
-            </div>
-            <div class="field">
-              <label>quantity</label>
-              <input class="value" name="quantity"/>
-            </div>
-            <div class="field">
-              <label>unit</label>
-              <div class="value" name="unit"></div>
-            </div>
-            <div class="field">
-              <label>stock limitation</label>
-              <input class="value" name="stockLimitation"/>
-            </div>
-            <div class="field">
-              <label>sku</label>
-              <input class="value" name="sku"/>
-            </div>
-          </div>
+          <button id="sameAs">sameAs</button>
+          <button id="sameAsSimple">sameAs simple</button>
         </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div class="containerH space-between">
-          <h2>Update data at source platform or refresh from it</h2>
-          <div class="containerH flex-end">
-            <button id="update">Update</button>
-            <button id="refresh">Refresh</button
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div class="containerH space-between">
-          <h2>test API sameAs</h2>
-          <div class="containerH flex-end">
-            <button id="sameAs">sameAs</button>
-            <button id="sameAsSimple">sameAs simple</button>
-          </div>
-        </div>
-        <textarea cols="100" rows="15" name="curl" ></textarea>
-      </td>
-    </tr>
-  </table>
+      </div>
+    </div>
+
+  </div>
+
 </div>
 <style>
   label {
-    height : 2em;
+    height: 2em;
   }
 
   a {

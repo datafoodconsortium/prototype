@@ -140,7 +140,7 @@ export default class CatalogSupply extends GenericElement {
                     const raw = data.data.raw;
                     let hostedBy = raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy'];
                     if (hostedBy.endsWith('dfc')){
-                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/edit-link.png"/></div>`)
+                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/ios/32/000000/edit-link.png"/></div>`)
                       element.append(item);
                     }else {
                       const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/edit--v1.png"/></div>`)

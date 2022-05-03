@@ -261,7 +261,7 @@ export default class ItemSupply extends GenericElement {
                           topic: 'navigate',
                           data: '/x-item-supply-platform/' + encodeURIComponent(raw['@id'])
                         })
-                      
+
                   }
               }]
           }
