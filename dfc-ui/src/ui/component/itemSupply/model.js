@@ -204,6 +204,7 @@ export default class ItemSupply extends GenericElement {
           "source",
           {
               type: "buttons",
+              width:200,
               buttons: [{
                   // text: "Edit",
                   // cssClass: "button-dx",
