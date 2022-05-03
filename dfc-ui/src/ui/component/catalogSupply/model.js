@@ -1,14 +1,13 @@
 import GenericElement from '../../core/genericElement.js';
 import view from 'html-loader!./view.html';
-import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
-import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
-import easyuiCssIcons from '../../easyui/jquery-easyui-1.8.1/themes/icon.css';
-import easyuiCssColors from '../../easyui/jquery-easyui-1.8.1/themes/color.css';
+import 'devextreme/integration/jquery';
+import TreeList from "devextreme/ui/tree_list";
+import dxcss from 'devextreme/dist/css/dx.light.css';
 
 export default class CatalogSupply extends GenericElement {
   constructor() {
     super(view);
-
+    this.dxGridDom = this.shadowRoot.querySelector('#dxGrid');
     this.elements = {
       descriptionSearch: this.shadowRoot.querySelector('[name="descriptionSearch"]'),
     };
@@ -24,94 +23,15 @@ export default class CatalogSupply extends GenericElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    $(this.shadowRoot.querySelector("#panel")).panel({
-      fit: true
-    });
-
-    this.gridDomTree = $(this.shadowRoot.querySelector("#treeGrid"));
-
-    let treegrid = this.gridDomTree.treegrid({
-      fit: true,
-      autoLoad: false,
-      idField: 'id',
-      treeField: 'description',
-      onSelect: (rowData) => {
-        this.selectedSupply = rowData.raw
-      },
-      columns: [
-        [{
-            field: 'description',
-            title: 'description',
-            width: 300
-          },
-          {
-            field: 'quantity',
-            title: 'quantity',
-            width: 100
-          },
-          {
-            field: 'sku',
-            title: 'sku',
-            width: 100
-          },
-          {
-            field: 'stockLimitation',
-            title: 'stock limitation (catalog)',
-            width: 100
-          },
-          {
-            field: 'totalTheoriticalStock',
-            title: 'total theoritical stock (supply)',
-            width: 100
-          },
-          {
-            field: 'quantity',
-            title: 'quantity',
-            width: 100
-          },
-          {
-            field: 'unit',
-            title: 'unit',
-            width: 100
-          },
-          {
-            field: 'type',
-            title: 'type',
-            width: 100
-          },
-          {
-            field: 'source',
-            title: 'source',
-            width: 200
-          }
-        ]
-      ]
-    });
-    // this.gridDom.datagrid('loadData', dataEasyUi);
-    // console.warn('ALLO');
 
     this.publish({
       channel: 'supply',
       topic: 'loadAll'
     });
 
-    this.gridDomTree.datagrid('getPanel').find('.datagrid-header .datagrid-htable').css('height', '');
-    this.gridDomTree.datagrid('getPanel').find('.datagrid-header').css('height', '');
-    // this.gridDom.datagrid('resize');
-
-    let injectedStyle = document.createElement('style');
-    injectedStyle.appendChild(document.createTextNode(easyuiCss.toString()));
-    this.shadowRoot.appendChild(injectedStyle);
-    let injectedStyle2 = document.createElement('style');
-    injectedStyle2.appendChild(document.createTextNode(easyuiCssIcons.toString()));
-    this.shadowRoot.appendChild(injectedStyle2);
-    let injectedStyle3 = document.createElement('style');
-    injectedStyle3.appendChild(document.createTextNode(easyuiCssColors.toString()));
-    this.shadowRoot.appendChild(injectedStyle3);
-
-    this.shadowRoot.querySelector('#edit').addEventListener('click', e => {
-      this.edit();
-    })
+    let injectedStyle4 = document.createElement('style');
+    injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
+    this.shadowRoot.appendChild(injectedStyle4);
 
     this.shadowRoot.querySelector('#filter').addEventListener('click', e => {
       this.filter(this.elements.descriptionSearch.value);
@@ -124,26 +44,6 @@ export default class CatalogSupply extends GenericElement {
 
   attributeChangedCallback(attrName, oldVal, newVal) {
     super.attributeChangedCallback(attrName, oldVal, newVal);
-  }
-
-  edit() {
-    console.log(this.selectedSupply);
-    console.log('label',this.selectedSupply['dfc-t:hostedBy']['rdfs:label']);
-    let label = this.selectedSupply['dfc-t:hostedBy']['rdfs:label']
-    if (Array.isArray(label)?label.includes('Data Food Consortium'):label=='Data Food Consortium'){
-      this.publish({
-        channel: 'main',
-        topic: 'navigate',
-        data: '/x-item-supply/' + encodeURIComponent(this.selectedSupply['@id'])
-      })
-    }else{
-      this.publish({
-        channel: 'main',
-        topic: 'navigate',
-        data: '/x-item-supply-platform/' + encodeURIComponent(this.selectedSupply['@id'])
-      })
-    }
-
   }
 
   normalize(value) {
@@ -161,8 +61,9 @@ export default class CatalogSupply extends GenericElement {
 
   setDataGrid(data) {
     console.log('setDataGrid',data);
+
     let counter = 0;
-    let dataEasyUi = data.map(d => {
+    let dxData = data.map(d => {
       counter++;
       let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
       if(type&&!Array.isArray(type)){
@@ -178,11 +79,28 @@ export default class CatalogSupply extends GenericElement {
         quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
         unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
         type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
+        children:d['dfc-t:hasPivot']['dfc-t:represent'],
         raw: d,
-        children: d['dfc-t:hasPivot']['dfc-t:represent']==undefined?[]:d['dfc-t:hasPivot']['dfc-t:represent'].filter(c=>c['@type']!=undefined).map(c => {
+      }
+    })
+
+    const dxDataChildren =[];
+    dxData.forEach((d, i) => {
+      console.log(d);
+      if (d.children){
+        let children = d.children;
+        if(!Array.isArray(children)){
+          children=[children];
+        }
+        children.forEach((c, i) => {
           counter++;
-          return {
+          let type = c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasType'];
+          if(type&&!Array.isArray(type)){
+            type=[type];
+          }
+          dxDataChildren.push({
             id: counter,
+            parentId:d.id,
             source: c['dfc-t:hostedBy']?c['dfc-t:hostedBy']['rdfs:label']:'',
             sku: c['dfc-b:sku'],
             stockLimitation : c['dfc-b:stockLimitation'],
@@ -190,14 +108,69 @@ export default class CatalogSupply extends GenericElement {
             description: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:description'],
             quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:quantity'],
             unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-            type: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasType']?c['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+            type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
             raw: c,
             parent: d,
-          }
-        })
+          })
+        });
       }
-    })
-    this.gridDomTree.treegrid('loadData', dataEasyUi);
+    });
+
+    dxData=[...dxData,...dxDataChildren];
+
+
+    this.dxGrid = new TreeList(this.dxGridDom, {
+      "autoExpandAll": true,
+      "columns": [
+          "description",
+          "quantity",
+          "unit",
+          "sku",
+          "stockLimitation",
+          "totalTheoriticalStock",
+          "type",
+          "source",
+          {
+              type: "buttons",
+              buttons: [{
+                  // text: "Edit",
+                  // cssClass: "button-dx",
+                  // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
+                  template: function (element, data) {
+                    const raw = data.data.raw;
+                    let hostedBy = raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy'];
+                    if (hostedBy.endsWith('dfc')){
+                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/edit-link.png"/></div>`)
+                      element.append(item);
+                    }else {
+                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/edit--v1.png"/></div>`)
+                      element.append(item);
+                    }
+                    // return "edit template"
+                  },
+                  onClick: (e)=>{
+                      const raw = e.row.data.raw;
+                      let hostedBy = raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy'];
+                      if (hostedBy.endsWith('dfc')){
+                        this.publish({
+                          channel: 'main',
+                          topic: 'navigate',
+                          data: '/x-item-supply/' + encodeURIComponent(raw['@id'])
+                        })
+                      } else {
+                        this.publish({
+                          channel: 'main',
+                          topic: 'navigate',
+                          data: '/x-item-supply-platform/' + encodeURIComponent(raw['@id'])
+                        })
+                      }
+                  }
+              }]
+          }
+      ],
+      "dataSource": dxData,
+      "showRowLines": true
+    });
   }
 }
 window.customElements.define('x-catalog-supply', CatalogSupply);

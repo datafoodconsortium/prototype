@@ -7,12 +7,33 @@ a{
 
 button{
   text-transform: uppercase;
-  font-size: 1.2em;
+  /* font-size: 1.2em; */
   border-style:none;
   background-color: var(--color-orange);
   color: white;
-  margin: 2px;
+  /* margin: 2px; */
   border-radius: 4px;
+}
+
+button img {
+  filter: invert(1);
+}
+
+.button-dx{
+  background-color: var(--color-orange);
+  border-radius: 4px;
+  display : inline-block;
+  padding : 4px;
+
+}
+
+.button-dx:hover{
+  cursor: pointer;
+}
+
+
+.button-dx img {
+  filter: invert(1);
 }
 
 button:hover{

@@ -7,7 +7,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist/ui'),
+    static: path.resolve(__dirname, 'dist/ui'),
     compress: true,
     host: '0.0.0.0',
     port: 8090

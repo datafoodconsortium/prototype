@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const Visualizer = require('webpack-visualizer-plugin');
+const Visualizer = require('webpack-visualizer-plugin2');
 const CompressionPlugin = require('compression-webpack-plugin');
 module.exports = {
   entry: [
@@ -65,7 +65,7 @@ module.exports = {
 
 
       {
-        test: /\.(png|jpe?g|gif)$/,
+        test: /\.(png|jpe?g|gif|woff(2)?|ttf)$/,
         use: [{
           loader: 'file-loader',
           options: {},

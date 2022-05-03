@@ -1,88 +1,65 @@
 <div class="panelContainer" style="flex:1">
-  <table style="height:100%;width:98%">
-    <tr style="height:30px">
-      <td>
-        <h1>Edit a product</h1>
-      </td>
-    </tr>
-    <tr style="height:100px">
-      <td>
-        <div class="containerV">
-          <div class="containerH">
-            <div class="field">
-              <label>id</label>
-              <div class="value" name="id"></div>
-            </div>
-            <div class="field">
-              <label>source</label>
-              <div class="value" name="source"></div>
-            </div>
-          </div>
-          <div>
-            <div class="containerH">
-              <div class="field">
-                <label>description</label>
-                <div class="value" name="description"></div>
-              </div>
-              <div class="field">
-                <label>type</label>
-                <div class="value" name="type"></div>
-              </div>
-              <div class="field">
-                <label>quantity</label>
-                <div class="value" name="quantity"></div>
-              </div>
-              <div class="field">
-                <label>unit</label>
-                <div class="value" name="unit"></div>
-              </div>
-              <div class="field">
-                <label>sku</label>
-                <div class="value" name="sku"></div>
-              </div>
-              <div class="field">
-                <label>total theoritical stock (supply)</label>
-                <div class="value" name="totalTheoriticalStock"></div>
-              </div>
-              <div class="field">
-                <label>stock limitation (catalog)</label>
-                <div class="value" name="stockLimitation"></div>
-              </div>
-            </div>
-          </div>
+  <h1>Edit a product</h1>
+  <div class="containerV">
+    <div class="containerH">
+      <div class="field">
+        <label>id</label>
+        <div class="value" name="id"></div>
+      </div>
+      <div class="field">
+        <label>source</label>
+        <div class="value" name="source"></div>
+      </div>
+    </div>
+    <div>
+      <div class="containerH">
+        <div class="field">
+          <label>description</label>
+          <div class="value" name="description"></div>
         </div>
-    </tr>
-    <tr style="height:100px">
-      <td>
-        <div class="containerH">
-          <div class="field">
-            <label>search description</label>
-            <input type="text" class="value" name="descriptionSearch"/>
-          </div>
-          <div class="containerH">
-            <button id="filter">filter</button>
-          </div>
+        <div class="field">
+          <label>type</label>
+          <div class="value" name="type"></div>
         </div>
-      </td>
-    </tr>
-    <tr style="height:30px">
-      <td>
-        <div class="containerH space-between">
-          <h2>reconcile this import with ever recociled catalog</h2>
-          <div class="containerH">
-            <button id="link">reconcile</button>
-            <button id="linkEmpty">new product</button>
-          </div>
+        <div class="field">
+          <label>quantity</label>
+          <div class="value" name="quantity"></div>
         </div>
-      </td>
-    </tr>
-    <tr style="height:100%">
-      <td>
-        <div id="treeGrid">
+        <div class="field">
+          <label>unit</label>
+          <div class="value" name="unit"></div>
         </div>
-      </td>
-    </tr>
-  </table>
+        <div class="field">
+          <label>sku</label>
+          <div class="value" name="sku"></div>
+        </div>
+        <div class="field">
+          <label>total theoritical stock (supply)</label>
+          <div class="value" name="totalTheoriticalStock"></div>
+        </div>
+        <div class="field">
+          <label>stock limitation (catalog)</label>
+          <div class="value" name="stockLimitation"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="containerH">
+    <div class="field">
+      <label>search description</label>
+      <input type="text" class="value" name="descriptionSearch"/>
+    </div>
+    <div class="containerH">
+      <button id="filter"><img src="https://img.icons8.com/windows/32/000000/search--v1.png"/></button>
+    </div>
+  </div>
+  <div class="containerH space-between">
+    <h2>reconcile this import with ever recociled catalog</h2>
+    <div class="containerH">
+      <button id="linkEmpty"><img src="https://img.icons8.com/windows/32/000000/add-link.png"/></button>
+    </div>
+  </div>
+  <div id="dxGrid"/>
 </div>
 <style>
 

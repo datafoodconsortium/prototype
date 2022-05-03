@@ -1,13 +1,16 @@
 import GenericElement from '../../core/genericElement.js';
 import view from 'html-loader!./view.html';
-import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
-import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
-import easyuiCssIcons from '../../easyui/jquery-easyui-1.8.1/themes/icon.css';
-import easyuiCssColors from '../../easyui/jquery-easyui-1.8.1/themes/color.css';
+
+import 'devextreme/integration/jquery';
+import TreeList from "devextreme/ui/tree_list";
+import dxcss from 'devextreme/dist/css/dx.light.css';
 
 export default class CatalogImport extends GenericElement {
   constructor() {
     super(view);
+
+    this.dxGridDom = this.shadowRoot.querySelector('#dxGrid');
+
     this.subscribe({
       channel: 'import',
       topic: 'changeAll',
@@ -19,93 +22,15 @@ export default class CatalogImport extends GenericElement {
 
   connectedCallback() {
     super.connectedCallback();
-    $(this.shadowRoot.querySelector("#panel")).panel({
-      fit: true
-    });
-    this.gridDom = $(this.shadowRoot.querySelector("#grid"));
-
-    let datagrid = this.gridDom.datagrid({
-      fit: true,
-      singleSelect:true,
-      autoLoad: false,
-      onSelect: (id,rowData) => {
-        this.selected = rowData.raw
-      },
-      columns: [
-        [{
-            field: 'description',
-            title: 'description',
-            width: 300,
-            sortable: true,
-          },
-          {
-            field: 'quantity',
-            title: 'quantity',
-            width: 100,
-            sortable: true
-          }, {
-            field: 'unit',
-            title: 'unit',
-            width: 100,
-            sortable: true
-          },
-          {
-            field: 'sku',
-            title: 'sku',
-            width: 100
-          },
-          {
-            field: 'stockLimitation',
-            title: 'stock limitation (catalog)',
-            width: 100
-          },
-          {
-            field: 'totalTheoriticalStock',
-            title: 'total theoritical stock (supply)',
-            width: 100
-          },
-          {
-            field: 'type',
-            title: 'type',
-            width: 100
-          },
-          {
-            field: 'source',
-            title: 'source',
-            width: 200,
-            sortable: true
-          },
-          // {
-          //   field: 'action',
-          //   title: 'Action',
-          //   width: 80,
-          //   align: 'center',
-          //   formatter: function(value, row, index) {
-          //     return '<a href="./#/x-item-import/' + encodeURIComponent(row['@id'] )+ '">Edit</a> ';
-          //   }
-          // }
-        ]
-      ]
-    });
 
     this.publish({
       channel: 'import',
       topic: 'loadAll'
     });
 
-    this.gridDom.datagrid('getPanel').find('.datagrid-header .datagrid-htable').css('height', '');
-    this.gridDom.datagrid('getPanel').find('.datagrid-header').css('height', '');
-    // this.gridDom.datagrid('resize');
-
-    let injectedStyle = document.createElement('style');
-    injectedStyle.appendChild(document.createTextNode(easyuiCss.toString()));
-    this.shadowRoot.appendChild(injectedStyle);
-    let injectedStyle2 = document.createElement('style');
-    injectedStyle2.appendChild(document.createTextNode(easyuiCssIcons.toString()));
-    this.shadowRoot.appendChild(injectedStyle2);
-    let injectedStyle3 = document.createElement('style');
-    injectedStyle3.appendChild(document.createTextNode(easyuiCssColors.toString()));
-    this.shadowRoot.appendChild(injectedStyle3);
+    let injectedStyle4 = document.createElement('style');
+    injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
+    this.shadowRoot.appendChild(injectedStyle4);
 
     this.shadowRoot.querySelector('#edit').addEventListener('click', e => {
       this.edit();
@@ -131,25 +56,62 @@ export default class CatalogImport extends GenericElement {
   setDataGrid(data) {
     // let catalogList =this.shadowRoot.getElementById('catalogList');
     console.log('data received', data);
+
     let counter = 0;
-    let dataEasyUi = data.map(d => {
+    const dxData = data.map(d => {
+      counter++;
       return {
         id: counter,
-        source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
-        sku: d['dfc-b:sku'],
-        stockLimitation : d['dfc-b:stockLimitation'],
-        totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
         description: d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']['dfc-b:quantity'],
-        raw:d,
-        // unit: d['dfc:hasUnit']['@id'],
-        '@id': d['@id']
+        sku: d['dfc-b:sku'],
+        stockLimitation : d['dfc-b:stockLimitation'],
+        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
+        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
+        source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
+        raw :d
       }
     })
-    // console.log('dataEasyUi', dataEasyUi);
-    this.gridDom.datagrid('loadData', dataEasyUi);
+
+    this.dxGrid = new TreeList(this.dxGridDom, {
+      "autoExpandAll": true,
+      "columns": [
+          "description",
+          "quantity",
+          "unit",
+          "sku",
+          "stockLimitation",
+          "totalTheoriticalStock",
+          "type",
+          "source",
+          {
+              type: "buttons",
+              buttons: [{
+                  // text: "Edit",
+                  // cssClass: "button-dx",
+                  // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
+                  template: function (element, data) {
+                    // console.log('ALLO TEMPLATE',data, element);
+                    const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/link--v1.png"/></div>`)
+                    element.append(item);
+                    // return "edit template"
+                  },
+                  onClick: (e)=>{
+                      console.log(e);
+                      this.publish({
+                        channel: 'main',
+                        topic: 'navigate',
+                        data : '/x-item-import/'+encodeURIComponent(e.row.data.raw['@id'])
+                      })
+                  }
+              }]
+          }
+      ],
+      "dataSource": dxData,
+      "showRowLines": true
+    });
+    // this.dxGrid.dataSource= dataEasyUi;
   }
 }
 window.customElements.define('x-catalog-import', CatalogImport);

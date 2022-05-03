@@ -1,72 +1,51 @@
 <div class="panelContainer" style="flex:1">
-  <table style="height:100%;width:98%">
-    <tr style="height:30px">
-      <td>
-        <h1>Reconciled DFC product</h1>
-      </td>
-    </tr>
-    <tr style="height:100px">
-      <td>
-        <div class="containerV">
-          <div class="containerH">
-            <div class="field">
-              <label>id</label>
-              <div class="value" name="id"></div>
-            </div>
-          </div>
-          <div>
-            <div class="containerH">
-              <div class="field">
-                <label>description</label>
-                <div class="value" name="description"></div>
-              </div>
-              <div class="field">
-                <label>type</label>
-                <div class="value" name="type"></div>
-              </div>
-              <div class="field">
-                <label>quantity OBSOLET</label>
-                <div class="value" name="quantity"></div>
-              </div>
-              <div class="field">
-                <label>unit</label>
-                <div class="value" name="unit"></div>
-              </div>
-              <div class="field">
-                <label>sku (catalog)</label>
-                <div class="value" name="sku"></div>
-              </div>
-              <div class="field">
-                <label>total theoritical stock (supply)</label>
-                <div class="value" name="totalTheoriticalStock"></div>
-              </div>
-              <div class="field">
-                <label>stock limitation (catalog)</label>
-                <div class="value" name="stockLimitation"></div>
-              </div>
-            </div>
-          </div>
+
+  <h1>Reconciled DFC product</h1>
+  <div class="containerV">
+    <div class="containerH">
+      <div class="field">
+        <label>id</label>
+        <div class="value" name="id"></div>
+      </div>
+    </div>
+    <div>
+      <div class="containerH">
+        <div class="field">
+          <label>description</label>
+          <div class="value" name="description"></div>
         </div>
-      </td>
-    </tr>
-    <tr style="height:30px">
-      <td>
-        <div class="containerH space-between">
-          <h2>Unconsolidat or choose reference</h2>
-          <div class="containerH">
-            <button id="unlink">Unconsolidat</button>
-            <button id="referer">Choose reference</button>
-          </div>
+        <div class="field">
+          <label>type</label>
+          <div class="value" name="type"></div>
         </div>
-      </td>
-    </tr>
-    <tr style="height:100%">
-      <td>
-        <div id="grid">
+        <div class="field">
+          <label>quantity OBSOLET</label>
+          <div class="value" name="quantity"></div>
         </div>
-      </td>
-    </tr>
-  </table>
+        <div class="field">
+          <label>unit</label>
+          <div class="value" name="unit"></div>
+        </div>
+        <div class="field">
+          <label>sku (catalog)</label>
+          <div class="value" name="sku"></div>
+        </div>
+        <div class="field">
+          <label>total theoritical stock (supply)</label>
+          <div class="value" name="totalTheoriticalStock"></div>
+        </div>
+        <div class="field">
+          <label>stock limitation (catalog)</label>
+          <div class="value" name="stockLimitation"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="dxGrid" />
+
+
+
+
 </div>
 <style>
   .field {
@@ -74,6 +53,6 @@
   }
 
   label {
-    height : 2em;
+    height: 2em;
   }
 </style>
