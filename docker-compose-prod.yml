@@ -36,6 +36,7 @@ services:
       - "3000:3000"
     expose:
       - "3000"
+    command: bash -c "yarn install && yarn start"
   dfc-app:
     build:
       context: ./dfc-app

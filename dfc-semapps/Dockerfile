@@ -10,6 +10,3 @@ RUN apk add --update --no-cache bash nano
 RUN yarn global add yalc
 #install yalc to dev (link) (need specific command in compose)
 RUN yarn global add nodemon
-
-# overide by compose if volume targeted src
-ADD src  ./src
