@@ -1,10 +1,10 @@
 import GenericElement from '../../core/genericElement.js';
 import view from 'html-loader!./view.html';
 
-import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
-import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
-import easyuiCssIcons from '../../easyui/jquery-easyui-1.8.1/themes/icon.css';
-import easyuiCssColors from '../../easyui/jquery-easyui-1.8.1/themes/color.css';
+// import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
+// import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
+// import easyuiCssIcons from '../../easyui/jquery-easyui-1.8.1/themes/icon.css';
+// import easyuiCssColors from '../../easyui/jquery-easyui-1.8.1/themes/color.css';
 
 import 'devextreme/integration/jquery';
 import TreeList from "devextreme/ui/tree_list";
@@ -288,7 +288,11 @@ export default class ItemImport extends GenericElement {
     this.dxGrid = new TreeList(this.dxGridDom, {
       "autoExpandAll": false,
       "columns": [
-          "description",
+          {
+            dataField: 'description',
+            caption: 'description',
+            minWidth: 400,
+          },
           "quantity",
           "unit",
           "sku",

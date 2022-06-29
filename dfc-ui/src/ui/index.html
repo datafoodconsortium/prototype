@@ -5,10 +5,9 @@
   <title>DFC proto V3.3</title>
 
   <!-- DevExtreme theme -->
+  <!-- require for exapnd marker on treegrid -->
   <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/21.2.6/css/dx.light.css">
-  <!-- DevExtreme library -->
-  <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/21.2.6/js/dx.all.js"></script>
-  
+
   <% for (var index in htmlWebpackPlugin.files.js) { %>
     <script src="./<%= htmlWebpackPlugin.files.js[index] %>"></script>
   <% } %>

@@ -57,7 +57,7 @@ class SparqlCrud {
     }
 
     const simplifiedRessource= this.simplify(resource)
-    console.log('simplifiedRessource',simplifiedRessource);
+    // console.log('simplifiedRessource',simplifiedRessource);
 
     const rdf = await jsonld.toRDF(simplifiedRessource, {
       format: 'application/n-quads'
@@ -146,9 +146,9 @@ class SparqlCrud {
       }
     });
 
-    console.log(response.status);
+    // console.log(response.status);
     const raw = await response.text();
-    console.log('raw',raw);
+    // console.log('raw',raw);
 
   }
 

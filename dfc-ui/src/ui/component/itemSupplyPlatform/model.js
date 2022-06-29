@@ -1,10 +1,10 @@
 import GenericElement from '../../core/genericElement.js';
 import view from 'html-loader!./view.html';
 
-import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
-import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
-import easyuiCssIcons from '../../easyui/jquery-easyui-1.8.1/themes/icon.css';
-import easyuiCssColors from '../../easyui/jquery-easyui-1.8.1/themes/color.css';
+// import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
+// import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
+// import easyuiCssIcons from '../../easyui/jquery-easyui-1.8.1/themes/icon.css';
+// import easyuiCssColors from '../../easyui/jquery-easyui-1.8.1/themes/color.css';
 
 export default class ItemSupplyPlatform extends GenericElement {
   constructor() {
@@ -214,7 +214,7 @@ export default class ItemSupplyPlatform extends GenericElement {
   }
 
   setUser(user) {
-
+    console.log('setUser',user);
     this.token =  user.token;
   }
 

@@ -77,7 +77,11 @@ export default class CatalogImport extends GenericElement {
     this.dxGrid = new TreeList(this.dxGridDom, {
       "autoExpandAll": true,
       "columns": [
-          "description",
+          {
+            dataField: 'description',
+            caption: 'description',
+            minWidth: 400,
+          },
           "quantity",
           "unit",
           "sku",

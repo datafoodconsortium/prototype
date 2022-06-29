@@ -32,10 +32,15 @@ class CatalogService {
   async init() {
     if (!this.context) {
       let contextConfigRaw = config.context;
-      let contextConfigResponse = await fetch(contextConfigRaw);
-      this.context = (await contextConfigResponse.json())['@context'];
-      console.log('this.context', this.context);
+      this.context = await this.resolveContext(contextConfigRaw);
+      // console.log('this.context', this.context);
     }
+  }
+
+  async resolveContext(contextUrl){
+    let contextConfigResponse = await fetch(contextUrl);
+    // console.log('contextConfigResponse',contextConfigResponse);
+    return (await contextConfigResponse.json())['@context']
   }
 
   cleanImport(user) {
@@ -859,18 +864,28 @@ class CatalogService {
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
+
+
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
           // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
 
-          let contextConfigRaw = config.context;
-          let contextConfigResponse = await fetch(contextConfigRaw);
-          let contextConfig = await contextConfigResponse.json();
 
+          let contextConfig = this.context
 
-          sourceResponseObject['@context'] = {
-            ...sourceResponseObject['@context'],
-            ...contextConfig['@context']
+          let sourceContext=sourceResponseObject['@context'];
+          if ((typeof sourceContext === 'string' || sourceContext instanceof String)&&sourceContext.includes('http')){
+            sourceContext = await this.resolveContext(sourceContext);
           }
+
+
+
+          // sourceResponseObject['@context'] = {
+          //   ...sourceContext,
+          //   ...contextConfig
+          // }
+
+// console.log('sourceResponseObject',sourceResponseObject);
+// console.log('contextConfig',contextConfig);
 
           sourceResponseObject = await jsonld.compact(sourceResponseObject, contextConfig)
 
@@ -951,6 +966,7 @@ class CatalogService {
           //     'dfc-t:represent'
           //   ]
           // }).make();
+          // console.log('sourceResponseObject',sourceResponseObject);
           await ldpNavigator.init(sourceResponseObject)
           // console.log('persist BEFORE');
           await ldpNavigator.persist();

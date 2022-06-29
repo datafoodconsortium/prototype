@@ -57,7 +57,7 @@ request(url, {
 
         // console.log('CONTEXT',context);
         // console.log('catalogAPI',catalogAPI);
-        // console.log('config',config);
+        console.log('config',config);
         var opts = {
           resources: [
             'http-get://dfc-middleware:3000/ldp/platform',
@@ -66,7 +66,9 @@ request(url, {
           delay: 1000, // initial delay in ms, default 0
           simultaneous: 1, // limit to 1 connection per resource at a time
         }
+        console.log('befor waitOn');
         await waitOn(opts);
+        console.log('after waitOn');
         await platformServiceSingleton.updatePlatformsFromConfig();
         // await unitServiceSingleton.updateUnitsFromConfig();
         // await productTypeServiceSingleton.updateProductsFromReference();

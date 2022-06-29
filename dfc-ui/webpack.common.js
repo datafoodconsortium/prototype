@@ -27,14 +27,7 @@ module.exports = {
     minimize: true,
     mergeDuplicateChunks: true,
     splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]easyui[\\/]/,
-          name: 'easyui',
-          chunks: 'all',
-        },
-      }
+      chunks: 'all'
     },
   },
   module: {
