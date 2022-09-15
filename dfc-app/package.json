@@ -3,8 +3,8 @@
   "version": "0.0.2",
   "description": "",
   "scripts": {
-    "dev": "nodemon --exec yarn start -e js,html,css --watch src --watch .yalc --ignore configuration.js",
-    "devwithlink": "make link && npm run dev & make watch-link",
+    "dev": "nodemon --exec yarn start -e js,html,css --watch src --ignore configuration.js",
+    "devwithlink": "make install && make link && make watch-link && yarn dev",
     "start": "node ./src/server/app.js"
   },
   "author": "",

@@ -4,7 +4,7 @@ const jsonld = require('jsonld');
 const fetch = require('node-fetch');
 var urljoin = require('url-join');
 const isObject = require("fix-esm").require('isobject')
-console.log('isObject',isObject);
+// console.log('isObject',isObject);
 const DataFactory = require('@rdfjs/data-model');
 const {
   literal,
@@ -48,7 +48,7 @@ class SparqlCrud {
   }
 
   async insert(resource) {
-    // console.log('insert');
+    // console.log('sparqlTool insert resource');
     // console.log('resource',resource);
     // console.log('-----------------------');
     resource['@context'] = {
@@ -63,7 +63,7 @@ class SparqlCrud {
       format: 'application/n-quads'
     });
 
-    // console.log('insert',`INSERT DATA { ${rdf} }`);
+    // console.log('sparqlTool insert',resource);
     const response = await fetch(urljoin('http://dfc-fuseki:3030/', 'localData', 'update'), {
       body: `INSERT DATA { ${rdf} }`,
       method: 'POST',
@@ -76,12 +76,12 @@ class SparqlCrud {
     // console.log('response',response);
     const data = await response.text();
     // console.log('data',data);
-    // console.log('sparqlTool getOne cause by insert');
+    console.log('sparqlTool getOne cause by insert');
     const getOneObject = await this.getOne(resource['@id'])
 
     // console.log('getOneObject',getOneObject);
 
-    return resource
+    return getOneObject;
   };
 
   async getOne(id) {
@@ -153,6 +153,7 @@ class SparqlCrud {
   }
 
   async removeTriples(id, triples) {
+    console.log('removeTriples',id);
     const navigator = new LDPNavigator_SparqlAndFetch_Factory({
       context: this.config.context,
     }).make();
@@ -171,7 +172,7 @@ class SparqlCrud {
       }
     `
 
-    // console.log('query', query);
+    console.log('query', query);
     const response = await fetch(urljoin('http://dfc-fuseki:3030/', 'localData', 'update'), {
       body: query,
       method: 'POST',

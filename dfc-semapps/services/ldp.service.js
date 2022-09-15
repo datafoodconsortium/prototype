@@ -12,7 +12,7 @@ module.exports = {
       {
         path: '/catalogItem',
         // acceptedTypes: ['dfc-b:CatalogItem'],
-        // dereference: ['dfc-b:references/dfc-p:hasType','dfc-b:references/dfc-p:hasUnit','dfc-t:hostedBy'],
+        dereference: ['dfc-b:hasQuantity'],
         // dereference: ['dfc-b:references/dfc-p:hasType','dfc-b:references/dfc-p:hasUnit','dfc-t:hostedBy'],
         // disassembly: [{path:'dfc-b:references',container:process.env.SEMAPPS_HOME_URL + 'ldp/product'}]
       },

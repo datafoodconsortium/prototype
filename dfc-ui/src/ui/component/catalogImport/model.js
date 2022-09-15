@@ -63,12 +63,12 @@ export default class CatalogImport extends GenericElement {
       return {
         id: counter,
         description: d['dfc-b:references']['dfc-b:description'],
-        quantity: d['dfc-b:references']['dfc-b:quantity'],
+        quantity: d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
         sku: d['dfc-b:sku'],
         stockLimitation : d['dfc-b:stockLimitation'],
-        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        unit: d['dfc-b:references']['dfc-b:hasQuantity']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-p:hasUnit']['rdfs:label']:'',
         totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
+        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'][0]['@value']:'',
         source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
         raw :d
       }

@@ -19,22 +19,30 @@ install :
 
 link:
 	make link-package
-	npm install
 
 watch-link :
-	nodemon -w $(NAVIGATOR_PATH) -x "make push";
+	nodemon -w $(NAVIGATOR_PATH) -x "yarn start";
 
 push:
 	make push-package
 
 unlink:
-	yalc installations clean
-	yalc remove --all
-	npm install
+	yarn unlink ldp-navigator
+	yarn --cwd $(NAVIGATOR_PATH) unlink
+
+	# yalc installations clean
+	# yalc remove --all
+	# npm install
+
 
 link-package :
-	yalc publish $(NAVIGATOR_PATH);
-	yalc link ldp-navigator;
+	yarn --cwd $(NAVIGATOR_PATH) link
+	yarn link ldp-navigator
+	# yalc publish $(NAVIGATOR_PATH);
+	# yalc link ldp-navigator;
+	# npm install
 
 push-package :
-	yalc push $(NAVIGATOR_PATH) --changed;
+	# make unlink
+	# make link
+	# yalc push $(NAVIGATOR_PATH) --changed;

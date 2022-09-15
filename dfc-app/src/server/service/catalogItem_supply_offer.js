@@ -23,6 +23,17 @@ const {
 // const SparqlAdapter = require('./../ldpUtil/adapter/SparqlAdapter');
 const SparqlTools = require('./../util/sparqlTools.js')
 
+const PREFIX=`
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+  PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+  PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+  PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+  PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+  PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  `
+
 
 class CatalogService {
   constructor() {
@@ -47,16 +58,10 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
         await this.init();
+        console.log('cleanImport for user ',user['@id'],);
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
-          body: `
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+          body: `${PREFIX}
           CONSTRUCT  {
             ?s1 ?p1 ?o1 .
           }
@@ -71,10 +76,13 @@ class CatalogService {
         });
 
         let datas = await response.json();
-        // console.log(datas);
+        console.log(datas);
         const sparqlTools = new SparqlTools({
           context: this.context
         });
+        if(datas['@id'] && datas['@id'].includes('http') ){
+            sparqlTools.remove(datas['@id']);
+        }
         if (datas['@graph']) {
           for (const data of datas['@graph']) {
             // console.log(data['@id']);
@@ -101,15 +109,7 @@ class CatalogService {
         let contextConfig = await contextConfigResponse.json();
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
-          body: `
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-          PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          body: `${PREFIX}
           CONSTRUCT  {
             ?sPlatform ?p ?o.
           }
@@ -139,16 +139,7 @@ class CatalogService {
               headers: {
                 'accept': 'application/ld+json'
               },
-              prefix: `
-                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                `
+              prefix: PREFIX
             },
             update: {
               endpoint: 'http://dfc-fuseki:3030/localData/update',
@@ -160,20 +151,26 @@ class CatalogService {
           },
           forceArray: ['dfc-t:represent']
         }).make();
+        // console.log('BEFORE app init');
         await ldpNavigator.init(items);
+        // console.log('AFTER app init');
         const importItemsRaw = await ldpNavigator.filterInMemory({});
         // console.log('importItemsRaw',importItemsRaw);
         let importItems = [];
         for (var importItem of importItemsRaw) {
           // console.log('before',importItem);
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
+          console.log('BEFORE app derefrence');
           importItem = await ldpNavigator.dereference(importItem, [{
               p: 'dfc-t:hostedBy'
             },
             {
               p: 'dfc-b:references',
               n: [{
-                  p: 'dfc-p:hasUnit'
+                  p: 'dfc-b:hasQuantity',
+                  n:[{
+                    p:'dfc-b:hasUnit'
+                  }]
                 },
                 {
                   p: 'dfc-p:hasType'
@@ -219,16 +216,7 @@ class CatalogService {
               headers: {
                 'accept': 'application/ld+json'
               },
-              prefix: `
-                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                `
+              prefix: PREFIX
             },
             update: {
               endpoint: 'http://dfc-fuseki:3030/localData/update',
@@ -250,7 +238,10 @@ class CatalogService {
           {
             p: 'dfc-b:references',
             n: [{
-                p: 'dfc-p:hasUnit'
+                p: 'dfc-b:hasQuantity',
+                n:[{
+                  p:'dfc-b:hasUnit'
+                }]
               },
               {
                 p: 'dfc-p:hasType'
@@ -273,14 +264,7 @@ class CatalogService {
       try {
         await this.init();
         const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
-        const query = ` PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                        PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                        PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                        PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                        PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                        PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                        PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        const query = ` ${PREFIX}
                         CONSTRUCT  {
                           ?sDFC ?p ?o.
                         }
@@ -304,7 +288,9 @@ class CatalogService {
 
         // console.log('items',items);
 
-        items = await jsonld.compact(items, this.context)
+        items = await jsonld.compact(items, this.context);
+
+        console.log('items',items);
 
         const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
           sparql: {
@@ -313,16 +299,7 @@ class CatalogService {
               headers: {
                 'accept': 'application/ld+json'
               },
-              prefix: `
-                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                `
+              prefix: PREFIX
             },
             update: {
               endpoint: 'http://dfc-fuseki:3030/localData/update',
@@ -354,7 +331,10 @@ class CatalogService {
                   {
                     p: 'dfc-b:references',
                     n: [{
-                        p: 'dfc-p:hasUnit'
+                        p: 'dfc-b:hasQuantity',
+                        n:[{
+                          p:'dfc-b:hasUnit'
+                        }]
                       },
                       {
                         p: 'dfc-p:hasType'
@@ -367,7 +347,10 @@ class CatalogService {
             {
               p: 'dfc-b:references',
               n: [{
-                  p: 'dfc-p:hasUnit'
+                  p: 'dfc-b:hasQuantity',
+                  n:[{
+                    p:'dfc-b:hasUnit'
+                  }]
                 },
                 {
                   p: 'dfc-p:hasType'
@@ -375,7 +358,7 @@ class CatalogService {
               ]
             }
           ]);
-          // console.log('AFTER', catalogItem);
+          console.log('AFTER', catalogItem);
           catalogItems.push(catalogItem);
         }
 
@@ -432,16 +415,7 @@ class CatalogService {
               headers: {
                 'accept': 'application/ld+json'
               },
-              prefix: `
-                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                `
+              prefix: PREFIX
             },
             update: {
               endpoint: 'http://dfc-fuseki:3030/localData/update',
@@ -472,7 +446,10 @@ class CatalogService {
                 {
                   p: 'dfc-b:references',
                   n: [{
-                      p: 'dfc-p:hasUnit'
+                      p: 'dfc-p:hasQuantity',
+                      n:[{
+                        p:'dfc-b:hasUnit'
+                      }]
                     },
                     {
                       p: 'dfc-p:hasType'
@@ -485,7 +462,10 @@ class CatalogService {
           {
             p: 'dfc-b:references',
             n: [{
-                p: 'dfc-p:hasUnit'
+                p: 'dfc-p:hasQuantity',
+                n:[{
+                  p:'dfc-b:hasUnit'
+                }]
               },
               {
                 p: 'dfc-p:hasType'
@@ -864,7 +844,7 @@ class CatalogService {
 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('DFC:', 'gi'), 'dfc:').replace(new RegExp('\"DFC\":', 'gi'), '\"dfc\":');
 
-
+          // console.log('sourceResponseRaw',sourceResponseRaw);
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
           // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
@@ -873,23 +853,26 @@ class CatalogService {
           let contextConfig = this.context
 
           let sourceContext=sourceResponseObject['@context'];
+          // console.log('sourceContext',sourceContext);
           if ((typeof sourceContext === 'string' || sourceContext instanceof String)&&sourceContext.includes('http')){
             sourceContext = await this.resolveContext(sourceContext);
           }
 
+          sourceResponseObject = await jsonld.compact(sourceResponseObject, sourceContext);
 
+          // console.log('sourceResponseObject 1',sourceResponseObject);
 
           // sourceResponseObject['@context'] = {
           //   ...sourceContext,
           //   ...contextConfig
           // }
 
-// console.log('sourceResponseObject',sourceResponseObject);
-// console.log('contextConfig',contextConfig);
+          // console.log('sourceResponseObject 2',sourceResponseObject);
+          // console.log('contextConfig',contextConfig);
 
           sourceResponseObject = await jsonld.compact(sourceResponseObject, contextConfig)
 
-          // console.log('sourceResponseObject',sourceResponseObject);
+          // console.log('sourceResponseObject 3',JSON.stringify(sourceResponseObject));
 
           // console.log('NEW for IMPORT');
 
@@ -908,16 +891,7 @@ class CatalogService {
                 headers: {
                   'accept': 'application/ld+json'
                 },
-                prefix: `
-                  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                  PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-                  PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-                  PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-                  PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-                  PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-                  PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-                  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                  `
+                prefix: PREFIX
               },
               update: {
                 endpoint: 'http://dfc-fuseki:3030/localData/update',
@@ -936,47 +910,20 @@ class CatalogService {
             })
           ]);
 
-
-
-          // const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
-          //   sparql: {
-          //     endpoint: 'http://dfc-middleware:3000/sparql',
-          //     prefix: `
-          //       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          //       PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-          //       PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-          //       PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-          //       PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-          //       PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-          //       PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-          //       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          //       `,
-          //     headers: {
-          //       'accept': 'application/ld+json'
-          //     }
-          //   },
-          //   fetch: {
-          //     headers: {
-          //       'authorization': 'JWT ' + user['ontosec:token'],
-          //       'accept': 'application/ld+json'
-          //     }
-          //   },
-          //   forceArray: [
-          //     'dfc-b:manages',
-          //     'dfc-t:represent'
-          //   ]
-          // }).make();
           // console.log('sourceResponseObject',sourceResponseObject);
+          // console.log('sourceResponseObject stringify',JSON.stringify(sourceResponseObject));
+
+
           await ldpNavigator.init(sourceResponseObject)
           // console.log('persist BEFORE');
           await ldpNavigator.persist();
-          // console.log('persist AFTER');
+          console.log('persist AFTER');
           // if (sourceResponseObject['@graph']){
           //   let person = sourceResponseObject['@graph'].find(r=>r['@type'].includes('Person'));
           //   console.log('person',person);
           // }
 
-
+          //
           let itemsToImport = [];
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
 
@@ -986,19 +933,23 @@ class CatalogService {
               '@type': 'dfc-b:Person'
             });
             // console.log('platformUser',platformUser);
-            // console.log('dereference BEFORE');
+            console.log('dereference BEFORE');
             const platformUserDereferences = await ldpNavigator.dereference(platformUser, {
               p: 'dfc-b:affiliates',
               n: {
                 p: 'dfc-b:manages',
                 n: {
-                  p: 'dfc-b:references'
+                  p: 'dfc-b:references',
+                  n: {
+                    p: 'dfc-b:hasQuantity'
+                  }
                 }
               }
             })
             // console.log('dereference AFTER');
 
-            // console.log(platformUserDereferences);
+            // console.log('platformUserDereferences',platformUserDereferences);
+            console.log("platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']",JSON.stringify(platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']));
 
             for (var manage of platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']) {
               // console.log('manage',manage);
@@ -1015,15 +966,7 @@ class CatalogService {
 
           const response = await fetch('http://dfc-middleware:3000/sparql', {
             method: 'POST',
-            body: `
-              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-              PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-              PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-              PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-              PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-              PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-              PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+            body: `${PREFIX}
               CONSTRUCT  {
                 ?s1 ?p1 ?o1 .
               }
@@ -1048,6 +991,8 @@ class CatalogService {
           let out = [];
           try {
             // existing = true;
+            //TODO remove / test
+            // itemsToImport=[itemsToImport[0]]
 
             let promises = itemsToImport.map(item => this.importItem(item, user, platform, existing));
             out = await Promise.all(promises);
@@ -1068,7 +1013,8 @@ class CatalogService {
             });
           }
 
-          resolve(out);
+          resolve(out)
+          // resolve([]);
         }
       } catch (e) {
         const responseProgressOn = await fetch(user['@id'], {
@@ -1092,10 +1038,11 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
 
+        console.log('INIT importItem');
         await this.init();
 
-        //TODO : convert to Generic
-        item['dfc-b:offeredThrough'] = undefined;
+        // //TODO : convert to Generic
+        // item['dfc-b:offeredThrough'] = undefined;
 
 
 
@@ -1103,22 +1050,27 @@ class CatalogService {
           context: this.context
         });
 
-        item = {
-          ...item,
+        let itemToInsert = {
+          // ...item,
+          "@id":item['@id'],
+          'dfc-b:offeredThrough':undefined,
           "dfc-t:hostedBy": platform['@id'],
           "dfc:owner": user['@id'],
           "@context": this.context,
         }
-
+        // console.log('INSERT');
         // console.log('* service insert owner and hostedBy');
         // console.log(item);
-        let importedItem = await sparqlTools.insert(item)
-        // console.log('post insert');
-
+        let importedItem = await sparqlTools.insert(itemToInsert)
+        // // console.log('post insert');
+        //
         let references = item['dfc-b:references']
         let dfcReferences;
         if (references) {
-          dfcReferences = await this.importItem(references, user, platform, convert);
+          // console.log('------------------------- IMPORT references',references);
+          // references=[references[0]];
+          dfcReferences = await this.importItem(references, user, platform, convert)
+          // dfcReferences = await this.importItem(references, user, platform, convert);
           // console.log('dfcReferences',dfcReferences);
           // item['dfc-b:references']=newReference;
         }
@@ -1131,6 +1083,7 @@ class CatalogService {
         }
 
         resolve(idDFC);
+        resolve();
       } catch (e) {
         console.error(e);
         reject(e)
@@ -1154,16 +1107,7 @@ class CatalogService {
           headers: {
             'accept': 'application/ld+json'
           },
-          prefix: `
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-            PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-            PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-            PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-            PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-            PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            `
+          prefix: PREFIX
         },
         update: {
           endpoint: 'http://dfc-fuseki:3030/localData/update',
@@ -1208,16 +1152,7 @@ class CatalogService {
           headers: {
             'accept': 'application/ld+json'
           },
-          prefix: `
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-            PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-            PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-            PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-            PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-            PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            `
+          prefix: PREFIX
         },
         update: {
           endpoint: 'http://dfc-fuseki:3030/localData/update',
