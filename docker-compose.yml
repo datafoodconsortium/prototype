@@ -15,13 +15,19 @@ services:
       - "3030"
     networks:
       - dfc
+    healthcheck:
+      test: curl --fail http://localhost:3030 || exit 1
+      interval: 1s
+      timeout: 1s
+      start_period: 5s
   dfc-middleware:
     build:
       context: ./dfc-semapps
       dockerfile: Dockerfile
     container_name: dfc-middleware
     depends_on:
-      - dfc-fuseki
+      dfc-fuseki:
+        condition: service_healthy
     environment:
       - SEMAPPS_SPARQL_ENDPOINT=http://dfc-fuseki:3030/
       - SEMAPPS_MAIN_DATASET=localData

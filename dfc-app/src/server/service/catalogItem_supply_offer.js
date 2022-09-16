@@ -23,17 +23,17 @@ const {
 // const SparqlAdapter = require('./../ldpUtil/adapter/SparqlAdapter');
 const SparqlTools = require('./../util/sparqlTools.js')
 
-const PREFIX=`
-  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-  PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-  PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
-  PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
-  PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
-  PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
-  PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
-  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-  `
-
+const PREFIX = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+PREFIX dfc-b: <http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#>
+PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntology.owl#>
+PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
+PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
+PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/#>
+`
 
 class CatalogService {
   constructor() {
@@ -147,7 +147,8 @@ class CatalogService {
                 'Content-Type': 'application/sparql-update',
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
-            }
+            },
+            dereference :['dfc-b:hasQuantity']
           },
           forceArray: ['dfc-t:represent']
         }).make();
@@ -224,7 +225,8 @@ class CatalogService {
                 'Content-Type': 'application/sparql-update',
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
-            }
+            },
+            dereference :['dfc-b:hasQuantity']
           },
           forceArray: ['dfc-t:represent'],
           context: this.context
@@ -307,7 +309,8 @@ class CatalogService {
                 'Content-Type': 'application/sparql-update',
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
-            }
+            },
+            dereference :['dfc-b:hasQuantity']
           },
           forceArray: ['dfc-t:represent']
         }).make();
@@ -423,7 +426,8 @@ class CatalogService {
                 'Content-Type': 'application/sparql-update',
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
-            }
+            },
+            dereference :['dfc-b:hasQuantity']
           },
           context: this.context,
           forceArray: ['dfc-t:represent']
@@ -900,7 +904,8 @@ class CatalogService {
                   Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
                 }
               },
-              skipResolveById: true
+              skipResolveById: true,
+              dereference :['dfc-b:hasQuantity']
             }),
             new FetchAdapter({
               headers: {
@@ -1116,7 +1121,8 @@ class CatalogService {
             Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
           }
         },
-        skipResolveById: true
+        skipResolveById: true,
+        dereference :['dfc-b:hasQuantity']
       }),
       new FetchAdapter({
         headers: {
@@ -1160,7 +1166,8 @@ class CatalogService {
             'Content-Type': 'application/sparql-update',
             Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
           }
-        }
+        },
+        dereference :['dfc-b:hasQuantity']
       },
       context: contextConfig,
       forceArray: ['dfc-t:represent']
