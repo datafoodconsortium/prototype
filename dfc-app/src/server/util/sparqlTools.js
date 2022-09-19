@@ -76,7 +76,7 @@ class SparqlCrud {
     // console.log('response',response);
     const data = await response.text();
     // console.log('data',data);
-    console.log('sparqlTool getOne cause by insert');
+    // console.log('sparqlTool getOne cause by insert');
     const getOneObject = await this.getOne(resource['@id'])
 
     // console.log('getOneObject',getOneObject);
@@ -111,7 +111,8 @@ class SparqlCrud {
             'Content-Type': 'application/sparql-update',
             Authorization: 'Basic ' + Buffer.from(process.env.SEMAPPS_JENA_USER + ':' + process.env.SEMAPPS_JENA_PASSWORD).toString('base64')
           }
-        }
+        },
+        dereference :['dfc-b:hasQuantity']
       },
       fetch: {
         headers: {

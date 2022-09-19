@@ -292,7 +292,7 @@ class CatalogService {
 
         items = await jsonld.compact(items, this.context);
 
-        console.log('items',items);
+        // console.log('items',items);
 
         const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
           sparql: {
@@ -361,7 +361,7 @@ class CatalogService {
               ]
             }
           ]);
-          console.log('AFTER', catalogItem);
+          // console.log('AFTER', catalogItem);
           catalogItems.push(catalogItem);
         }
 
@@ -922,7 +922,7 @@ class CatalogService {
           await ldpNavigator.init(sourceResponseObject)
           // console.log('persist BEFORE');
           await ldpNavigator.persist();
-          console.log('persist AFTER');
+          // console.log('persist AFTER');
           // if (sourceResponseObject['@graph']){
           //   let person = sourceResponseObject['@graph'].find(r=>r['@type'].includes('Person'));
           //   console.log('person',person);
@@ -954,7 +954,7 @@ class CatalogService {
             // console.log('dereference AFTER');
 
             // console.log('platformUserDereferences',platformUserDereferences);
-            console.log("platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']",JSON.stringify(platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']));
+            // console.log("platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']",JSON.stringify(platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']));
 
             for (var manage of platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']) {
               // console.log('manage',manage);
