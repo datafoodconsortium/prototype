@@ -44,7 +44,7 @@
     "express-session": "^1.17.1",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
-    "jsonld": "^3.1.1",
+    "jsonld": "^8.1.0",
     "navigo": "^7.1.2",
     "openid-client": "^3.15.8",
     "postal": "^2.0.5",
