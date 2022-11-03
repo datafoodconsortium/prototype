@@ -44,6 +44,7 @@ export default class Navigation extends GenericElement {
       channel: 'ui',
       topic: 'hideLoader',
       callback: () => {
+        console.log('hideLoader');
         this.elements.loader.classList.add('hide')
       }
     });
@@ -97,6 +98,7 @@ export default class Navigation extends GenericElement {
 
       }
     }
+    console.log('urlToken',urlToken);
     if (urlToken == undefined) {
       let token = localStorage.getItem('token');
 
@@ -127,7 +129,8 @@ export default class Navigation extends GenericElement {
         if (response.status == 200) {
           let jsonResponse = await response.json();
 
-          // console.log('response', jsonResponse);
+          console.log('response', jsonResponse);
+          
           this.publish({
             channel: 'profil',
             topic: 'set',

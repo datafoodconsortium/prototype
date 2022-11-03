@@ -8,6 +8,8 @@ import view from 'html-loader!./view.html';
 
 import 'devextreme/integration/jquery';
 import TreeList from "devextreme/ui/tree_list";
+import DataGrid from "devextreme/ui/data_grid";
+import TabPanel from "devextreme/ui/tab_panel";
 import dxcss from 'devextreme/dist/css/dx.light.css';
 
 export default class ItemSupply extends GenericElement {
@@ -15,7 +17,8 @@ export default class ItemSupply extends GenericElement {
     super(view);
 
     this.dxGridDom = this.shadowRoot.querySelector('#dxGrid');
-
+    this.dxGridOffersDom = this.shadowRoot.querySelector('#dxGridOffers');
+    console.log("this.dxGridOffersDom",this.dxGridOffersDom);
     this.elements = {
       description: this.shadowRoot.querySelector('[name="description"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
@@ -26,6 +29,7 @@ export default class ItemSupply extends GenericElement {
       stockLimitation: this.shadowRoot.querySelector('[name="stockLimitation"]'),
       totalTheoriticalStock: this.shadowRoot.querySelector('[name="totalTheoriticalStock"]'),
       id: this.shadowRoot.querySelector('[name="id"]'),
+      uriButton: this.shadowRoot.querySelector('#uri'),
     };
 
     this.subscribe({
@@ -132,6 +136,10 @@ export default class ItemSupply extends GenericElement {
       data: id
     });
 
+    this.elements.uriButton.addEventListener('click', e => {
+      window.alert(this.item['@id'])
+    })
+
     let injectedStyle4 = document.createElement('style');
     injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
     this.shadowRoot.appendChild(injectedStyle4);
@@ -173,38 +181,86 @@ export default class ItemSupply extends GenericElement {
     // // console.log('gridDom', this.gridDom, dataEasyUi);
     // this.gridDom.datagrid('loadData', dataEasyUi);
 
-
     let counter = 0;
     const dxData = data.map(d => {
       counter++;
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      if(type&&!Array.isArray(type)){
+        type=[type];
+      }
       return {
         id: counter,
         description: d['dfc-b:references']['dfc-b:description'],
-        quantity: d['dfc-b:references']['dfc-b:quantity'],
+        quantity:d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value']:'',
         sku: d['dfc-b:sku'],
         stockLimitation : d['dfc-b:stockLimitation'],
-        unit: d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'],
         totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['rdfs:label']:'',
+        type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
         raw :d
       }
     })
 
-    this.dxGrid = new TreeList(this.dxGridDom, {
+    this.dxGrid = new DataGrid(this.dxGridDom, {
       "autoExpandAll": true,
+      "showBorders": true,
+        masterDetail: {
+          enabled: true,
+          template: function (container, info) {
+              //console.log('info',info);
+              let dataOffers = info.data.raw['dfc-b:offeredThrough'].map(d=>({
+                price:d['dfc-b:price'],
+                stockLimitation:d['dfc-b:stockLimitation'],
+                description:d['dfc-b:offeres']['dfc-b:description']
+
+              }));
+
+              const tabPanelItems = [{
+                ID: 1,
+                title: 'Offers',
+                data: dataOffers,
+                template: function (itemData, itemIndex, element) {
+                  console.log(itemData, itemIndex, element);
+                  let offersGrid = new DataGrid(element, {
+                    "columns": [
+                      "description",
+                      "stockLimitation",
+                      "price",
+                    ],
+                    "dataSource": itemData.data
+                  })
+                },
+              }];
+
+
+              const panel =$("<div></div>").dxTabPanel({
+                  itemTitleTemplate:  function (data,index,container){
+                    // console.log('template',data,index,container);
+                    const title=$(`<span>${data.title}</span>`);
+                    container.append(title);
+                  },
+                  dataSource:tabPanelItems
+              });
+
+              container.append(panel);
+
+
+          }
+      },
       "columns": [
           {
             dataField: 'description',
             caption: 'description',
             minWidth: 400,
           },
+          "type",
           "quantity",
           "unit",
-          "sku",
+          // "sku",
           "stockLimitation",
-          "totalTheoriticalStock",
-          "type",
+          // "totalTheoriticalStock",
+
           "source",
           {
               type: "buttons",
@@ -278,21 +334,22 @@ export default class ItemSupply extends GenericElement {
   }
 
   setData(data) {
-    // console.log(data);
+    console.log(data);
     let type = data['dfc-b:references']&&data['dfc-b:references']['dfc-p:hasType'];
     if(type&&!Array.isArray(type)){
       type=[type];
     }
     this.item = data
+    this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&&data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
+    // this.elements.id.textContent = data['@id'];
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
     this.elements.type.textContent = type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'';
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
-    this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
-    this.elements.id.textContent = data['@id'];
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']?data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'';
+    this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&&data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.stockLimitation.textContent = data['dfc-b:stockLimitation'];
-    this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
-    this.elements.sku.textContent = data['dfc-b:sku'];
+    // this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
+    // this.elements.sku.textContent = data['dfc-b:sku'];
     // const represents = Array.isArray(data['dfc-t:hasPivot']['dfc-t:represent'])?data['dfc-b:references']:[data['dfc-b:references']]
     // console.log(data['dfc-t:hasPivot']['dfc-t:represent']);
     let represent= data['dfc-t:hasPivot']['dfc-t:represent'];
@@ -302,6 +359,26 @@ export default class ItemSupply extends GenericElement {
 
     // this.elements.quantity.textContent = data['dfc:quantity'];
     // this.elements.source.textContent = data['source'];
+
+    // let offers = data['dfc-b:offeredThrough'].map(o=>({
+    //   price:o['dfc-b:price'],
+    //   stockLimitation:o['dfc-b:stockLimitation'],
+    //   description:o['dfc-b:offeres']['dfc-b:description']
+    // }))
+    // console.log('offers',offers);
+
+
+    // this.dxGridOffers = new DataGrid(this.dxGridOffersDom, {
+    //   "autoExpandAll": true,
+    //   "showBorders": true,
+    //   "columns": [
+    //     "description",
+    //     "price",
+    //     "stockLimitation"
+    //   ],
+    //   "dataSource": offers,
+    // })
+
   }
 
   unlink(){

@@ -65,9 +65,13 @@ export default class User extends GenericElement {
   }
 
   logout(){
+    let token = localStorage.getItem('token');
+    // console.log('token',token);
     localStorage.removeItem('token');
-    console.log(window.location.href);
-    let redirectUrl = `${url_server}/login/auth/logout?redirectUri=${window.location.href}`;
+    // console.log(window.location.href);
+
+    let redirectUrl = `${url_server}/login/auth/logout?redirectUri=${encodeURIComponent(window.location.href)}&token=${encodeURIComponent('JWT' + ' '+token)}`;
+    // fetch(redirectUrl)
     window.location.href = redirectUrl;
     // this.util.ajaxCall("/auth/logout, option")
   }

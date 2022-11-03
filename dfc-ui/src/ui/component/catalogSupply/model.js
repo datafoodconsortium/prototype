@@ -2,12 +2,16 @@ import GenericElement from '../../core/genericElement.js';
 import view from 'html-loader!./view.html';
 import 'devextreme/integration/jquery';
 import TreeList from "devextreme/ui/tree_list";
+import Popup from "devextreme/ui/popup";
+import DataGrid from "devextreme/ui/data_grid";
 import dxcss from 'devextreme/dist/css/dx.light.css';
 
 export default class CatalogSupply extends GenericElement {
   constructor() {
     super(view);
-    this.dxGridDom = this.shadowRoot.querySelector('#dxGrid');
+    this.dxTreeGridDom = this.shadowRoot.querySelector('#dxGrid');
+    this.dxGridPlatformDom = this.shadowRoot.querySelector('#dxGridPlatform');
+    this.dxDialogDom = this.shadowRoot.querySelector('#dxDialog');
     this.elements = {
       descriptionSearch: this.shadowRoot.querySelector('[name="descriptionSearch"]'),
     };
@@ -18,6 +22,14 @@ export default class CatalogSupply extends GenericElement {
       callback: (data) => {
         this.rawSupplies = data;
         this.setDataGrid(data)
+      }
+    });
+
+    this.subscribe({
+      channel: 'source',
+      topic: 'changeAll',
+      callback: (data) => {
+        this.setSources(data)
       }
     });
   }
@@ -33,9 +45,60 @@ export default class CatalogSupply extends GenericElement {
     injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
     this.shadowRoot.appendChild(injectedStyle4);
 
+    this.dialog=new Popup(this.dxDialogDom , {
+      "visible": false
+    });
+
     this.shadowRoot.querySelector('#filter').addEventListener('click', e => {
       this.filter(this.elements.descriptionSearch.value);
     })
+    this.shadowRoot.querySelector('#export').addEventListener('click', e => {
+      this.openDialog();
+    })
+
+    this.publish({
+      channel: 'source',
+      topic: 'getAll'
+    });
+  }
+
+  setSources(data){
+    this.writableSource = data.filter(d=>d.supporWrite);
+
+    this.dxGrid = new DataGrid(this.dxGridPlatformDom, {
+      "autoExpandAll": true,
+      "columns": [
+          "name",
+          {
+              type: "buttons",
+              buttons: [{
+                  // text: "Edit",
+                  // cssClass: "button-dx",
+                  // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
+                  template: function (element, data) {
+                    const item = $(`<div class="button-dx"><image src="https://img.icons8.com/pastel-glyph/32/000000/upload--v1.png"/></div>`)
+                    element.append(item);
+                  },
+                  onClick: (e)=>{
+                    const slug = e.row.data.slug
+                    const items = this.dxTreeGrid.getSelectedRowsData().map(s=>s.raw);
+                    console.log(slug,items);
+                    this.publish({
+                      channel: 'source',
+                      topic: 'export',
+                      data: {
+                        slug,
+                        items
+                      }
+                    })
+                  }
+              }]
+          }
+      ],
+      "dataSource": this.writableSource,
+      "showRowLines": true
+    });
+
   }
 
   disconnectedCallback() {
@@ -58,6 +121,10 @@ export default class CatalogSupply extends GenericElement {
     this.setDataGrid(filteredData)
   }
 
+  openDialog(){
+    this.dialog.show();
+  }
+
 
   setDataGrid(data) {
     console.log('setDataGrid',data);
@@ -76,7 +143,7 @@ export default class CatalogSupply extends GenericElement {
         sku: d['dfc-b:sku'],
         stockLimitation : d['dfc-b:stockLimitation'],
         totalTheoriticalStock : d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-        quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
+        quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
         unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
         type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         children:d['dfc-t:hasPivot']['dfc-t:represent'],
@@ -107,7 +174,7 @@ export default class CatalogSupply extends GenericElement {
             totalTheoriticalStock : c['dfc-b:references']&&c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             description: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:description'],
             quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasQuantity']?c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value']:'',
-            unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasQuantity']?c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+            unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasQuantity']&&c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']&&c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'],
             type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
             raw: c,
             parent: d,
@@ -119,20 +186,33 @@ export default class CatalogSupply extends GenericElement {
     dxData=[...dxData,...dxDataChildren];
 
 
-    this.dxGrid = new TreeList(this.dxGridDom, {
+    this.dxTreeGrid = new TreeList(this.dxTreeGridDom, {
       "autoExpandAll": true,
+      "selection": {
+        mode: 'multiple',
+        recursive: true,
+      },
       "columns": [
           {
             dataField: 'description',
             caption: 'description',
-            minWidth: 400,
+            minWidth: 500,
           },
-          "quantity",
-          "unit",
-          "sku",
-          "stockLimitation",
-          "totalTheoriticalStock",
           "type",
+          // "quantity",
+          {
+            dataField: 'quantity',
+            caption: 'quantity',
+            width: 100,
+          },
+          "unit",
+          // "sku",
+          // "stockLimitation",
+          {
+            dataField: 'stockLimitation',
+            caption: 'stock'
+          },
+          // "totalTheoriticalStock",
           "source",
           {
               type: "buttons",

@@ -85,6 +85,14 @@ export default class Catalog extends GenericElement {
 
     this.subscribe({
       channel: 'source',
+      topic: 'export',
+      callback: (data) => {
+        this.exportToSource(data.slug,data.items);
+      }
+    });
+
+    this.subscribe({
+      channel: 'source',
       topic: 'clean',
       callback: (data) => {
         this.cleanAll();
@@ -136,6 +144,22 @@ export default class Catalog extends GenericElement {
         data: data.body
       });
     })
+  }
+
+  exportToSource(platformSlug, items) {
+    let url = `${url_server}/data/core/catalog/exportSource`;
+    console.log('EXPORT',platformSlug, items);
+    let option = {
+      method: 'POST'
+    };
+    // this.util.ajaxCall(url, option).then(data => {
+    //   // console.log('import converti', data);
+    //   this.publish({
+    //     channel: 'import',
+    //     topic: 'convert.done',
+    //     data: data.body
+    //   });
+    // })
   }
 
   async getSources() {

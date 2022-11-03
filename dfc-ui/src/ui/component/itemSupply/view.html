@@ -1,15 +1,13 @@
 <div class="panelContainer" style="flex:1">
 
-  <h1>Reconciled DFC product</h1>
-  <div class="containerV">
-    <div class="containerH">
-      <div class="field">
-        <label>id</label>
-        <div class="value" name="id"></div>
-      </div>
-    </div>
-    <div>
+  <h1>DFC product</h1>
+
+
       <div class="containerH">
+        <div class="field">
+          <label>uri</label>
+          <button id="uri"><img src="https://img.icons8.com/pastel-glyph/32/000000/security-pass.png"/></button>
+        </div>
         <div class="field">
           <label>description</label>
           <div class="value" name="description"></div>
@@ -19,31 +17,33 @@
           <div class="value" name="type"></div>
         </div>
         <div class="field">
-          <label>quantity OBSOLET</label>
+          <label>quantity</label>
           <div class="value" name="quantity"></div>
         </div>
         <div class="field">
           <label>unit</label>
           <div class="value" name="unit"></div>
         </div>
-        <div class="field">
-          <label>sku (catalog)</label>
-          <div class="value" name="sku"></div>
-        </div>
-        <div class="field">
-          <label>total theoritical stock (supply)</label>
-          <div class="value" name="totalTheoriticalStock"></div>
-        </div>
+        <!-- <div class="field">
+            <label>sku (catalog)</label>
+            <div class="value" name="sku"></div>
+          </div> -->
+        <!-- <div class="field">
+            <label>total theoritical stock (supply)</label>
+            <div class="value" name="totalTheoriticalStock"></div>
+          </div> -->
         <div class="field">
           <label>stock limitation (catalog)</label>
           <div class="value" name="stockLimitation"></div>
         </div>
+
       </div>
-    </div>
+
+
+
+  <div>
+    <div id="dxGrid"></div>
   </div>
-  <div id="dxGrid" />
-
-
 
 
 </div>

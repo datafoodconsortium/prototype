@@ -169,9 +169,9 @@ class CatalogService {
               p: 'dfc-b:references',
               n: [{
                   p: 'dfc-b:hasQuantity',
-                  n:[{
+                  n:{
                     p:'dfc-b:hasUnit'
-                  }]
+                  }
                 },
                 {
                   p: 'dfc-p:hasType'
@@ -241,9 +241,9 @@ class CatalogService {
             p: 'dfc-b:references',
             n: [{
                 p: 'dfc-b:hasQuantity',
-                n:[{
+                n:{
                   p:'dfc-b:hasUnit'
-                }]
+                }
               },
               {
                 p: 'dfc-p:hasType'
@@ -430,15 +430,22 @@ class CatalogService {
             dereference :['dfc-b:hasQuantity']
           },
           context: this.context,
-          forceArray: ['dfc-t:represent']
+          forceArray: ['dfc-t:represent','dfc-b:offeredThrough']
         }).make();
         // console.log('resolveById', id);
         let item = await ldpNavigator.resolveById(id);
 
         // console.log('item',item);
 
+        console.log('getOneItem DEREFERENCE');
+
         item = await ldpNavigator.dereference(item, [{
             p: 'dfc-t:hostedBy'
+          },{
+            p: 'dfc-b:offeredThrough',
+            n : {
+              p : 'dfc-b:offeres'
+            }
           },
           {
             p: 'dfc-t:hasPivot',
@@ -448,9 +455,15 @@ class CatalogService {
                   p: 'dfc-t:hostedBy'
                 },
                 {
+                  p: 'dfc-b:offeredThrough',
+                  n : {
+                    p : 'dfc-b:offeres'
+                  }
+                },
+                {
                   p: 'dfc-b:references',
                   n: [{
-                      p: 'dfc-p:hasQuantity',
+                      p: 'dfc-b:hasQuantity',
                       n:[{
                         p:'dfc-b:hasUnit'
                       }]
@@ -466,7 +479,7 @@ class CatalogService {
           {
             p: 'dfc-b:references',
             n: [{
-                p: 'dfc-p:hasQuantity',
+                p: 'dfc-b:hasQuantity',
                 n:[{
                   p:'dfc-b:hasUnit'
                 }]

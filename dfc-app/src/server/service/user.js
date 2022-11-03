@@ -20,52 +20,70 @@ class UserService {
     })
   }
 
-  async connectUser(login, accessToken) {
+  async connectUser(login, accessToken,idToken) {
     // console.log('CONNECT');
     return new Promise(async (resolve, reject) => {
       try {
+        const query =`
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX ontosec: <http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#>
+        PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
+        CONSTRUCT  {
+          ?s1 ?p1 ?o1 .
+        }
+        WHERE {
+          ?s1 ?p1 ?o1 ;
+            rdf:type dfc:Person;
+            dfc:email '${login}'.
+        }
+        `;
+
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
-          body: `
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX ontosec: <http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#>
-          PREFIX dfc: <http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#>
-
-          CONSTRUCT  {
-            ?s1 ?p1 ?o1 .
-          }
-          WHERE {
-            ?s1 ?p1 ?o1 ;
-              rdf:type dfc:Person;
-              dfc:email '${login}'.
-          }
-          `,
+          body:query,
           headers: {
             'accept': 'application/ld+json'
           }
         });
         let user = await response.json();
-        // console.log('user',user);
-        // TODO fefactor removing  this.UserCreationByConnect
-        if (!(user['@id'] || user['@graph'])) {
 
-          if (this.UserCreationByConnect===true) {
-            // console.log('DELAY UserCreationByConnect');
-            user = await this.connectUser(login, accessToken)
-          }else {
-            this.UserCreationByConnect=true;
-            user = await this.createOneUser({
-              'login': login,
-              'ontosec:token': accessToken
-            });
-            this.UserCreationByConnect=false;
+        if(accessToken||idToken){
+          if (!(user['@id'] || user['@graph'])) {
+
+            if (this.UserCreationByConnect===true) {
+              // console.log('DELAY UserCreationByConnect');
+              user = await this.connectUser(login, accessToken)
+            }else {
+              this.UserCreationByConnect=true;
+              user = await this.createOneUser({
+                "@context": {
+                  "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+                  "ontosec": "http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#"
+                },
+                'dfc:email': login,
+                'ontosec:token': accessToken,
+                'ontosec:idToken' : idToken,
+              });
+              this.UserCreationByConnect=false;
+            }
+
+          } else {
+            // TODO update token
+            // user.accessToken = accessToken;
+            let data = {
+              "@context": {
+                "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+                "ontosec": "http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#"
+              },
+              '@id': user['@id'],
+              'dfc:email': login,
+              'ontosec:token': accessToken,
+              'ontosec:idToken' : idToken||user['idToken'],
+            }
+            user =  await this.updateOneUser(data);
           }
-
-        } else {
-          // TODO update token
-          user.accessToken = accessToken;
-          user =  await this.updateOneUser(user);
         }
+
         resolve(user);
       } catch (e) {
         reject(e);
@@ -91,12 +109,20 @@ class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         let data = {
-          "@context": user['@context'],
-          "ontosec:token": user.accessToken
+          "@context": {
+            "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
+            "ontosec": "http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#"
+          },
+          "@type": "dfc:Person",
+          "ontosec:token": user['ontosec:token'],
+          "dfc:email": user['dfc:email']
+        }
+        if(user['ontosec:idToken']){
+          data['ontosec:idToken'] = user['ontosec:idToken'];
         }
 
         const response = await fetch(user['@id'], {
-          method: 'PATCH',
+          method: 'PUT',
           body: JSON.stringify(data),
           headers: {
             'accept': 'application/ld+json',
@@ -112,7 +138,8 @@ class UserService {
         // await userOld.save();
         resolve({
           ...user,
-          'ontosec:token':user.accessToken
+          'ontosec:token':user['ontosec:token'],
+          'ontosec:idToken':user['ontosec:idToken']
         });
       } catch (e) {
         reject(e);
@@ -124,14 +151,19 @@ class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         // TODO add token
+
         let data = {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
             "ontosec": "http://www.semanticweb.org/ontologies/2008/11/OntologySecurity.owl#"
           },
           "@type": "dfc:Person",
-          "dfc:email": user.login,
-          "ontosec:token": user.accessToken
+          "dfc:email": user['dfc:email'],
+          "ontosec:token": user['ontosec:token'],
+
+        }
+        if(user['ontosec:idToken']){
+          data['ontosec:idToken'] = user['ontosec:idToken'];
         }
 
         const response = await fetch('http://dfc-middleware:3000/ldp/user', {
