@@ -599,7 +599,7 @@ class CatalogService {
             headers: {
               'accept': 'application/ld+json',
               'content-type': 'application/ld+json',
-              'Authorization': 'JWT ' + user['ontosec:token']
+              'Authorization': 'JWT ' + user['token']
             }
           });
 
@@ -626,7 +626,7 @@ class CatalogService {
           headers: {
             'accept': 'application/ld+json',
             'content-type': 'application/ld+json',
-            'Authorization': 'JWT ' + user['ontosec:token']
+            'Authorization': 'JWT ' + user['token']
           }
         });
 
@@ -844,11 +844,10 @@ class CatalogService {
 
           // console.log('sourceObject', sourceObject);
 
-
           const sourceResponse = await fetch(source, {
             method: 'GET',
             headers: {
-              'authorization': 'JWT ' + user['ontosec:token'],
+              'authorization': 'JWT ' + user['token'],
               'accept': 'application/ld+json'
             }
           })
@@ -922,7 +921,7 @@ class CatalogService {
             }),
             new FetchAdapter({
               headers: {
-                'authorization': 'JWT ' + user['ontosec:token'],
+                'authorization': 'JWT ' + user['token'],
                 'accept': 'application/ld+json'
               }
             })
@@ -1139,7 +1138,7 @@ class CatalogService {
       }),
       new FetchAdapter({
         headers: {
-          'authorization': 'JWT ' + user['ontosec:token'],
+          'authorization': 'JWT ' + user['token'],
           'accept': 'application/ld+json'
         }
       })

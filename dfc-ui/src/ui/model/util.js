@@ -11,6 +11,8 @@ export default class Util {
     return new Promise((resolve, reject) => {
       let token = localStorage.getItem('token');
 
+      console.log('token',token);
+
       // console.log('ALLLO',token);
       if (token != undefined && token != 'undefined') {
         var myHeaders = new Headers();
