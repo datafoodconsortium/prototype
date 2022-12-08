@@ -144,7 +144,7 @@ export default class CatalogSupply extends GenericElement {
         stockLimitation : d['dfc-b:stockLimitation'],
         totalTheoriticalStock : d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
         quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
-        unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+        unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
         type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         children:d['dfc-t:hasPivot']['dfc-t:represent'],
         raw: d,
