@@ -105,6 +105,23 @@ module.exports = function(router) {
     }
   })
 
+  router.post('/catalog/exportSource', async (req, res, next) => {
+    // console.log('IMPORT',req)
+    // console.log('USER',req.user);
+    // let source = decodeURI(req.query.source);
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        // let out = await catalogItem_supply_offer.importSource(source, req.user);
+        res.json({});
+      } catch (e) {
+        res.statusCode = 409;
+        next(e);
+      }
+    }
+  })
+
   router.get('/catalog/link/:id', async (req, res, next) => {
     let source = decodeURI(req.query.source);
     if (req.user == undefined) {

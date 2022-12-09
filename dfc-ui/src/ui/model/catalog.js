@@ -152,14 +152,14 @@ export default class Catalog extends GenericElement {
     let option = {
       method: 'POST'
     };
-    // this.util.ajaxCall(url, option).then(data => {
-    //   // console.log('import converti', data);
-    //   this.publish({
-    //     channel: 'import',
-    //     topic: 'convert.done',
-    //     data: data.body
-    //   });
-    // })
+    this.util.ajaxCall(url, option).then(data => {
+      // console.log('import converti', data);
+      this.publish({
+        channel: 'source',
+        topic: 'export.done',
+        data: data.body
+      });
+    })
   }
 
   async getSources() {

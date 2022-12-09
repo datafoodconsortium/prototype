@@ -762,12 +762,6 @@ class CatalogService {
             context: this.context
           });
 
-          // let pivot = reconciled["dfc-t:hasPivot"];
-          // // console.log('pivot BEFORE',pivot);
-          // pivot["dfc-t:represent"].push({
-          //   "@id": importToConvert['@id'],
-          //   "@type": "@id"
-          // });
 
           await sparqlTools.insert({
             "@context": this.context,
@@ -778,36 +772,7 @@ class CatalogService {
             }
           });
 
-          // // console.log('pivot AFTER',pivot);
-          // const responsePivotPatch = await fetch(pivot['@id'], {
-          //   method: 'Patch',
-          //   body: JSON.stringify({
-          //     "@context": this.context,
-          //     "dfc-t:represent": pivot["dfc-t:represent"]
-          //   }),
-          //   headers: {
-          //     'accept': 'application/ld+json',
-          //     'content-type': 'application/ld+json'
-          //   }
-          // });
 
-          // const importToConvertBody= {
-          //   "@context": this.context,
-          //   "dfc-t:hasPivot": { "@id": pivot['@id'], "@type": "@id" }
-          // };
-          // console.log('importToConvertBody',importToConvertBody);
-          //
-          // // const responseReconciledPlatform = await fetch(importToConvert['@id'], {
-          //   method: 'Patch',
-          //   body: JSON.stringify(importToConvertBody),
-          //   headers: {
-          //     'accept': 'application/ld+json',
-          //     'content-type': 'application/ld+json'
-          //   }
-          // });
-
-
-          // console.log('* service insert hasPivot');
           await sparqlTools.insert({
             "@context": this.context,
             "@id": importToConvert['@id'],
@@ -817,10 +782,6 @@ class CatalogService {
             }
           });
 
-          // importToConvert["dfc-t:hasPivot"] = {
-          //   "@id": pivot['@id'],
-          //   "@type": "@id"
-          // };
 
           resolve(importToConvert['@id']);
         }
@@ -896,7 +857,7 @@ class CatalogService {
           //   ...contextConfig
           // }
 
-          console.log('sourceResponseObject 2',sourceResponseObject);
+          console.log('sourceResponseObject 2',JSON.stringify(sourceResponseObject));
           console.log('contextConfig',contextConfig);
 
 

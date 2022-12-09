@@ -32,6 +32,14 @@ export default class CatalogSupply extends GenericElement {
         this.setSources(data)
       }
     });
+
+    this.subscribe({
+      channel: 'source',
+      topic: 'export.done',
+      callback: (data) => {
+        alert('export done')
+      }
+    });
   }
   connectedCallback() {
     super.connectedCallback();
