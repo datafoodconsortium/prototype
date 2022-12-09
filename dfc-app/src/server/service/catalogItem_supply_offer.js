@@ -757,24 +757,39 @@ class CatalogService {
           resolve(responseItemDFC.headers.get('location'));
 
         } else {
-          let pivot = reconciled["dfc-t:hasPivot"];
-          // console.log('pivot BEFORE',pivot);
-          pivot["dfc-t:represent"].push({
-            "@id": importToConvert['@id'],
-            "@type": "@id"
+
+          const sparqlTools = new SparqlTools({
+            context: this.context
           });
-          // console.log('pivot AFTER',pivot);
-          const responsePivotPatch = await fetch(pivot['@id'], {
-            method: 'Patch',
-            body: JSON.stringify({
-              "@context": this.context,
-              "dfc-t:represent": pivot["dfc-t:represent"]
-            }),
-            headers: {
-              'accept': 'application/ld+json',
-              'content-type': 'application/ld+json'
+
+          // let pivot = reconciled["dfc-t:hasPivot"];
+          // // console.log('pivot BEFORE',pivot);
+          // pivot["dfc-t:represent"].push({
+          //   "@id": importToConvert['@id'],
+          //   "@type": "@id"
+          // });
+
+          await sparqlTools.insert({
+            "@context": this.context,
+            "@id": reconciled['dfc-t:hasPivot']['@id'],
+            "dfc-t:represent": {
+              "@id": importToConvert['@id'],
+              "@type": "@id"
             }
           });
+
+          // // console.log('pivot AFTER',pivot);
+          // const responsePivotPatch = await fetch(pivot['@id'], {
+          //   method: 'Patch',
+          //   body: JSON.stringify({
+          //     "@context": this.context,
+          //     "dfc-t:represent": pivot["dfc-t:represent"]
+          //   }),
+          //   headers: {
+          //     'accept': 'application/ld+json',
+          //     'content-type': 'application/ld+json'
+          //   }
+          // });
 
           // const importToConvertBody= {
           //   "@context": this.context,
@@ -791,23 +806,21 @@ class CatalogService {
           //   }
           // });
 
-          const sparqlTools = new SparqlTools({
-            context: this.context
-          });
+
           // console.log('* service insert hasPivot');
           await sparqlTools.insert({
             "@context": this.context,
             "@id": importToConvert['@id'],
             "dfc-t:hasPivot": {
-              "@id": pivot['@id'],
+              "@id": reconciled['dfc-t:hasPivot']['@id'],
               "@type": "@id"
             }
           });
 
-          importToConvert["dfc-t:hasPivot"] = {
-            "@id": pivot['@id'],
-            "@type": "@id"
-          };
+          // importToConvert["dfc-t:hasPivot"] = {
+          //   "@id": pivot['@id'],
+          //   "@type": "@id"
+          // };
 
           resolve(importToConvert['@id']);
         }
@@ -883,8 +896,9 @@ class CatalogService {
           //   ...contextConfig
           // }
 
-          // console.log('sourceResponseObject 2',sourceResponseObject);
-          // console.log('contextConfig',contextConfig);
+          console.log('sourceResponseObject 2',sourceResponseObject);
+          console.log('contextConfig',contextConfig);
+
 
           sourceResponseObject = await jsonld.compact(sourceResponseObject, contextConfig)
 
