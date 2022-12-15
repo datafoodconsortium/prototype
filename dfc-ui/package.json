@@ -40,7 +40,7 @@
     "@babel/polyfill": "^7.10.4",
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "devextreme": "^21.2.6",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.1",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
