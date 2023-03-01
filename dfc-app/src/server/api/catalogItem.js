@@ -108,15 +108,15 @@ module.exports = function(router) {
   router.post('/catalog/exportSource', async (req, res, next) => {
     // console.log('IMPORT',req)
     // console.log('USER',req.user);
-    // let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
       try {
-        // let out = await catalogItem_supply_offer.importSource(source, req.user);
+        console.log(req.body);
+        let out = await catalogItem_supply_offer.exportAllToSource(req.body.sourceSlug,req.body.data, req.user);
         res.json({});
       } catch (e) {
-        res.statusCode = 409;
+        res.statusCode = 500;
         next(e);
       }
     }

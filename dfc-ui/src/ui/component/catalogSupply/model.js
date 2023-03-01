@@ -95,7 +95,7 @@ export default class CatalogSupply extends GenericElement {
                       channel: 'source',
                       topic: 'export',
                       data: {
-                        slug,
+                        sourceSlug : slug,
                         items
                       }
                     })

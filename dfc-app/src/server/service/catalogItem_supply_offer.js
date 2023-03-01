@@ -48,7 +48,7 @@ class CatalogService {
     }
   }
 
-  async resolveContext(contextUrl){
+  async resolveContext(contextUrl) {
     let contextConfigResponse = await fetch(contextUrl);
     // console.log('contextConfigResponse',contextConfigResponse);
     return (await contextConfigResponse.json())['@context']
@@ -58,7 +58,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
         await this.init();
-        console.log('cleanImport for user ',user['@id'],);
+        console.log('cleanImport for user ', user['@id'], );
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
           body: `${PREFIX}
@@ -80,8 +80,8 @@ class CatalogService {
         const sparqlTools = new SparqlTools({
           context: this.context
         });
-        if(datas['@id'] && datas['@id'].includes('http') ){
-            sparqlTools.remove(datas['@id']);
+        if (datas['@id'] && datas['@id'].includes('http')) {
+          sparqlTools.remove(datas['@id']);
         }
         if (datas['@graph']) {
           for (const data of datas['@graph']) {
@@ -148,7 +148,7 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference :['dfc-b:hasQuantity']
+            dereference: ['dfc-b:hasQuantity']
           },
           forceArray: ['dfc-t:represent']
         }).make();
@@ -161,7 +161,7 @@ class CatalogService {
         for (var importItem of importItemsRaw) {
           // console.log('before',importItem);
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
-          console.log('BEFORE app derefrence');
+          // console.log('BEFORE app derefrence');
           importItem = await ldpNavigator.dereference(importItem, [{
               p: 'dfc-t:hostedBy'
             },
@@ -169,8 +169,8 @@ class CatalogService {
               p: 'dfc-b:references',
               n: [{
                   p: 'dfc-b:hasQuantity',
-                  n:{
-                    p:'dfc-b:hasUnit'
+                  n: {
+                    p: 'dfc-b:hasUnit'
                   }
                 },
                 {
@@ -226,7 +226,7 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference :['dfc-b:hasQuantity']
+            dereference: ['dfc-b:hasQuantity']
           },
           forceArray: ['dfc-t:represent'],
           context: this.context
@@ -241,8 +241,8 @@ class CatalogService {
             p: 'dfc-b:references',
             n: [{
                 p: 'dfc-b:hasQuantity',
-                n:{
-                  p:'dfc-b:hasUnit'
+                n: {
+                  p: 'dfc-b:hasUnit'
                 }
               },
               {
@@ -310,7 +310,7 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference :['dfc-b:hasQuantity']
+            dereference: ['dfc-b:hasQuantity']
           },
           forceArray: ['dfc-t:represent']
         }).make();
@@ -335,8 +335,8 @@ class CatalogService {
                     p: 'dfc-b:references',
                     n: [{
                         p: 'dfc-b:hasQuantity',
-                        n:[{
-                          p:'dfc-b:hasUnit'
+                        n: [{
+                          p: 'dfc-b:hasUnit'
                         }]
                       },
                       {
@@ -351,8 +351,8 @@ class CatalogService {
               p: 'dfc-b:references',
               n: [{
                   p: 'dfc-b:hasQuantity',
-                  n:[{
-                    p:'dfc-b:hasUnit'
+                  n: [{
+                    p: 'dfc-b:hasUnit'
                   }]
                 },
                 {
@@ -369,17 +369,17 @@ class CatalogService {
 
           // console.log(ci['dfc-t:hasPivot']['dfc-t:represent']);
           if (ci['dfc-t:hasPivot']) {
-            if(ci['dfc-t:hasPivot']['dfc-t:represent']){
+            if (ci['dfc-t:hasPivot']['dfc-t:represent']) {
               ci['dfc-t:hasPivot']['dfc-t:represent'] = ci['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
                 // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
-                if(r==undefined){
-                  console.error('Pivot with un represents',ci['dfc-t:hasPivot']);
+                if (r == undefined) {
+                  console.error('Pivot with un represents', ci['dfc-t:hasPivot']);
                 }
 
-                return r&&r['dfc-t:hostedBy']&&r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+                return r && r['dfc-t:hostedBy'] && r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
               })
-            }else{
-              console.error('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
+            } else {
+              console.error('ORPHAN PIVOT', ci['dfc-t:hasPivot']);
             }
 
           }
@@ -427,10 +427,10 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference :['dfc-b:hasQuantity']
+            dereference: ['dfc-b:hasQuantity']
           },
           context: this.context,
-          forceArray: ['dfc-t:represent','dfc-b:offeredThrough']
+          forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough']
         }).make();
         // console.log('resolveById', id);
         let item = await ldpNavigator.resolveById(id);
@@ -441,10 +441,10 @@ class CatalogService {
 
         item = await ldpNavigator.dereference(item, [{
             p: 'dfc-t:hostedBy'
-          },{
+          }, {
             p: 'dfc-b:offeredThrough',
-            n : {
-              p : 'dfc-b:offeres'
+            n: {
+              p: 'dfc-b:offeres'
             }
           },
           {
@@ -456,16 +456,16 @@ class CatalogService {
                 },
                 {
                   p: 'dfc-b:offeredThrough',
-                  n : {
-                    p : 'dfc-b:offeres'
+                  n: {
+                    p: 'dfc-b:offeres'
                   }
                 },
                 {
                   p: 'dfc-b:references',
                   n: [{
                       p: 'dfc-b:hasQuantity',
-                      n:[{
-                        p:'dfc-b:hasUnit'
+                      n: [{
+                        p: 'dfc-b:hasUnit'
                       }]
                     },
                     {
@@ -480,8 +480,8 @@ class CatalogService {
             p: 'dfc-b:references',
             n: [{
                 p: 'dfc-b:hasQuantity',
-                n:[{
-                  p:'dfc-b:hasUnit'
+                n: [{
+                  p: 'dfc-b:hasUnit'
                 }]
               },
               {
@@ -495,13 +495,13 @@ class CatalogService {
 
         if (item['dfc-t:hasPivot'] && item['dfc-t:hasPivot']['dfc-t:represent'] && item['dfc-t:hasPivot']['dfc-t:represent'].filter) {
 
-          if(item['dfc-t:hasPivot']['dfc-t:represent']){
+          if (item['dfc-t:hasPivot']['dfc-t:represent']) {
             item['dfc-t:hasPivot']['dfc-t:represent'] = item['dfc-t:hasPivot']['dfc-t:represent'].filter(r => {
               // console.log('represent hosted by',r['dfc-t:hostedBy'],uriDfcPlatform);
-              return r&&r['dfc-t:hostedBy']&&r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+              return r && r['dfc-t:hostedBy'] && r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
             })
-          }else{
-            console.log('ORPHAN PIVOT',ci['dfc-t:hasPivot']);
+          } else {
+            console.log('ORPHAN PIVOT', ci['dfc-t:hasPivot']);
           }
 
         }
@@ -567,13 +567,13 @@ class CatalogService {
 
         const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
 
-        const isDfcPlatform=item['dfc-t:hostedBy']['@id']==dfcPlaform['@id'];
+        const isDfcPlatform = item['dfc-t:hostedBy']['@id'] == dfcPlaform['@id'];
         // console.log('IS DFC PLATFORM',isDfcPlatform);
 
         if (item['dfc-b:references']) {
           //update remote data
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
-          let data= {
+          let data = {
             'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
             'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity']
@@ -581,8 +581,8 @@ class CatalogService {
 
 
           // NOT supported by socleo
-          if (isDfcPlatform){
-            data={
+          if (isDfcPlatform) {
+            data = {
               'dfc-p:hasType': item['dfc-b:references']['dfc-p:hasType'],
               'dfc-b:hasUnit': item['dfc-b:references']['dfc-b:hasUnit'],
               ...data
@@ -604,7 +604,7 @@ class CatalogService {
           });
 
           // console.log(item['dfc-b:references']);
-          if(!isDfcPlatform){
+          if (!isDfcPlatform) {
             // console.log('REMOVE CALL');
             // console.log(referencesSlimplified);
             await sparqlTools.remove(item['dfc-b:references']['@id'])
@@ -630,7 +630,7 @@ class CatalogService {
           }
         });
 
-        if(!isDfcPlatform){
+        if (!isDfcPlatform) {
 
           await sparqlTools.remove(item['@id'])
           // console.log('UPDATE item',item);
@@ -842,9 +842,9 @@ class CatalogService {
 
           let contextConfig = this.context
 
-          let sourceContext=sourceResponseObject['@context'];
+          let sourceContext = sourceResponseObject['@context'];
           // console.log('sourceContext',sourceContext);
-          if ((typeof sourceContext === 'string' || sourceContext instanceof String)&&sourceContext.includes('http')){
+          if ((typeof sourceContext === 'string' || sourceContext instanceof String) && sourceContext.includes('http')) {
             sourceContext = await this.resolveContext(sourceContext);
           }
 
@@ -857,8 +857,8 @@ class CatalogService {
           //   ...contextConfig
           // }
 
-          console.log('sourceResponseObject 2',JSON.stringify(sourceResponseObject));
-          console.log('contextConfig',contextConfig);
+          console.log('sourceResponseObject 2', JSON.stringify(sourceResponseObject));
+          console.log('contextConfig', contextConfig);
 
 
           sourceResponseObject = await jsonld.compact(sourceResponseObject, contextConfig)
@@ -892,7 +892,7 @@ class CatalogService {
                 }
               },
               skipResolveById: true,
-              dereference :['dfc-b:hasQuantity']
+              dereference: ['dfc-b:hasQuantity']
             }),
             new FetchAdapter({
               headers: {
@@ -925,7 +925,7 @@ class CatalogService {
               '@type': 'dfc-b:Person'
             });
             // console.log('platformUser',platformUser);
-            console.log('dereference BEFORE');
+            // console.log('dereference BEFORE');
             const platformUserDereferences = await ldpNavigator.dereference(platformUser, {
               p: 'dfc-b:affiliates',
               n: {
@@ -1044,8 +1044,8 @@ class CatalogService {
 
         let itemToInsert = {
           // ...item,
-          "@id":item['@id'],
-          'dfc-b:offeredThrough':undefined,
+          "@id": item['@id'],
+          'dfc-b:offeredThrough': undefined,
           "dfc-t:hostedBy": platform['@id'],
           "dfc:owner": user['@id'],
           "@context": this.context,
@@ -1083,6 +1083,117 @@ class CatalogService {
     })
   }
 
+  async exportAllToSource(sourceSlug, dataToExport, user) {
+
+    for (var oneDataToExport of dataToExport) {
+      await this.exportOneToSource(sourceSlug, oneDataToExport, user)
+    }
+
+
+    return true;
+  }
+
+  async exportOneToSource(sourceSlug, dataToExport, user) {
+
+    let sourceObject = config.sources.find(so => sourceSlug.includes(so.slug));
+    const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceSlug);
+    console.log('sourceObject', sourceObject);
+    if (sourceObject.urlExportSupplyProduct) {
+
+      // const newData = {
+      //   ...dataToExport['dfc-b:references'],
+      //   '@context': "http://static.datafoodconsortium.org/ontologies/context.json",
+      //   '@id': undefined,
+      //   'dfc-t:hostedBy': undefined,
+      //   'dfc:owner':undefined,
+      //   'dfc-t:hasPivot':undefined,
+      //   'dfc-p:hasType': dataToExport['dfc-b:references']['dfc-p:hasType']['@id']
+      // }
+
+      const newData =  {
+        "@context": [
+          "http://static.datafoodconsortium.org/ontologies/context.json",
+          {
+            "@base": "https://demo.socleo.org/api/dfc/"
+          }
+        ],
+        "@type": "dfc-b:SuppliedProduct",
+        "dfc-b:hasQuantity":{
+          "dfc-b:hasUnit":dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'],
+          "dfc-b:value":dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
+          "@type":"dfc-b:QuantitiveValue",
+        },
+        "dfc-p:hasType": dataToExport['dfc-b:references']['dfc-p:hasType']['@id'],
+        "dfc-b:description": dataToExport['dfc-b:references']['dfc-b:description'],
+        "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:references']['dfc-b:totalTheoriticalStock']
+      }
+
+      console.log('newData', newData);
+      console.log('user',user);
+      const dummy =  {
+        "@context": [
+          "http://static.datafoodconsortium.org/ontologies/context.json",
+          {
+            "@base": "https://demo.socleo.org/api/dfc/"
+          }
+        ],
+        "@type": "dfc-b:SuppliedProduct",
+        "dfc-b:hasQuantity":{
+            "@type":"dfc-b:QuantitiveValue",
+            "dfc-b:hasUnit":"dfc-m:Gram",
+            "dfc-b:value":"1500"
+        },
+        "dfc-p:hasType": "dfc-pt:strawberry",
+        "dfc-b:description": "supply description 4",
+        "dfc-b:totalTheoriticalStock": "999"
+      }
+
+      console.log('url',sourceObject.urlExportSupplyProduct)
+      const sourceResponse = await fetch("https://demo.socleo.org/api/dfc/suppliedProduct", {
+        method: 'POST',
+        headers: {
+          'authorization': 'JWT ' + user['token'],
+          'accept': 'application/ld+json',
+          'content-type' : 'application/json'
+        },
+        body:JSON.stringify(newData)
+      })
+
+      console.log('sourceResponse.status', sourceResponse.status);
+      console.log('sourceResponse',sourceResponse)
+
+      if (sourceResponse.status == 403) {
+        throw new Error("Authentification failed");
+      }
+
+      if (sourceResponse.status != 201) {
+        throw new Error("Platform have to return 201 status on creation");
+      }
+      const location = sourceResponse.headers.get('location');
+      console.log('sourceResponse.headers',location)
+      if (location == undefined) {
+        throw new Error("Platform have to return location header on creation");
+      }
+
+      const createdItemResponse = await fetch(location,{
+        headers: {
+          'authorization': 'JWT ' + user['token'],
+          'accept': 'application/ld+json',
+        },
+      });
+      // console.log(await createdItemResponse.text())
+      const createdItem = await createdItemResponse.json();
+      return createdItem;
+
+    } else {
+      throw new Error("Platform api is not configured to create supply product");
+    }
+
+
+  }
+
+
+
   async refreshItem(id, user) {
     await this.init();
     const ldpNavigator = new LDPNavigator({
@@ -1109,7 +1220,7 @@ class CatalogService {
           }
         },
         skipResolveById: true,
-        dereference :['dfc-b:hasQuantity']
+        dereference: ['dfc-b:hasQuantity']
       }),
       new FetchAdapter({
         headers: {
@@ -1154,7 +1265,7 @@ class CatalogService {
             Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
           }
         },
-        dereference :['dfc-b:hasQuantity']
+        dereference: ['dfc-b:hasQuantity']
       },
       context: contextConfig,
       forceArray: ['dfc-t:represent']
@@ -1171,17 +1282,22 @@ class CatalogService {
     return linked;
   }
 
+
+
   async getOneLinkedItemSimple(id, user) {
     const linked = await this.getOneLinkedItem(id, user);
     // console.log(linked);
     const shorter = {
       '@id': linked['@id'],
-      'dfc-t:hostedBy' : linked['dfc-t:hostedBy'],
+      'dfc-t:hostedBy': linked['dfc-t:hostedBy'],
       'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(
-          r => ({"@id":r['@id'],"dfc-t:hostedBy":r['dfc-t:hostedBy']})
-        ).filter(
-          r => !(r['@id'].includes(linked['@id']))
-        )
+        r => ({
+          "@id": r['@id'],
+          "dfc-t:hostedBy": r['dfc-t:hostedBy']
+        })
+      ).filter(
+        r => !(r['@id'].includes(linked['@id']))
+      )
     }
     return shorter;
 
