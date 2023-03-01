@@ -1149,7 +1149,7 @@ class CatalogService {
       }
 
       console.log('url',sourceObject.urlExportSupplyProduct)
-      const sourceResponse = await fetch("https://demo.socleo.org/api/dfc/suppliedProduct", {
+      const sourceResponse = await fetch(sourceObject.urlExportSupplyProduct, {
         method: 'POST',
         headers: {
           'authorization': 'JWT ' + user['token'],
