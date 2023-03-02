@@ -1128,27 +1128,6 @@ class CatalogService {
         "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:references']['dfc-b:totalTheoriticalStock']
       }
 
-      console.log('newData', newData);
-      console.log('user',user);
-      const dummy =  {
-        "@context": [
-          "http://static.datafoodconsortium.org/ontologies/context.json",
-          {
-            "@base": "https://demo.socleo.org/api/dfc/"
-          }
-        ],
-        "@type": "dfc-b:SuppliedProduct",
-        "dfc-b:hasQuantity":{
-            "@type":"dfc-b:QuantitiveValue",
-            "dfc-b:hasUnit":"dfc-m:Gram",
-            "dfc-b:value":"1500"
-        },
-        "dfc-p:hasType": "dfc-pt:strawberry",
-        "dfc-b:description": "supply description 4",
-        "dfc-b:totalTheoriticalStock": "999"
-      }
-
-      console.log('url',sourceObject.urlExportSupplyProduct)
       const sourceResponse = await fetch(sourceObject.urlExportSupplyProduct, {
         method: 'POST',
         headers: {
@@ -1159,8 +1138,6 @@ class CatalogService {
         body:JSON.stringify(newData)
       })
 
-      console.log('sourceResponse.status', sourceResponse.status);
-      console.log('sourceResponse',sourceResponse)
 
       if (sourceResponse.status == 403) {
         throw new Error("Authentification failed");
@@ -1170,7 +1147,6 @@ class CatalogService {
         throw new Error("Platform have to return 201 status on creation");
       }
       const location = sourceResponse.headers.get('location');
-      console.log('sourceResponse.headers',location)
       if (location == undefined) {
         throw new Error("Platform have to return location header on creation");
       }
