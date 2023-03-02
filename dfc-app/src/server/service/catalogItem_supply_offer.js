@@ -1100,22 +1100,9 @@ class CatalogService {
     console.log('sourceObject', sourceObject);
     if (sourceObject.urlExportSupplyProduct) {
 
-      // const newData = {
-      //   ...dataToExport['dfc-b:references'],
-      //   '@context': "http://static.datafoodconsortium.org/ontologies/context.json",
-      //   '@id': undefined,
-      //   'dfc-t:hostedBy': undefined,
-      //   'dfc:owner':undefined,
-      //   'dfc-t:hasPivot':undefined,
-      //   'dfc-p:hasType': dataToExport['dfc-b:references']['dfc-p:hasType']['@id']
-      // }
-
-      const newData =  {
+      const newDataSuppliedProduct =  {
         "@context": [
-          "http://static.datafoodconsortium.org/ontologies/context.json",
-          {
-            "@base": "https://demo.socleo.org/api/dfc/"
-          }
+          "http://static.datafoodconsortium.org/ontologies/context.json"
         ],
         "@type": "dfc-b:SuppliedProduct",
         "dfc-b:hasQuantity":{
@@ -1128,6 +1115,15 @@ class CatalogService {
         "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:references']['dfc-b:totalTheoriticalStock']
       }
 
+      const newDataCatalogItem =  {
+        "@context": [
+          "http://static.datafoodconsortium.org/ontologies/context.json"
+        ],
+        "@type": "dfc-b:CatalogItem",
+        "dfc-p:sku": dataToExport['dfc-p:sku'],
+        "dfc-b:stockLimitation": dataToExport['dfc-b:stockLimitation'],
+      }
+
       const sourceResponse = await fetch(sourceObject.urlExportSupplyProduct, {
         method: 'POST',
         headers: {
@@ -1135,7 +1131,7 @@ class CatalogService {
           'accept': 'application/ld+json',
           'content-type' : 'application/json'
         },
-        body:JSON.stringify(newData)
+        body:JSON.stringify(newDataSuppliedProduct)
       })
 
 
