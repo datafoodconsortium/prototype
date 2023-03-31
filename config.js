@@ -86,7 +86,8 @@ module.exports = {
       "name": "Socleo",
       "slug" : "socleo",
       "url": "https://demo.socleo.org/api/dfc/person/",
-      "urlExportSupplyProduct":"https://demo.socleo.org/api/dfc/suppliedProduct/",
+      "urlExportSuppliedProduct":"https://demo.socleo.org/api/dfc/suppliedProduct/",
+      "urlExportCatalogItem":"https://demo.socleo.org/api/dfc/catalogItem/",
       "version":"1.7",
       "supporWrite":"true"
     }, {
@@ -160,7 +161,7 @@ module.exports = {
       "name": "shopify",
       "slug": "shopify",
       "url": "https://0f44-92-18-223-75.eu.ngrok.io/api/products",
-      "urlExportSupplyProduct":"https://0f44-92-18-223-75.eu.ngrok.io/api/products",
+      "urlExportSuppliedProduct":"https://0f44-92-18-223-75.eu.ngrok.io/api/products",
       "version":"1.7",
       "supporWrite":"true"
     }

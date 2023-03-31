@@ -1088,79 +1088,155 @@ class CatalogService {
     for (var oneDataToExport of dataToExport) {
       await this.exportOneToSource(sourceSlug, oneDataToExport, user)
     }
-
-
     return true;
   }
 
-  async exportOneToSource(sourceSlug, dataToExport, user) {
-
+  async exportSuppliedProduct(sourceSlug, dataToExport, user) {
     let sourceObject = config.sources.find(so => sourceSlug.includes(so.slug));
     const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceSlug);
     console.log('sourceObject', sourceObject);
-    if (sourceObject.urlExportSupplyProduct) {
-
-      const newDataSuppliedProduct =  {
+    let createdItem;
+    if (sourceObject.urlExportSuppliedProduct) {
+  
+      const newDataSuppliedProduct = {
         "@context": [
           "http://static.datafoodconsortium.org/ontologies/context.json"
         ],
         "@type": "dfc-b:SuppliedProduct",
-        "dfc-b:hasQuantity":{
-          "dfc-b:hasUnit":dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'],
-          "dfc-b:value":dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
-          "@type":"dfc-b:QuantitiveValue",
+        "dfc-b:hasQuantity": {
+          "dfc-b:hasUnit": dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'],
+          "dfc-b:value": dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
+          "@type": "dfc-b:QuantitiveValue",
         },
         "dfc-p:hasType": dataToExport['dfc-b:references']['dfc-p:hasType']['@id'],
         "dfc-b:description": dataToExport['dfc-b:references']['dfc-b:description'],
         "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:references']['dfc-b:totalTheoriticalStock']
-      }
-
-      const newDataCatalogItem =  {
-        "@context": [
-          "http://static.datafoodconsortium.org/ontologies/context.json"
-        ],
-        "@type": "dfc-b:CatalogItem",
-        "dfc-p:sku": dataToExport['dfc-p:sku'],
-        "dfc-b:stockLimitation": dataToExport['dfc-b:stockLimitation'],
-      }
-
-      const sourceResponse = await fetch(sourceObject.urlExportSupplyProduct, {
+      };
+  
+      const sourceResponse = await fetch(sourceObject.urlExportSuppliedProduct, {
         method: 'POST',
         headers: {
           'authorization': 'JWT ' + user['token'],
           'accept': 'application/ld+json',
-          'content-type' : 'application/json'
+          'content-type': 'application/json'
         },
-        body:JSON.stringify(newDataSuppliedProduct)
-      })
-
-
+        body: JSON.stringify(newDataSuppliedProduct)
+      });
+  
+  
       if (sourceResponse.status == 403) {
         throw new Error("Authentification failed");
       }
-
+  
       if (sourceResponse.status != 201) {
-        throw new Error("Platform have to return 201 status on creation");
+        console.log(await sourceResponse.text())
+        throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
+
       }
+
       const location = sourceResponse.headers.get('location');
       if (location == undefined) {
         throw new Error("Platform have to return location header on creation");
       }
-
-      const createdItemResponse = await fetch(location,{
+  
+      const createdItemResponse = await fetch(location, {
         headers: {
           'authorization': 'JWT ' + user['token'],
           'accept': 'application/ld+json',
         },
       });
       // console.log(await createdItemResponse.text())
-      const createdItem = await createdItemResponse.json();
-      return createdItem;
+      createdItem = await createdItemResponse.json();
 
+      const sparqlTools = new SparqlTools({
+        context: this.context
+      });
+      await sparqlTools.insert(createdItem)
+  
     } else {
       throw new Error("Platform api is not configured to create supply product");
     }
+    return createdItem;
+  }
 
+  async exportCatalogItem(sourceSlug, dataToExport, user, suppliedProduct) {
+    let sourceObject = config.sources.find(so => sourceSlug.includes(so.slug));
+    const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceSlug);
+    console.log('suppliedProduct', suppliedProduct);
+    let createdItem;
+    if (sourceObject.urlExportCatalogItem) {
+  
+      const newDataCatalogItem = {
+        "@context": [
+          "http://static.datafoodconsortium.org/ontologies/context.json"
+        ],
+        "@type": "dfc-b:CatalogItem",
+        "dfc-b:sku": dataToExport['dfc-b:sku'],
+        "dfc-b:references":suppliedProduct['@id'],
+        "dfc-b:stockLimitation": dataToExport['dfc-b:stockLimitation'],
+      };
+      console.log('newDataCatalogItem',JSON.stringify(newDataCatalogItem))
+      console.log('post token','JWT ' + user['token']);
+      console.log('POST url',sourceObject.urlExportCatalogItem)
+      const sourceResponse = await fetch(sourceObject.urlExportCatalogItem, {
+        method: 'POST',
+        headers: {
+          'authorization': 'JWT ' + user['token'],
+          'accept': 'application/ld+json',
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(newDataCatalogItem)
+      });
+  
+  
+      if (sourceResponse.status == 403) {
+        throw new Error("Authentification failed");
+      }
+  
+      if (sourceResponse.status != 201) {
+        console.log(await sourceResponse.text())
+        throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
+
+      }
+      const location = sourceResponse.headers.get('location');
+      if (location == undefined) {
+        throw new Error("Platform have to return location header on creation");
+      }
+  
+      const createdItemResponse = await fetch(location, {
+        headers: {
+          'authorization': 'JWT ' + user['token'],
+          'accept': 'application/ld+json',
+        },
+      });
+
+      createdItem = await createdItemResponse.json();
+
+      const sparqlTools = new SparqlTools({
+        context: this.context
+      });
+      await sparqlTools.insert(createdItem)
+  
+    } else {
+      throw new Error("Platform api is not configured to create supply product");
+    }
+    return createdItem;
+  }
+
+
+  async exportOneToSource(sourceSlug, dataToExport, user) {
+
+    const product = await this.exportSuppliedProduct(sourceSlug, dataToExport, user);
+    const framed = await jsonld.frame(product,{
+      "@context":{
+        ...product['@context'],
+        '@base':null
+      },
+      "@type":"dfc-b:SuppliedProduct"
+    })
+    // console.log("product",JSON.stringify(product))
+    // console.log("framed",framed)
+    const catalog = await this.exportCatalogItem (sourceSlug, dataToExport, user,framed);
 
   }
 
@@ -1277,3 +1353,5 @@ class CatalogService {
 }
 
 module.exports = CatalogService;
+
+

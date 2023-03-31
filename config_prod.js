@@ -1,4 +1,4 @@
-{
+module.exports = {
   "mongoConnection" : "mongodb://mongodb:27017",
   "appUrl": "https://185.25.192.252:8080",
   "data":{
