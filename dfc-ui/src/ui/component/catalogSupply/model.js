@@ -37,7 +37,18 @@ export default class CatalogSupply extends GenericElement {
       channel: 'source',
       topic: 'export.done',
       callback: (data) => {
-        alert('export done')
+        alert('export done');
+        // this.publish({
+        //   channel: 'main',
+        //   topic: 'navigate',
+        //   data: '/x-catalog-supply/'
+        // }) 
+        this.dialog.hide();
+        this.publish({
+          channel: 'supply',
+          topic: 'loadAll'
+        });
+        // alert('navigation done'); 
       }
     });
   }
@@ -230,8 +241,8 @@ export default class CatalogSupply extends GenericElement {
                   // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
                   template: function (element, data) {
                     const raw = data.data.raw;
-                    let hostedBy = raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy'];
-                    if (hostedBy.endsWith('dfc')){
+                    let hostedBy = raw['dfc-t:hostedBy']!=undefined?raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy']:undefined;
+                    if (hostedBy && hostedBy.endsWith('dfc')){
                       const item = $(`<div class="button-dx"><image src="https://img.icons8.com/ios/32/000000/edit-link.png"/></div>`)
                       element.append(item);
                     }else {

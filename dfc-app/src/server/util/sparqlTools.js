@@ -77,6 +77,7 @@ class SparqlCrud {
     const data = await response.text();
     // console.log('data',data);
     // console.log('sparqlTool getOne cause by insert');
+    console.log("resource['@id']",resource['@id'])
     const getOneObject = await this.getOne(resource['@id'])
 
     // console.log('getOneObject',getOneObject);

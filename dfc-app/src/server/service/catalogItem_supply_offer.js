@@ -361,7 +361,7 @@ class CatalogService {
               ]
             }
           ]);
-          // console.log('AFTER', catalogItem);
+          // console.log('catalogItem', catalogItem['dfc-t:hasPivot']['dfc-t:represent']);
           catalogItems.push(catalogItem);
         }
 
@@ -376,7 +376,7 @@ class CatalogService {
                   console.error('Pivot with un represents', ci['dfc-t:hasPivot']);
                 }
 
-                return r && r['dfc-t:hostedBy'] && r['dfc-t:hostedBy']['@id'] != uriDfcPlatform
+                return r && (r['dfc-t:hostedBy']==undefined || (r['dfc-t:hostedBy'] && r['dfc-t:hostedBy']['@id'] != uriDfcPlatform))
               })
             } else {
               console.error('ORPHAN PIVOT', ci['dfc-t:hasPivot']);
@@ -762,22 +762,23 @@ class CatalogService {
             context: this.context
           });
 
-
+          console.log('convert',reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],'<->',importToConvert['@id'])
+          // console.log('reconciled',reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'])
+          // console.log('importToConvert',importToConvert['@id'])
           await sparqlTools.insert({
             "@context": this.context,
-            "@id": reconciled['dfc-t:hasPivot']['@id'],
+            "@id": reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],
             "dfc-t:represent": {
               "@id": importToConvert['@id'],
               "@type": "@id"
             }
           });
 
-
           await sparqlTools.insert({
             "@context": this.context,
             "@id": importToConvert['@id'],
             "dfc-t:hasPivot": {
-              "@id": reconciled['dfc-t:hasPivot']['@id'],
+              "@id": reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],
               "@type": "@id"
             }
           });
@@ -1094,7 +1095,7 @@ class CatalogService {
   async exportSuppliedProduct(sourceSlug, dataToExport, user) {
     let sourceObject = config.sources.find(so => sourceSlug.includes(so.slug));
     const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceSlug);
-    console.log('sourceObject', sourceObject);
+    // console.log('sourceObject', sourceObject);
     let createdItem;
     if (sourceObject.urlExportSuppliedProduct) {
   
@@ -1104,13 +1105,13 @@ class CatalogService {
         ],
         "@type": "dfc-b:SuppliedProduct",
         "dfc-b:hasQuantity": {
-          "dfc-b:hasUnit": dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'],
-          "dfc-b:value": dataToExport['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
+          "dfc-b:hasUnit": dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'],
+          "dfc-b:value": dataToExport['dfc-b:hasQuantity']['dfc-b:value'],
           "@type": "dfc-b:QuantitiveValue",
         },
-        "dfc-p:hasType": dataToExport['dfc-b:references']['dfc-p:hasType']['@id'],
-        "dfc-b:description": dataToExport['dfc-b:references']['dfc-b:description'],
-        "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:references']['dfc-b:totalTheoriticalStock']
+        "dfc-p:hasType": dataToExport['dfc-p:hasType']['@id'],
+        "dfc-b:description": dataToExport['dfc-b:description'],
+        "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:totalTheoriticalStock']
       };
   
       const sourceResponse = await fetch(sourceObject.urlExportSuppliedProduct, {
@@ -1129,7 +1130,7 @@ class CatalogService {
       }
   
       if (sourceResponse.status != 201) {
-        console.log(await sourceResponse.text())
+        // console.log(await sourceResponse.text())
         throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
 
       }
@@ -1148,10 +1149,21 @@ class CatalogService {
       // console.log(await createdItemResponse.text())
       createdItem = await createdItemResponse.json();
 
+      createdItem = await jsonld.frame(createdItem,{
+        "@context":{
+          ...createdItem['@context'],
+          '@base':null
+        },
+        "@type":"dfc-b:SuppliedProduct"
+      })
+      createdItem['dfc-t:hostedBy']=platform['@id'];
+      createdItem['dfc:owner']= user['@id'];
       const sparqlTools = new SparqlTools({
         context: this.context
       });
+
       await sparqlTools.insert(createdItem)
+
   
     } else {
       throw new Error("Platform api is not configured to create supply product");
@@ -1162,7 +1174,7 @@ class CatalogService {
   async exportCatalogItem(sourceSlug, dataToExport, user, suppliedProduct) {
     let sourceObject = config.sources.find(so => sourceSlug.includes(so.slug));
     const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceSlug);
-    console.log('suppliedProduct', suppliedProduct);
+    // console.log('suppliedProduct', suppliedProduct);
     let createdItem;
     if (sourceObject.urlExportCatalogItem) {
   
@@ -1175,9 +1187,9 @@ class CatalogService {
         "dfc-b:references":suppliedProduct['@id'],
         "dfc-b:stockLimitation": dataToExport['dfc-b:stockLimitation'],
       };
-      console.log('newDataCatalogItem',JSON.stringify(newDataCatalogItem))
-      console.log('post token','JWT ' + user['token']);
-      console.log('POST url',sourceObject.urlExportCatalogItem)
+      // console.log('newDataCatalogItem',JSON.stringify(newDataCatalogItem))
+      // console.log('post token','JWT ' + user['token']);
+      // console.log('POST url',sourceObject.urlExportCatalogItem)
       const sourceResponse = await fetch(sourceObject.urlExportCatalogItem, {
         method: 'POST',
         headers: {
@@ -1188,13 +1200,12 @@ class CatalogService {
         body: JSON.stringify(newDataCatalogItem)
       });
   
-  
       if (sourceResponse.status == 403) {
         throw new Error("Authentification failed");
       }
   
       if (sourceResponse.status != 201) {
-        console.log(await sourceResponse.text())
+        // console.log(await sourceResponse.text())
         throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
 
       }
@@ -1202,7 +1213,7 @@ class CatalogService {
       if (location == undefined) {
         throw new Error("Platform have to return location header on creation");
       }
-  
+
       const createdItemResponse = await fetch(location, {
         headers: {
           'authorization': 'JWT ' + user['token'],
@@ -1212,10 +1223,20 @@ class CatalogService {
 
       createdItem = await createdItemResponse.json();
 
+      createdItem = await jsonld.frame(createdItem,{
+        "@context":{
+          ...createdItem['@context'],
+          '@base':null
+        },
+        "@type":"dfc-b:CatalogItem"
+      })
+      createdItem['dfc-t:hostedBy']=platform['@id'];
+      createdItem['dfc:owner']= user['@id'];
       const sparqlTools = new SparqlTools({
         context: this.context
       });
       await sparqlTools.insert(createdItem)
+
   
     } else {
       throw new Error("Platform api is not configured to create supply product");
@@ -1226,17 +1247,21 @@ class CatalogService {
 
   async exportOneToSource(sourceSlug, dataToExport, user) {
 
-    const product = await this.exportSuppliedProduct(sourceSlug, dataToExport, user);
-    const framed = await jsonld.frame(product,{
-      "@context":{
-        ...product['@context'],
-        '@base':null
-      },
-      "@type":"dfc-b:SuppliedProduct"
-    })
+    // console.log('dataToExport',dataToExport)
+    const product = await this.exportSuppliedProduct(sourceSlug, dataToExport['dfc-b:references'], user);
+    await this.convertImportToReconciled(product,  dataToExport['dfc-b:references'], user);
+    // const framed = await jsonld.frame(product,{
+    //   "@context":{
+    //     ...product['@context'],
+    //     '@base':null
+    //   },
+    //   "@type":"dfc-b:SuppliedProduct"
+    // })
     // console.log("product",JSON.stringify(product))
     // console.log("framed",framed)
-    const catalog = await this.exportCatalogItem (sourceSlug, dataToExport, user,framed);
+    const catalog = await this.exportCatalogItem (sourceSlug, dataToExport, user,product);
+    await this.convertImportToReconciled(catalog,  dataToExport, user);
+    // console.log('END INSERT')
 
   }
 

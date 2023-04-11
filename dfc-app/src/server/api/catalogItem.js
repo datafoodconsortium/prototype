@@ -114,6 +114,7 @@ module.exports = function(router) {
       try {
         console.log(req.body);
         let out = await catalogItem_supply_offer.exportAllToSource(req.body.sourceSlug,req.body.data, req.user);
+        // console.log('END API');
         res.json({});
       } catch (e) {
         res.statusCode = 500;
