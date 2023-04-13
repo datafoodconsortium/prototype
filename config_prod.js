@@ -89,6 +89,8 @@ module.exports = {
       "name": "Socleo",
       "slug" : "socleo",
       "url": "https://demo.socleo.org/api/dfc/person/",
+      "urlExportSuppliedProduct":"https://demo.socleo.org/api/dfc/suppliedProduct/",
+      "urlExportCatalogItem":"https://demo.socleo.org/api/dfc/catalogItem/",
       "version":"1.6",
       "supporWrite":"true"
     }, {
