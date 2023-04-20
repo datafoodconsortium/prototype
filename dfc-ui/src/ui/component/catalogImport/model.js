@@ -79,14 +79,14 @@ export default class CatalogImport extends GenericElement {
       "columns": [
           {
             dataField: 'description',
-            caption: 'description',
+            caption: 'Name',
             minWidth: 500,
           },
           "type",
           // "quantity",
           {
             dataField: 'quantity',
-            caption: 'quantity',
+            caption: 'Quantity',
             width: 100,
           },
           "unit",
@@ -94,7 +94,7 @@ export default class CatalogImport extends GenericElement {
           // "stockLimitation",
           {
             dataField: 'stockLimitation',
-            caption: 'stock'
+            caption: 'Stock'
           },
           {
               type: "buttons",

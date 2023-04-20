@@ -251,7 +251,7 @@ export default class ItemSupply extends GenericElement {
       "columns": [
           {
             dataField: 'description',
-            caption: 'description',
+            caption: 'Name',
             minWidth: 400,
           },
           "type",

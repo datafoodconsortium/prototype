@@ -92,7 +92,7 @@ a:hover{
 
   /* Position the tooltip text */
   position: absolute;
-  bottom: 100%;
+  top: 0%;
   z-index: 1;
   margin-left: -15px;
 

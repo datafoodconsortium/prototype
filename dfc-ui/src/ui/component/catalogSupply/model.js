@@ -214,14 +214,14 @@ export default class CatalogSupply extends GenericElement {
       "columns": [
           {
             dataField: 'description',
-            caption: 'description',
+            caption: 'Name',
             minWidth: 500,
           },
           "type",
           // "quantity",
           {
             dataField: 'quantity',
-            caption: 'quantity',
+            caption: 'Quantity',
             width: 100,
           },
           "unit",
@@ -229,7 +229,7 @@ export default class CatalogSupply extends GenericElement {
           // "stockLimitation",
           {
             dataField: 'stockLimitation',
-            caption: 'stock'
+            caption: 'Stock'
           },
           // "totalTheoriticalStock",
           "source",
@@ -243,10 +243,10 @@ export default class CatalogSupply extends GenericElement {
                     const raw = data.data.raw;
                     let hostedBy = raw['dfc-t:hostedBy']!=undefined?raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy']:undefined;
                     if (hostedBy && hostedBy.endsWith('dfc')){
-                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/ios/32/000000/edit-link.png"/></div>`)
+                      const item = $(`<div class="button-dx tooltip"><image src="https://img.icons8.com/ios/32/000000/edit-link.png"/><div class="tooltiptext">Edit links</div></div>`)
                       element.append(item);
                     }else {
-                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/edit--v1.png"/></div>`)
+                      const item = $(`<div class="button-dx tooltip"><image src="https://img.icons8.com/windows/32/000000/edit--v1.png"/><div class="tooltiptext">Edit product</div></div>`)
                       element.append(item);
                     }
                     // return "edit template"

@@ -290,7 +290,7 @@ export default class ItemImport extends GenericElement {
       "columns": [
           {
             dataField: 'description',
-            caption: 'description',
+            caption: 'Name',
             minWidth: 400,
           },
           "quantity",
