@@ -74,3 +74,47 @@ a:hover{
 #main{
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 80px;
+  background-color: #939393;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  bottom: 100%;
+  z-index: 1;
+  margin-left: -15px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+/* Tooltip arrow optionnal */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #939393 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
