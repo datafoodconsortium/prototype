@@ -1,62 +1,60 @@
 <div class="panelContainer" style="flex:1">
 
-  <h1 class="value" name="description"></h1>
+  <div class="containerH" style="flex:1;">
+    <h1 class="value" name="name"></h1>
+    <div class="containerH" style="flex:1;justify-content: flex-end;">
+      <button id="update"><img src="https://img.icons8.com/pastel-glyph/48/000000/upload--v1.png" /></button>
+      <!-- refresh data as -->
+      <button id="refresh"><img src="https://img.icons8.com/pastel-glyph/48/000000/download--v1.png" /></button>
+    </div>
+  </div>
  
   <div class="containerV">
-    <div style="border-style:solid;border-width:thin;">
+    <div>
+      <div class="field">
+        <label>Producer name</label>
+        <div class="value" name="producerName"></div>
+      </div>
       <div class="field">
         <label>Supply product id</label>
         <div class="value" name="id_supply"></div>
       </div>
       <div class="field">
-        <label>type</label>
+        <label>Type</label>
         <div class="value" name="type"></div>
       </div>
       <div class="field">
-        <label>quantity</label>
+        <label>Quantity</label>
         <input class="value" name="quantity" />
       </div>
       <div class="field">
-        <label>unit</label>
+        <label>Unit</label>
         <div class="value" name="unit"></div>
       </div>
       <div class="field">
-        <label>stock limitation</label>
+        <label>Description</label>
+        <input class="value" name="description"/>
+      </div>
+      <div class="field">
+        <label>Stock limitation</label>
         <input class="value" name="stockLimitation" />
       </div>
       <div class="field">
-        <label>sku</label>
+        <label>Sku</label>
         <input class="value" name="sku" />
       </div>
     </div>
   </div>
+
   <div class="containerV">
-    <div class="containerH space-between">
-      <h2>Update data at source platform or refresh from it</h2>
-      <div class="containerH flex-end">
-        <button id="update"><img src="https://img.icons8.com/pastel-glyph/48/000000/upload--v1.png" /></button>
+    <h2>test API sameAs</h2>
+    <div class="containerH">
+      <textarea cols="140" rows="15" name="curl"></textarea>
+      <div class="containerV">
+        <button id="sameAs">sameAs</button>
+        <button id="sameAsSimple">sameAs simple</button>
       </div>
     </div>
-    <div class="containerH space-between">
-      <h2>Refresh data from platform</h2>
-      <div class="containerH flex-end">
-        <button id="refresh"><img src="https://img.icons8.com/pastel-glyph/48/000000/download--v1.png" /></button>
-      </div>
-    </div>
-
-
-
-    <div class="containerV">
-      <h2>test API sameAs</h2>
-      <div class="containerH">
-        <textarea cols="140" rows="15" name="curl"></textarea>
-        <div class="containerV">
-          <button id="sameAs">sameAs</button>
-          <button id="sameAsSimple">sameAs simple</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 </div>
