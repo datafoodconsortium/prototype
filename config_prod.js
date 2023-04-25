@@ -94,9 +94,15 @@ module.exports = {
       "version":"1.6",
       "supporWrite":"true"
     }, {
-      "name": "Open Food Network",
-      "slug": "ofn",
+      "name": "OFN FR Staging",
+      "slug": "ofn-fr",
       "url": "https://staging.coopcircuits.fr/api/dfc-v1.6/enterprises/default/catalog_items.json",
+      "version":"1.6",
+      "supporWrite":"true"
+  }, {
+      "name": "OFN UK Staging",
+      "slug": "ofn-uk",
+      "url": "https://staging.openfoodnetwork.org.uk/api/dfc-v1.6/enterprises/default/catalog_items.json",
       "version":"1.6",
       "supporWrite":"true"
     },{
