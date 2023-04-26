@@ -12,6 +12,13 @@ export default class ItemSupplyPlatform extends GenericElement {
 
     this.elements = {
       name: this.shadowRoot.querySelector('[name="name"]'),
+      origin: this.shadowRoot.querySelector('[name="origin"]'),
+      labelCertification: this.shadowRoot.querySelector('[name="labelCertification"]'),
+      certification: this.shadowRoot.querySelector('[name="certification"]'),
+      magnesium : this.shadowRoot.querySelector('[name="magnesium"]'),
+      weight : this.shadowRoot.querySelector('[name="weight"]'),
+      allergens : this.shadowRoot.querySelector('[name="allergens"]'),
+      expirationDate : this.shadowRoot.querySelector('[name="expirationDate"]'),
       producerName: this.shadowRoot.querySelector('[name="producerName"]'),
       description: this.shadowRoot.querySelector('[name="description"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
@@ -197,10 +204,8 @@ export default class ItemSupplyPlatform extends GenericElement {
   // }
 
   setData(data) {
-    console.log('model after ------------------------------');
     console.log(data);
     this.item = data
-
 
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
@@ -208,14 +213,20 @@ export default class ItemSupplyPlatform extends GenericElement {
 
     this.elements.name.textContent = data['dfc-b:references']['dfc-b:description'];
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
-    this.elements.producerName.textContent = data['dfc-p:producedBy'];
+    this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
+
+    this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'];
+    this.elements.expirationDate.textContent = data['dfc-b:references']['dfc-b:lifeTime'];
+    this.elements.labelCertification.textContent =  data['dfc-b:references']['dfc-b:hasCertification'] && (data['dfc-b:references']['dfc-b:hasCertification'] || data['dfc-b:references']['dfc-b:hasCertification'].map(certificate=>certificate));
+    this.elements.weight.textContent = data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'];
+    // console.log('WEIGHT ->>>',data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'].toString());
 
     this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&&(data['dfc-b:references']['dfc-p:hasType']['rdfs:prefLabel'] || data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']);
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
     // (data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value']
-    this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity'][0]['dfc-b:value'];
-    // || data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& ((data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value']) || (data['dfc-b:references']['dfc-b:hasQuantity'][0]['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']));
+    this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
+    //&& (data['dfc-b:references']['dfc-b:hasQuantity'][0]['dfc-b:value'] || data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']);
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'];
     // this.elements.totalTheoriticalStock.value = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 
