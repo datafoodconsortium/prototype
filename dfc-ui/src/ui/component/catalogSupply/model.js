@@ -207,22 +207,34 @@ export default class CatalogSupply extends GenericElement {
 
     this.dxTreeGrid = new TreeList(this.dxTreeGridDom, {
       "autoExpandAll": true,
+      "columnAutoWidth": true,
+      // "mode": "virtual",
+      "paging": {
+        enabled: true,
+        pageSize: 15
+      },
+      "pager": {
+        showPageSizeSelector: true,
+        allowedPageSizes: [15, 25, 50],
+        showNavigationButtons: true
+      },
+      "scrolling": {
+        useNative: true,
+        mode: "standard"
+      },
       "selection": {
-        mode: 'multiple',
-        recursive: true,
+        mode: 'multiple'
       },
       "columns": [
           {
             dataField: 'description',
             caption: 'Name',
-            minWidth: 500,
           },
           "type",
           // "quantity",
           {
             dataField: 'quantity',
             caption: 'Quantity',
-            width: 100,
           },
           "unit",
           // "sku",
