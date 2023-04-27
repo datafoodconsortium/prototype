@@ -209,18 +209,19 @@ export default class CatalogSupply extends GenericElement {
       "autoExpandAll": true,
       "columnAutoWidth": true,
       // "mode": "virtual",
-      "paging": {
-        enabled: true,
-        pageSize: 15
-      },
-      "pager": {
-        showPageSizeSelector: true,
-        allowedPageSizes: [15, 25, 50],
-        showNavigationButtons: true
-      },
+      // "paging": {
+      //   enabled: true,
+      //   pageSize: 15
+      // },
+      // "pager": {
+      //   showPageSizeSelector: true,
+      //   allowedPageSizes: [30, 50],
+      //   showNavigationButtons: true
+      // },
+      "height" : "1000px",
       "scrolling": {
-        useNative: true,
-        mode: "standard"
+       useNative: true,
+       mode: "standard"
       },
       "selection": {
         mode: 'multiple'
