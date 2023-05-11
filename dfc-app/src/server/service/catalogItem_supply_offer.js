@@ -30,6 +30,8 @@ PREFIX dfc-p: <http://static.datafoodconsortium.org/ontologies/DFC_ProductOntolo
 PREFIX dfc-t: <http://static.datafoodconsortium.org/ontologies/DFC_TechnicalOntology.owl#>
 PREFIX dfc-u: <http://static.datafoodconsortium.org/data/units.rdf#>
 PREFIX dfc-pt: <http://static.datafoodconsortium.org/data/productTypes.rdf#>
+PREFIX dfc-f: <http://static.datafoodconsortium.org/data/facets.rdf#>
+PREFIX dfc-m: <http://static.datafoodconsortium.org/data/measures.rdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/#>
@@ -400,6 +402,7 @@ class CatalogService {
   getOneItem(id) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('getoneitem------------');
         await this.init();
         const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
         // console.log('ID',id);
@@ -427,7 +430,8 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference: ['dfc-b:hasQuantity']
+            dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
+            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic','dfc-b:hasAllergenDimension']
           },
           context: this.context,
           forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough']
@@ -486,6 +490,39 @@ class CatalogService {
               },
               {
                 p: 'dfc-p:hasType'
+              },
+              {
+                p : 'dfc-b:hasGeographicalOrigin'
+              },
+              {
+                p: 'dfc-b:hasPhysicalCharacteristic',
+                n: [{
+                    p: 'dfc-b:hasUnit'
+                  },
+                  {
+                    p: 'dfc-b:hasPhysicalDimension'
+                  }
+                ]
+              },
+              {
+                p: 'dfc-b:hasNutrientCharacteristic',
+                n: [
+                  {
+                    p: 'dfc-b:hasUnit'
+                  },
+                  {
+                    p: 'dfc-b:hasNutrientDimension'
+                  }
+                ]
+              },
+              {
+                p: 'dfc-b:hasCertification'
+              },
+              {
+                p: 'dfc-b:hasAllergenCharacteristic',
+                n: [{
+                  p: 'dfc-b:hasAllergenDimension'
+                }]
               }
             ]
           }

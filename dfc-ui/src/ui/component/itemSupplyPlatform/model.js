@@ -209,25 +209,21 @@ export default class ItemSupplyPlatform extends GenericElement {
 
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
-    // this.elements.id_catalog.textContent = data['@id'];
 
     this.elements.name.textContent = data['dfc-b:references']['dfc-b:description'];
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
     this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
 
-    this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'];
+    this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'] && data['dfc-b:references']['dfc-b:hasGeographicalOrigin']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.expirationDate.textContent = data['dfc-b:references']['dfc-b:lifeTime'];
-    this.elements.labelCertification.textContent =  data['dfc-b:references']['dfc-b:hasCertification'] && (data['dfc-b:references']['dfc-b:hasCertification'] || data['dfc-b:references']['dfc-b:hasCertification'].map(certificate=>certificate));
-    this.elements.weight.textContent = data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'];
-    // console.log('WEIGHT ->>>',data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'].toString());
+    this.elements.labelCertification.textContent =  data['dfc-b:references']['dfc-b:hasCertification'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'] ;
+    this.elements.weight.textContent = data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'] && data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic']['dfc-b:value'] + data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic']['dfc-b:hasUnit']['skos:notation'];
+    this.elements.magnesium.textContent = data['dfc-b:references']['dfc-b:hasNutrientCharacteristic'] && data['dfc-b:references']['dfc-b:hasNutrientCharacteristic']['dfc-b:hasUnit']['skos:notation'] && data['dfc-b:references']['dfc-b:hasNutrientCharacteristic']['dfc-b:value'] + data['dfc-b:references']['dfc-b:hasNutrientCharacteristic']['dfc-b:hasUnit']['skos:notation'];
+    this.elements.allergens.textContent = data['dfc-b:references']['dfc-b:hasAllergenCharacteristic'] && data['dfc-b:references']['dfc-b:hasAllergenCharacteristic']['dfc-b:value'] + ' ' + data['dfc-b:references']['dfc-b:hasAllergenCharacteristic']['dfc-b:hasUnit'];
 
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&&(data['dfc-b:references']['dfc-p:hasType']['rdfs:prefLabel'] || data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']);
-    // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
-    // (data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value']
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&& data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
-    //&& (data['dfc-b:references']['dfc-b:hasQuantity'][0]['dfc-b:value'] || data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']);
     this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'];
-    // this.elements.totalTheoriticalStock.value = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 
   }
