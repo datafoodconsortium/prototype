@@ -259,39 +259,42 @@ export default class ItemSupplyPlatform extends GenericElement {
 
   setDataGrid(domElement,shadowRootElement,data) {
 
-    let counter = 0;
-    const dxData = data.map(d => {
-      counter++;
-      return {
-        id: counter,
-        value: d['dfc-b:value'],
-        notation : d['dfc-b:hasUnit']['skos:notation'],
-        unit: d['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'],
-        type: (d['dfc-b:hasNutrientDimension'] && d['dfc-b:hasNutrientDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
-         || (d['dfc-b:hasPhysicalDimension'] && d['dfc-b:hasPhysicalDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
-         || (d['dfc-b:hasAllergenDimension'] && d['dfc-b:hasAllergenDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
-      }
-    })
-
-    domElement = new TreeList(shadowRootElement, {
-      "autoExpandAll": true,
-      "columns": [
-          {
-            dataField: 'type',
-            caption: 'Type',
-          },
-          {
-            dataField: 'value',
-            caption: 'Value',
-          },
-          {
-            dataField: 'unit',
-            caption: 'Unit',
-          }
-      ],
-      "dataSource": dxData,
-      "showRowLines": true
-    });
+    if(data.length != 0){
+      // if no data we don't show anything
+      let counter = 0;
+      const dxData = data.map(d => {
+        counter++;
+        return {
+          id: counter,
+          value: d['dfc-b:value'],
+          notation : d['dfc-b:hasUnit']['skos:notation'],
+          unit: d['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'],
+          type: (d['dfc-b:hasNutrientDimension'] && d['dfc-b:hasNutrientDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+           || (d['dfc-b:hasPhysicalDimension'] && d['dfc-b:hasPhysicalDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+           || (d['dfc-b:hasAllergenDimension'] && d['dfc-b:hasAllergenDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+        }
+      })
+  
+      domElement = new TreeList(shadowRootElement, {
+        "autoExpandAll": true,
+        "columns": [
+            {
+              dataField: 'type',
+              caption: 'Type',
+            },
+            {
+              dataField: 'value',
+              caption: 'Value',
+            },
+            {
+              dataField: 'unit',
+              caption: 'Unit',
+            }
+        ],
+        "dataSource": dxData,
+        "showRowLines": true
+      });
+    }
     // this.dxGrid.dataSource= dataEasyUi;
   }
 
