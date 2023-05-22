@@ -431,10 +431,12 @@ class CatalogService {
               }
             },
             dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
-            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic','dfc-b:hasAllergenDimension']
+            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
           },
           context: this.context,
-          forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough']
+          forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough','dfc-b:hasAllergenCharacteristic',
+            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic'
+          ]
         }).make();
         // console.log('resolveById', id);
         let item = await ldpNavigator.resolveById(id);
@@ -495,6 +497,9 @@ class CatalogService {
                 p : 'dfc-b:hasGeographicalOrigin'
               },
               {
+                p: 'dfc-b:hasCertification'
+              },
+              {
                 p: 'dfc-b:hasPhysicalCharacteristic',
                 n: [{
                     p: 'dfc-b:hasUnit'
@@ -516,13 +521,14 @@ class CatalogService {
                 ]
               },
               {
-                p: 'dfc-b:hasCertification'
-              },
-              {
                 p: 'dfc-b:hasAllergenCharacteristic',
                 n: [{
-                  p: 'dfc-b:hasAllergenDimension'
-                }]
+                    p: 'dfc-b:hasUnit'
+                  },
+                  {
+                    p: 'dfc-b:hasAllergenDimension'
+                  }
+                ]
               }
             ]
           }

@@ -133,6 +133,12 @@ module.exports = {
       "version":"1.7"
     },
     {
+      "name": "test v1.7.2",
+      "slug": "test_v1-7",
+      "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.7.2/user.json",
+      "version":"1.7"
+    },
+    {
       "name": "test v1.7 flat blanck socleo",
       "slug": "test_v1-7_flat_blanck_socleo",
       "url": "http://static.datafoodconsortium.org/businessAPI/user_1_7_flatblanck.json",
