@@ -402,7 +402,7 @@ class CatalogService {
   getOneItem(id) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('getoneitem------------');
+       // console.log('getoneitem------------');
         await this.init();
         const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
         // console.log('ID',id);

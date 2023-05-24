@@ -32,9 +32,11 @@ export default class CatalogImport extends GenericElement {
     injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
     this.shadowRoot.appendChild(injectedStyle4);
 
-    this.shadowRoot.querySelector('#edit') ? this.shadowRoot.querySelector('#edit').addEventListener('click', e => {
+    const editElement = this.shadowRoot.querySelector('#edit');
+    if(editElement){
+      this.shadowRoot.querySelector('#edit').addEventListener('click', e => {
       this.edit();
-    }) : null;
+    })}
   }
 
   disconnectedCallback() {

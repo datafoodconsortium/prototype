@@ -224,7 +224,8 @@ export default class CatalogSupply extends GenericElement {
        mode: "standard"
       },
       "selection": {
-        mode: 'multiple'
+        mode: 'multiple',
+        recursive: 'true'
       },
       "columns": [
           {
