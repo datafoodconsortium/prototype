@@ -207,29 +207,43 @@ export default class CatalogSupply extends GenericElement {
 
     this.dxTreeGrid = new TreeList(this.dxTreeGridDom, {
       "autoExpandAll": true,
+      "columnAutoWidth": true,
+      // "mode": "virtual",
+      // "paging": {
+      //   enabled: true,
+      //   pageSize: 15
+      // },
+      // "pager": {
+      //   showPageSizeSelector: true,
+      //   allowedPageSizes: [30, 50],
+      //   showNavigationButtons: true
+      // },
+      "height" : "1000px",
+      "scrolling": {
+       useNative: true,
+       mode: "standard"
+      },
       "selection": {
         mode: 'multiple',
-        recursive: true,
+        recursive: 'true'
       },
       "columns": [
           {
             dataField: 'description',
-            caption: 'description',
-            minWidth: 500,
+            caption: 'Name',
           },
           "type",
           // "quantity",
           {
             dataField: 'quantity',
-            caption: 'quantity',
-            width: 100,
+            caption: 'Quantity',
           },
           "unit",
           // "sku",
           // "stockLimitation",
           {
             dataField: 'stockLimitation',
-            caption: 'stock'
+            caption: 'Stock'
           },
           // "totalTheoriticalStock",
           "source",
@@ -243,10 +257,10 @@ export default class CatalogSupply extends GenericElement {
                     const raw = data.data.raw;
                     let hostedBy = raw['dfc-t:hostedBy']!=undefined?raw['dfc-t:hostedBy']['@id']||raw['dfc-t:hostedBy']:undefined;
                     if (hostedBy && hostedBy.endsWith('dfc')){
-                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/ios/32/000000/edit-link.png"/></div>`)
+                      const item = $(`<div class="button-dx tooltip"><image src="https://img.icons8.com/ios/32/000000/edit-link.png"/><div class="tooltiptext">Edit links</div></div>`)
                       element.append(item);
                     }else {
-                      const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/edit--v1.png"/></div>`)
+                      const item = $(`<div class="button-dx tooltip"><image src="https://img.icons8.com/windows/32/000000/edit--v1.png"/><div class="tooltiptext">Edit product</div></div>`)
                       element.append(item);
                     }
                     // return "edit template"

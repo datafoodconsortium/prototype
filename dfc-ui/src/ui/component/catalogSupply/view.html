@@ -2,14 +2,16 @@
     <div class="containerH" style="justify-content:space-between">
       <div class="containerH">
         <div class="field">
-          <input type="text" class="value" name="descriptionSearch"/>
+          <input type="text" placeholder="Search by name" class="value" name="descriptionSearch"/>
         </div>
         <div class="containerH">
           <button id="filter"><img src="https://img.icons8.com/windows/32/000000/search--v1.png"/></button>
         </div>
       </div>
       <div class="containerH">
-        <button id="export"><img src="https://img.icons8.com/pastel-glyph/48/000000/upload--v1.png"/></button>
+        <button id="export" class="tooltip"><img src="https://img.icons8.com/pastel-glyph/48/000000/add--v1.png"/>
+          <div class="tooltiptext">Create</div>
+        </button>
       </div>
     </div>
     <div id="dxGrid"></div>
@@ -20,5 +22,14 @@
 </div>
 
 <style>
+
+.containerH {
+  align-items: center;
+}
+
+button {
+  display: flex;
+  padding: 0px 3px;
+}
 
 </style>

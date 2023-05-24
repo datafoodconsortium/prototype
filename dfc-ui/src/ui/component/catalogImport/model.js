@@ -32,9 +32,11 @@ export default class CatalogImport extends GenericElement {
     injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
     this.shadowRoot.appendChild(injectedStyle4);
 
-    this.shadowRoot.querySelector('#edit').addEventListener('click', e => {
+    const editElement = this.shadowRoot.querySelector('#edit');
+    if(editElement){
+      this.shadowRoot.querySelector('#edit').addEventListener('click', e => {
       this.edit();
-    })
+    })}
   }
 
   disconnectedCallback() {
@@ -79,14 +81,14 @@ export default class CatalogImport extends GenericElement {
       "columns": [
           {
             dataField: 'description',
-            caption: 'description',
+            caption: 'Name',
             minWidth: 500,
           },
           "type",
           // "quantity",
           {
             dataField: 'quantity',
-            caption: 'quantity',
+            caption: 'Quantity',
             width: 100,
           },
           "unit",
@@ -94,7 +96,7 @@ export default class CatalogImport extends GenericElement {
           // "stockLimitation",
           {
             dataField: 'stockLimitation',
-            caption: 'stock'
+            caption: 'Stock'
           },
           {
               type: "buttons",

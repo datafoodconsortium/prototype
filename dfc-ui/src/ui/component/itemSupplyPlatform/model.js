@@ -1,5 +1,8 @@
 import GenericElement from '../../core/genericElement.js';
 import view from 'html-loader!./view.html';
+import TreeList from "devextreme/ui/tree_list";
+
+import dxcss from 'devextreme/dist/css/dx.light.css';
 
 // import easyui from '../../easyui/jquery-easyui-1.8.1/jquery.easyui.min.js';
 // import easyuiCss from '../../easyui/jquery-easyui-1.8.1/themes/default/easyui.css';
@@ -10,7 +13,20 @@ export default class ItemSupplyPlatform extends GenericElement {
   constructor() {
     super(view);
 
+    this.dxGridDomNutrients = this.shadowRoot.querySelector('#dxGridNutrients');
+    this.dxGridDomPhysical = this.shadowRoot.querySelector('#dxGridPhysical');
+    this.dxGridDomAllergens = this.shadowRoot.querySelector('#dxGridAllergens');
+
     this.elements = {
+      name: this.shadowRoot.querySelector('[name="name"]'),
+      origin: this.shadowRoot.querySelector('[name="origin"]'),
+      labelCertification: this.shadowRoot.querySelector('[name="labelCertification"]'),
+      certification: this.shadowRoot.querySelector('[name="certification"]'),
+      magnesium : this.shadowRoot.querySelector('[name="magnesium"]'),
+      weight : this.shadowRoot.querySelector('[name="weight"]'),
+      allergens : this.shadowRoot.querySelector('[name="allergens"]'),
+      expirationDate : this.shadowRoot.querySelector('[name="expirationDate"]'),
+      producerName: this.shadowRoot.querySelector('[name="producerName"]'),
       description: this.shadowRoot.querySelector('[name="description"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
       type : this.shadowRoot.querySelector('[name="type"]'),
@@ -65,8 +81,9 @@ export default class ItemSupplyPlatform extends GenericElement {
       this.sameAsSimple();
     })
 
-
-
+    let injectedStyle4 = document.createElement('style');
+    injectedStyle4.appendChild(document.createTextNode(dxcss.toString()));
+    this.shadowRoot.appendChild(injectedStyle4);
 
 
     // this.shadowRoot.querySelector('#update').addEventListener('click', e => {
@@ -198,19 +215,121 @@ export default class ItemSupplyPlatform extends GenericElement {
     console.log(data);
     this.item = data
 
+    // array nutrientCharacteristics
+    let nutrients = data['dfc-b:references'] && data['dfc-b:references']['dfc-b:hasNutrientCharacteristic'];
+    if(nutrients && !Array.isArray(nutrients)){
+      nutrients=[nutrients];
+    }
+    //console.log("nutrients : ",nutrients);
+    // array physicalCharacteristics
+    let physicalCharacteristics = data['dfc-b:references'] && data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'];
+    if(physicalCharacteristics && !Array.isArray(physicalCharacteristics)){
+      physicalCharacteristics=[physicalCharacteristics];
+    }
+    //console.log("physicalCharacteristics : ",physicalCharacteristics);
+    // array allergenCharacteristics
+    let allergens = data['dfc-b:references'] && data['dfc-b:references']['dfc-b:hasAllergenCharacteristic'];
+    if(allergens && !Array.isArray(allergens)){
+      allergens=[allergens];
+    }
+    //console.log("allergens : ",allergens);    
 
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
-    // this.elements.id_catalog.textContent = data['@id'];
 
+    this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&&data['dfc-b:references']['dfc-p:hasType']['rdfs:label'];
-    // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
-    this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&&data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
-    // this.elements.totalTheoriticalStock.value = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
+    this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
+
+    this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'] && data['dfc-b:references']['dfc-b:hasGeographicalOrigin']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
+    this.elements.expirationDate.textContent = data['dfc-b:references']['dfc-b:lifeTime'];
+    this.elements.labelCertification.textContent =  data['dfc-b:references']['dfc-b:hasCertification'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'] ;
+    
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&& data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
+    this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 
+
+    // DataGrid for the allergens, the nutrients and physical characteristics
+    this.setDataGrid(this.dxGridNutrients,this.dxGridDomNutrients,nutrients);
+    this.setDataGrid(this.dxGridPhysical,this.dxGridDomPhysical,physicalCharacteristics);
+    this.setDataGrid(this.dxGridAllergens,this.dxGridDomAllergens,allergens);
+  }
+
+  setDataGrid(domElement,shadowRootElement,data) {
+
+    if(data.length != 0){
+      // if no data we don't show anything
+      let counter = 0;
+      const dxData = data.map(d => {
+        counter++;
+        return {
+          id: counter,
+          value: d['dfc-b:value'],
+          notation : d['dfc-b:hasUnit']['skos:notation'],
+          unit: d['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'],
+          type: (d['dfc-b:hasNutrientDimension'] && d['dfc-b:hasNutrientDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+           || (d['dfc-b:hasPhysicalDimension'] && d['dfc-b:hasPhysicalDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+           || (d['dfc-b:hasAllergenDimension'] && d['dfc-b:hasAllergenDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+        }
+      })
+  
+      domElement = new TreeList(shadowRootElement, {
+        "autoExpandAll": true,
+        "columns": [
+            {
+              dataField: 'type',
+              caption: 'Type',
+            },
+            {
+              dataField: 'value',
+              caption: 'Value',
+            },
+            {
+              dataField: 'unit',
+              caption: 'Unit',
+            }
+        ],
+        "dataSource": dxData,
+        "showRowLines": true
+      });
+    }
+    // this.dxGrid.dataSource= dataEasyUi;
+  }
+
+  setDataGridPhysicalCharacteristics(data){
+     let counter = 0;
+    const dxData = data.map(d => {
+      counter++;
+      return {
+        id: counter,
+        value: d['dfc-b:value'],
+        notation : d['dfc-b:hasUnit']['skos:notation'],
+        unit: d['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'],
+        nutrientType: d['dfc-b:hasNutrientDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value']
+      }
+    })
+
+    this.dxGrid = new TreeList(this.dxGridDom, {
+      "autoExpandAll": true,
+      "columns": [
+          {
+            dataField: 'nutrientType',
+            caption: 'Nutrient Type',
+          },
+          {
+            dataField: 'value',
+            caption: 'Value',
+          },
+          {
+            dataField: 'unit',
+            caption: 'Unit',
+          }
+      ],
+      "dataSource": dxData,
+      "showRowLines": true
+    });
   }
 
   setUser(user) {
