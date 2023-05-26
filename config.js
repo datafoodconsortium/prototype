@@ -139,6 +139,12 @@ module.exports = {
       "version":"1.7"
     },
     {
+      "name": "Elzeard",
+      "slug": "elzeard",
+      "url": "https://dfc.dev.elzeard.co/api/dfc/catalog",
+      "version": "1.7"
+    },
+    {
       "name": "test v1.7 flat blanck socleo",
       "slug": "test_v1-7_flat_blanck_socleo",
       "url": "http://static.datafoodconsortium.org/businessAPI/user_1_7_flatblanck.json",

@@ -117,6 +117,12 @@ module.exports = {
       "version":"1.7"
     },
     {
+      "name": "Elzeard",
+      "slug": "elzeard",
+      "url": "https://dfc.dev.elzeard.co/api/dfc/catalog",
+      "version": "1.7"
+    },
+    {
       "name": "Garethe v1.6",
       "slug": "garethe_v1-6",
       "url": "https://raggedstaff.github.io/data/en_user_1_6.json",
