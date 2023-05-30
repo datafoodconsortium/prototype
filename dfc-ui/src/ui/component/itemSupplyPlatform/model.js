@@ -42,7 +42,9 @@ export default class ItemSupplyPlatform extends GenericElement {
       refresh: this.shadowRoot.querySelector('#refresh'),
       sameAs: this.shadowRoot.querySelector('#sameAs'),
       sameAsSimple: this.shadowRoot.querySelector('#sameAsSimple'),
+      updateDataProtoToPlatform: this.shadowRoot.querySelector('#updateDataProtoToPlatform'),
       curl: this.shadowRoot.querySelector('[name="curl"]'),
+      curlUpdate: this.shadowRoot.querySelector('[name="curlUpdate"]')
     };
 
     this.subscribe({
@@ -79,6 +81,10 @@ export default class ItemSupplyPlatform extends GenericElement {
 
     this.elements.sameAsSimple.addEventListener('click', e => {
       this.sameAsSimple();
+    })
+
+    this.elements.updateDataProtoToPlatform.addEventListener('click', e => {
+      this.updateDataProtoToPlatform();
     })
 
     let injectedStyle4 = document.createElement('style');
@@ -241,11 +247,11 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
     this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
 
-    this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'] && data['dfc-b:references']['dfc-b:hasGeographicalOrigin']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
+    this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'] && data['dfc-b:references']['dfc-b:hasGeographicalOrigin']['skos:prefLabel'] && data['dfc-b:references']['dfc-b:hasGeographicalOrigin']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.expirationDate.textContent = data['dfc-b:references']['dfc-b:lifeTime'];
     this.elements.labelCertification.textContent =  data['dfc-b:references']['dfc-b:hasCertification'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'] ;
     
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&& data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
+    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType'] && data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'] && data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
     this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
@@ -259,7 +265,7 @@ export default class ItemSupplyPlatform extends GenericElement {
 
   setDataGrid(domElement,shadowRootElement,data) {
 
-    if(data.length != 0){
+    if(data && data.length != 0){
       // if no data we don't show anything
       let counter = 0;
       const dxData = data.map(d => {
@@ -380,6 +386,16 @@ export default class ItemSupplyPlatform extends GenericElement {
     // window.alert(curl);
 
     this.elements.curl.value = curl;
+  }
+
+  updateDataProtoToPlatform(){
+    const url=`${url_server}/data/core/catalog/refresh/${encodeURIComponent(this.item['@id'])}`;
+    
+    const curlUpdate = `curl --request GET \\
+    --url ${url} \\
+    --header 'authorization: JWT ${this.token}'`;
+
+    this.elements.curlUpdate.value = curlUpdate;
   }
 
 

@@ -1315,7 +1315,11 @@ class CatalogService {
     const ldpNavigator = new LDPNavigator({
       forceArray: [
         'dfc-b:manages',
-        'dfc-t:represent'
+        'dfc-t:represent',
+        'dfc-b:offeredThrough',
+        'dfc-b:hasAllergenCharacteristic',
+        'dfc-b:hasPhysicalCharacteristic',
+        'dfc-b:hasNutrientCharacteristic'
       ],
       context: this.context
     });
@@ -1336,7 +1340,8 @@ class CatalogService {
           }
         },
         skipResolveById: true,
-        dereference: ['dfc-b:hasQuantity']
+        dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
+          'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
       }),
       new FetchAdapter({
         headers: {
@@ -1348,10 +1353,95 @@ class CatalogService {
     // console.log('RESOLVE', id);
     let result = await ldpNavigator.resolveById(id);
     if (result) {
-      // console.log('BEFORE dereference', result);
-      result = await ldpNavigator.dereference(result, {
-        p: 'dfc-b:references'
-      })
+    // console.log('BEFORE dereference', result);
+      result = await ldpNavigator.dereference(result, [{
+          p: 'dfc-t:hostedBy'
+        }, {
+          p: 'dfc-b:offeredThrough',
+          n: {
+            p: 'dfc-b:offeres'
+          }
+        },
+        {
+          p: 'dfc-t:hasPivot',
+          n: {
+            p: 'dfc-t:represent',
+            n: [{
+                p: 'dfc-t:hostedBy'
+              },
+              {
+                p: 'dfc-b:offeredThrough',
+                n: {
+                  p: 'dfc-b:offeres'
+                }
+              },
+              {
+                p: 'dfc-b:references',
+                n: [{
+                    p: 'dfc-b:hasQuantity',
+                    n: [{
+                      p: 'dfc-b:hasUnit'
+                    }]
+                  },
+                  {
+                    p: 'dfc-p:hasType'
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          p: 'dfc-b:references',
+          n: [{
+              p: 'dfc-b:hasQuantity',
+              n: [{
+                p: 'dfc-b:hasUnit'
+              }]
+            },
+            {
+              p: 'dfc-p:hasType'
+            },
+            {
+              p : 'dfc-b:hasGeographicalOrigin'
+            },
+            {
+              p: 'dfc-b:hasCertification'
+            },
+            {
+              p: 'dfc-b:hasPhysicalCharacteristic',
+              n: [{
+                  p: 'dfc-b:hasUnit'
+                },
+                {
+                  p: 'dfc-b:hasPhysicalDimension'
+                }
+              ]
+            },
+            {
+              p: 'dfc-b:hasNutrientCharacteristic',
+              n: [
+                {
+                  p: 'dfc-b:hasUnit'
+                },
+                {
+                  p: 'dfc-b:hasNutrientDimension'
+                }
+              ]
+            },
+            {
+              p: 'dfc-b:hasAllergenCharacteristic',
+              n: [{
+                  p: 'dfc-b:hasUnit'
+                },
+                {
+                  p: 'dfc-b:hasAllergenDimension'
+                }
+              ]
+            }
+          ]
+        }
+      ]);
       // console.log('AFTER dereference', result);
       return result;
     } else {
@@ -1417,6 +1507,16 @@ class CatalogService {
     }
     return shorter;
 
+  }
+
+  async updateDataProtoToPlatform(id, user){
+    // console.log('id : ',id);
+    // console.log('user : ',user);
+    let resultToSend;
+    await this.refreshItem(id, user).then( (result) => {
+      resultToSend = result;
+    })
+    return resultToSend;
   }
 }
 

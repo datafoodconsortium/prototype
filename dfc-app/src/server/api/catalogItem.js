@@ -75,7 +75,8 @@ module.exports = function(router) {
   router.post('/catalog/reconciled/:idImport(*)/refresh', async (req, res, next) => {
     // console.log('API',req.params);
     try {
-      let idImport = req.params.idImport;
+      let idImport = decodeURI(req.params.idImport);
+      console.log('idImport = ',idImport);
       // let idReconciled = req.params.idReconciled;
       if (req.user == undefined) {
         next(new Error('user not defined'))
@@ -150,6 +151,21 @@ module.exports = function(router) {
         res.statusCode = 409;
         next(e);
       }
+    }
+  })
+
+  router.post('/catalog/refresh/:idImport(*)', async (req, res, next) => {
+    //console.log('refreshID');
+    try {
+      let idImport = req.params.idImport;
+      if (req.user == undefined) {
+        next(new Error('user not defined'))
+      } else {
+        let out = await catalogItem_supply_offer.updateDataProtoToPlatform(idImport, req.user);
+        res.json(out)
+      }
+    } catch (e) {
+      next(e)
     }
   })
 
