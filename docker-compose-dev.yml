@@ -59,7 +59,7 @@ services:
         - SEMAPPS_JENA_PASSWORD=admin
     volumes:
       - ./dfc-app:/app
-      - ./../LDP-navigator:/LDP-navigator
+      - ./../../LDP-navigator:/LDP-navigator
       - ./config.js:/app/configuration.js
     depends_on:
       - dfc-middleware

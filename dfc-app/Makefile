@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 .PHONY: link unlink install push
-NAVIGATOR_PATH=./../../LDP-navigator/
+NAVIGATOR_PATH=./../LDP-navigator/
 
 hard-clean :
 	make clean
