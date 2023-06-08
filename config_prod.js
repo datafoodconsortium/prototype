@@ -105,7 +105,14 @@ module.exports = {
       "url": "https://staging.openfoodnetwork.org.uk/api/dfc-v1.6/enterprises/default/catalog_items.json",
       "version":"1.6",
       "supporWrite":"true"
-    },{
+    },
+    {
+      "name": "Elzeard",
+      "slug": "elzeard",
+      "url": "https://dfc.dev.elzeard.co/api/dfc/catalog",
+      "version": "1.7"
+    },
+    {
       "name": "lecoqlibre",
       "slug": "lecoqlibre",
       "url": "https://dfc.lecoqlibre.fr/api/dfc/person/617434aeda56d67eb07d1198",

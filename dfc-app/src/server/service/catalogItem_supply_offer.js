@@ -842,6 +842,7 @@ class CatalogService {
       try {
         await this.init();
         // console.log(user['dfc:importInProgress']);
+        // throw new Error('force progress OFF');
         if (user['dfc:importInProgress'] == true) {
           reject(new Error("import in progress. Not possible to process an other"))
         } else {
@@ -916,7 +917,8 @@ class CatalogService {
           const ldpNavigator = new LDPNavigator({
             forceArray: [
               'dfc-b:manages',
-              'dfc-t:represent'
+              'dfc-t:represent',
+              'dfc-b:affiliates'
             ]
           });
           ldpNavigator.setAdapters([
@@ -965,36 +967,79 @@ class CatalogService {
 
           if (sourceObject.version == "1.5" || sourceObject.version == "1.6" || sourceObject.version == "1.7") {
             // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
-            const platformUser = await ldpNavigator.findInMemory({
+            const platformUser = await ldpNavigator.filterInMemory({
               '@type': 'dfc-b:Person'
             });
-            // console.log('platformUser',platformUser);
-            // console.log('dereference BEFORE');
-            const platformUserDereferences = await ldpNavigator.dereference(platformUser, {
-              p: 'dfc-b:affiliates',
-              n: {
-                p: 'dfc-b:manages',
-                n: {
-                  p: 'dfc-b:references',
-                  n: {
-                    p: 'dfc-b:hasQuantity'
-                  }
-                }
-              }
-            })
-            // console.log('dereference AFTER');
+            const platformCompany = await ldpNavigator.filterInMemory({
+              '@type': 'dfc-b:Enterprise'
+            });
 
-            // console.log('platformUserDereferences',platformUserDereferences);
-            // console.log("platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']",JSON.stringify(platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']));
-
-            for (var manage of platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']) {
-              // console.log('manage',manage);
-              itemsToImport.push({
-                ...manage,
+            let platformCompaniesMix = [];
+            if(platformUser.length>0){
+              const platformUsersDereferenced = await ldpNavigator.dereference(platformUser, {
+                p: 'dfc-b:affiliates'
               })
+              for (const platformUserDereferenced of platformUsersDereferenced) {
+                platformCompaniesMix=[...platformUserDereferenced['dfc-b:affiliates']]
+              }
+              // console.log('platformUserDereferenced',platformUserDereferenced)
+
+            } else if(platformCompany.length>0){
+              platformCompaniesMix =[...platformCompany]
+            } else {
+              throw new Error('no user nor companies in data from platform')
             }
 
-            // console.log('itemsToImport',itemsToImport);
+            if (platformCompaniesMix.length>0){
+              const platformCompaniesMixDereferenced = await ldpNavigator.dereference(platformCompaniesMix,
+                {
+                  p: 'dfc-b:manages',
+                  n: {
+                    p: 'dfc-b:references',
+                    n: {
+                      p: 'dfc-b:hasQuantity'
+                    }
+                  }
+                }
+              );
+              for (const platformCompanie of platformCompaniesMixDereferenced) {
+                console.log('platformCompanie catalogitem',platformCompanie['dfc-b:manages']);
+                for (const catalogitem of platformCompanie['dfc-b:manages']) {
+                  itemsToImport.push({
+                    ...catalogitem,
+                  })
+                }
+              }
+            }
+
+
+            // // console.log('platformUser',platformUser);
+            // // console.log('dereference BEFORE');
+            // const platformUserDereferences = await ldpNavigator.dereference(platformUser, {
+            //   p: 'dfc-b:affiliates',
+            //   n: {
+            //     p: 'dfc-b:manages',
+            //     n: {
+            //       p: 'dfc-b:references',
+            //       n: {
+            //         p: 'dfc-b:hasQuantity'
+            //       }
+            //     }
+            //   }
+            // })
+            // // console.log('dereference AFTER');
+
+            // // console.log('platformUserDereferences',platformUserDereferences);
+            // // console.log("platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']",JSON.stringify(platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']));
+
+            // for (var manage of platformUserDereferences['dfc-b:affiliates']['dfc-b:manages']) {
+            //   // console.log('manage',manage);
+            //   itemsToImport.push({
+            //     ...manage,
+            //   })
+            // }
+
+            // // console.log('itemsToImport',itemsToImport);
 
           } else {
             throw new Error("version not supported")
@@ -1050,9 +1095,10 @@ class CatalogService {
           }
 
           resolve(out)
-          // resolve([]);
+          // throw new Error ('fake')
         }
       } catch (e) {
+        console.log('abord import',user['@id'])
         const responseProgressOn = await fetch(user['@id'], {
           method: 'PATCH',
           body: JSON.stringify({
@@ -1064,6 +1110,7 @@ class CatalogService {
             'content-type': 'application/ld+json'
           }
         });
+        console.log('abord result',responseProgressOn)
         reject(e);
       }
     })
@@ -1142,17 +1189,18 @@ class CatalogService {
     let createdItem;
     if (sourceObject.urlExportSuppliedProduct) {
   
+      console.log('dataToExport',dataToExport)
       const newDataSuppliedProduct = {
         "@context": [
           "http://static.datafoodconsortium.org/ontologies/context.json"
         ],
         "@type": "dfc-b:SuppliedProduct",
         "dfc-b:hasQuantity": {
-          "dfc-b:hasUnit": dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'],
-          "dfc-b:value": dataToExport['dfc-b:hasQuantity']['dfc-b:value'],
+          "dfc-b:hasUnit": dataToExport['dfc-b:hasQuantity']&&dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']?dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id']:undefined,
+          "dfc-b:value": dataToExport['dfc-b:hasQuantity']?dataToExport['dfc-b:hasQuantity']['dfc-b:value']:undefined,
           "@type": "dfc-b:QuantitiveValue",
         },
-        "dfc-p:hasType": dataToExport['dfc-p:hasType']['@id'],
+        "dfc-p:hasType": dataToExport['dfc-p:hasType']?dataToExport['dfc-p:hasType']['@id']:undefined,
         "dfc-b:description": dataToExport['dfc-b:description'],
         "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:totalTheoriticalStock']
       };
