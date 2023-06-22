@@ -124,7 +124,6 @@ module.exports = function(router) {
   })
 
   router.get('/catalog/link/:id', async (req, res, next) => {
-    let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
@@ -139,12 +138,25 @@ module.exports = function(router) {
   })
 
   router.get('/catalog/linkSimple/:id', async (req, res, next) => {
-    let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
       try {
-        let out = await catalogItem_supply_offer.getOneLinkedItemSimple(req.params.id);
+        let out = await catalogItem_supply_offer.getOneLinkedItemSimple(req.params.id, req.user);
+        res.json(out);
+      } catch (e) {
+        res.statusCode = 409;
+        next(e);
+      }
+    }
+  })
+
+  router.post('/catalog/impact/:id', async (req, res, next) => {
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        let out = await catalogItem_supply_offer.impactOneLinked(req.params.id,req.user,req.body);
         res.json(out);
       } catch (e) {
         res.statusCode = 409;

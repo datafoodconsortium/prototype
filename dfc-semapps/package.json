@@ -8,7 +8,7 @@
   ],
   "license": "AGPLV3",
   "scripts": {
-    "dev": "moleculer-runner --env --repl --hot services",
+    "dev": "moleculer-runner --env --repl services",
     "start": "moleculer-runner --env --instances=max services",
     "devwithlink": "make hotlink & npm run dev"
   },

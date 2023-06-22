@@ -1466,6 +1466,15 @@ class CatalogService {
     return shorter;
 
   }
+
+
+  async impactOneLinked(id, user, data) {
+    const linked = await this.getOneLinkedItem(id, user);
+    console.log('linked',linked);
+    console.log('data',data);
+    return ;
+
+  }
 }
 
 module.exports = CatalogService;
