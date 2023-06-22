@@ -1469,9 +1469,35 @@ class CatalogService {
 
 
   async impactOneLinked(id, user, data) {
+    const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+      sparql: {
+        query: {
+          endpoint: 'http://dfc-middleware:3000/sparql',
+          headers: {
+            'accept': 'application/ld+json'
+          },
+          prefix: PREFIX
+        },
+        update: {
+          endpoint: 'http://dfc-fuseki:3030/localData/update',
+          headers: {
+            'Content-Type': 'application/sparql-update',
+            Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+          }
+        },
+        dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
+        'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+      },
+      context: this.context ,
+      forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough','dfc-b:hasAllergenCharacteristic',
+      'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+    }).make();
+
+    console.log('data',data);
+    ldpNavigator.init(data);
+    ldpNavigator.persist();
     const linked = await this.getOneLinkedItem(id, user);
     console.log('linked',linked);
-    console.log('data',data);
     return ;
 
   }
