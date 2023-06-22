@@ -20,6 +20,7 @@ export default class ItemSupply extends GenericElement {
     this.dxGridOffersDom = this.shadowRoot.querySelector('#dxGridOffers');
     console.log("this.dxGridOffersDom",this.dxGridOffersDom);
     this.elements = {
+      name: this.shadowRoot.querySelector('[name="name"]'),
       description: this.shadowRoot.querySelector('[name="description"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
       type : this.shadowRoot.querySelector('[name="type"]'),
@@ -190,6 +191,7 @@ export default class ItemSupply extends GenericElement {
       }
       return {
         id: counter,
+        name: d['dfc-b:references']['dfc-b:name'],
         description: d['dfc-b:references']['dfc-b:description'],
         quantity:d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value']:'',
         sku: d['dfc-b:sku'],
@@ -212,6 +214,7 @@ export default class ItemSupply extends GenericElement {
               let dataOffers = info.data.raw['dfc-b:offeredThrough'].map(d=>({
                 price:d['dfc-b:price'],
                 stockLimitation:d['dfc-b:stockLimitation'],
+                name:d['dfc-b:offeres']['dfc-b:name'],
                 description:d['dfc-b:offeres']['dfc-b:description']
 
               }));
@@ -224,6 +227,7 @@ export default class ItemSupply extends GenericElement {
                   console.log(itemData, itemIndex, element);
                   let offersGrid = new DataGrid(element, {
                     "columns": [
+                      "name",
                       "description",
                       "stockLimitation",
                       "price",
@@ -250,8 +254,13 @@ export default class ItemSupply extends GenericElement {
       },
       "columns": [
           {
-            dataField: 'description',
+            dataField: 'name',
             caption: 'Name',
+            minWidth: 400,
+          },
+          {
+            dataField: 'description',
+            caption: 'Description',
             minWidth: 400,
           },
           "type",
@@ -343,6 +352,7 @@ export default class ItemSupply extends GenericElement {
     this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&&data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
     // this.elements.id.textContent = data['@id'];
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
+    this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
     this.elements.type.textContent = type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'';
     // this.elements.unit.textContent = data['dfc:hasUnit']['@id'];
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];

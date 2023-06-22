@@ -64,6 +64,7 @@ export default class CatalogImport extends GenericElement {
       counter++;
       return {
         id: counter,
+        name: d['dfc-b:references']['dfc-b:name'],
         description: d['dfc-b:references']['dfc-b:description'],
         quantity: d['dfc-b:references']['dfc-b:hasQuantity']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
         sku: d['dfc-b:sku'],
@@ -80,8 +81,13 @@ export default class CatalogImport extends GenericElement {
       "autoExpandAll": true,
       "columns": [
           {
-            dataField: 'description',
+            dataField: 'name',
             caption: 'Name',
+            minWidth: 500,
+          },
+          {
+            dataField: 'desription',
+            caption: 'Description',
             minWidth: 500,
           },
           "type",

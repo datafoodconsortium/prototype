@@ -147,7 +147,7 @@ module.exports = {
   },
   {
     "name": "test v1.7.2",
-    "slug": "test_v1-7",
+    "slug": "test_v1-7-2",
     "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.7.2/user.json",
     "version": "1.7"
   },

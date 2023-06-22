@@ -135,7 +135,8 @@ export default class CatalogSupply extends GenericElement {
 
   filter(value) {
     let filteredData = this.rawSupplies.filter(record => {
-      return this.normalize(record['dfc-b:references']['dfc-b:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
+      const searchText=record['dfc-b:references']['dfc-b:name'].concat(record['dfc-b:references']['dfc-b:description'])
+      return this.normalize(searchText.toUpperCase()).includes(this.normalize(value.toUpperCase()));
     })
     this.setDataGrid(filteredData)
   }
@@ -157,6 +158,7 @@ export default class CatalogSupply extends GenericElement {
       }
       return {
         id: counter,
+        name: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:name'],
         description: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:description'],
         source: d['dfc-t:hostedBy']['rdfs:label'],
         sku: d['dfc-b:sku'],
@@ -192,6 +194,7 @@ export default class CatalogSupply extends GenericElement {
             stockLimitation : c['dfc-b:stockLimitation'],
             totalTheoriticalStock : c['dfc-b:references']&&c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             description: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:description'],
+            name: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:name'],
             quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasQuantity']?c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value']:'',
             unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasQuantity']&&c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']&&c['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'],
             type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
@@ -229,8 +232,12 @@ export default class CatalogSupply extends GenericElement {
       },
       "columns": [
           {
-            dataField: 'description',
+            dataField: 'name',
             caption: 'Name',
+          },
+          {
+            dataField: 'description',
+            caption: 'Description',
           },
           "type",
           // "quantity",

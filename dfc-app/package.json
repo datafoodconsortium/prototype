@@ -48,7 +48,7 @@
     "jsonld": "^5.2.0",
     "ldflex": "^2.6.1",
     "ldflex-comunica": "^3.1.0",
-    "ldp-navigator": "^1.2.11",
+    "ldp-navigator": "^1.2.13",
     "mongodb": "^3.2.7",
     "mongoose": "^5.5.14",
     "navigo": "^7.1.2",

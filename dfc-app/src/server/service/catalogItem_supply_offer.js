@@ -618,6 +618,7 @@ class CatalogService {
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
           let data = {
             'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
+            'dfc-b:name': item['dfc-b:references']['dfc-b:name'],
             'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity']
           }
@@ -659,7 +660,7 @@ class CatalogService {
 
         //update remote data
         // console.log('UPDATE product ', item['@id']);
-        await fetch(item['@id'], {
+        const platformCatalogItemResponse =  await fetch(item['@id'], {
           method: 'Patch',
           body: JSON.stringify({
             "@context": this.context,
@@ -672,6 +673,13 @@ class CatalogService {
             'Authorization': 'JWT ' + user['token']
           }
         });
+
+        if (platformCatalogItemResponse.status == 403) {
+          throw new Error("Authentification failed");
+        }
+        if (platformCatalogItemResponse.status != 202) {
+          throw new Error(`statuts have to be 204 and is ${platformCatalogItemResponse.status }`);
+        }
 
         if (!isDfcPlatform) {
 
@@ -1202,6 +1210,7 @@ class CatalogService {
         },
         "dfc-p:hasType": dataToExport['dfc-p:hasType']?dataToExport['dfc-p:hasType']['@id']:undefined,
         "dfc-b:description": dataToExport['dfc-b:description'],
+        "dfc-b:name": dataToExport['dfc-b:name'],
         "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:totalTheoriticalStock']
       };
   
@@ -1469,7 +1478,7 @@ class CatalogService {
 
 
   async impactOneLinked(id, user, data) {
-    const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+    const ldpNavigatorFactory = new LDPNavigator_SparqlAndFetch_Factory({
       sparql: {
         query: {
           endpoint: 'http://dfc-middleware:3000/sparql',
@@ -1491,14 +1500,86 @@ class CatalogService {
       context: this.context ,
       forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough','dfc-b:hasAllergenCharacteristic',
       'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
-    }).make();
+    })
 
-    console.log('data',data);
-    ldpNavigator.init(data);
-    ldpNavigator.persist();
-    const linked = await this.getOneLinkedItem(id, user);
-    console.log('linked',linked);
-    return ;
+    const ldpNavigatorOrigin = ldpNavigatorFactory.make();
+    const oldData = await ldpNavigatorOrigin.resolveById(data['@id']);
+    const newData= {...oldData,...data}
+    // console.log('newData',newData)
+    const ldpNavigatorOrigin2 = ldpNavigatorFactory.make();
+    await ldpNavigatorOrigin2.addToMemory(newData);
+    await ldpNavigatorOrigin2.persist();
+
+    const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
+    const sameAsList = await this.getOneLinkedItemSimple(id, user);
+
+    for (const sameAs of sameAsList['owl:sameAs']) {
+      // console.log('sameAs ____________',sameAs['dfc-t:hostedBy'],uriDfcPlatform)
+      if (sameAs['dfc-t:hostedBy']!=uriDfcPlatform && sameAs['dfc-t:hostedBy']!=data['dfc-t:hostedBy']){
+
+        const ldpNavigatorOther = ldpNavigatorFactory.make();
+        const oldData = await ldpNavigatorOther.resolveById(sameAs['@id']);
+        // console.log('oldData',oldData)
+
+        //TODO forceArray have to be apply in ldp-navigator even dereference not used 
+        const keptData = {
+          '@id':oldData['@id'],
+          'dfc-b:offeredThrough':oldData['dfc-b:offeredThrough']==undefined?undefined:Array.isArray(oldData['dfc-b:offeredThrough'])?oldData['dfc-b:offeredThrough']:[oldData['dfc-b:offeredThrough']],
+          'dfc-b:referencedBy':oldData['dfc-b:referencedBy']==undefined?undefined:Array.isArray(oldData['dfc-b:referencedBy'])?oldData['dfc-b:referencedBy']:[oldData['dfc-b:referencedBy']],
+        }
+ 
+        const newData= {
+          ...oldData,
+          ...data,
+          ...keptData
+        }
+
+        console.log('newData',newData);
+        const ldpNavigatorOther2 = ldpNavigatorFactory.make();
+        await ldpNavigatorOther2.addToMemory(newData)
+        await ldpNavigatorOther2.persist();
+        const newOtherPlatformData= {
+          ...data, 
+          ...keptData
+        }
+
+        if (newOtherPlatformData['dfc-b:offeredThrough']==undefined) delete newOtherPlatformData['dfc-b:offeredThrough'];
+        if (newOtherPlatformData['dfc-b:references']==undefined) delete newOtherPlatformData['dfc-b:references'];
+        if (newOtherPlatformData['dfc-b:offers']==undefined) delete newOtherPlatformData['dfc-b:offers'];
+        if (newOtherPlatformData['dfc-b:referencedBy']==undefined) delete newOtherPlatformData['dfc-b:referencedBy'];
+        console.log('newOtherPlatformData',newOtherPlatformData)
+
+        //TODO remove this line only temp for socle suport
+        delete newOtherPlatformData['dfc-b:offeredThrough'];
+
+        const sourceResponse = await fetch(sameAs['@id'], {
+          method: 'PATCH',
+          headers: {
+            'authorization': 'JWT ' + user['token'],
+            'accept': 'application/ld+json',
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(newOtherPlatformData)
+        });
+
+        if (sourceResponse.status == 403) {
+          throw new Error("Authentification failed");
+        }
+
+        if (sourceResponse.status == 404) {
+          throw new Error(`uri 404 for ${sameAs['@id']}`);
+        }
+    
+        if (sourceResponse.status != 204) {
+          // console.log(await sourceResponse.text())
+          console.log(await sourceResponse.text())
+          throw new Error(`Platform have to return 204 status on creation; Platform return ${sourceResponse.status} status for ${sameAs['@id']}`);
+  
+        }
+      }
+    }    
+
+    return "product well impacted";
 
   }
 }

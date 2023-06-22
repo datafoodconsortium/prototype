@@ -28,6 +28,7 @@ export default class ItemSupplyPlatform extends GenericElement {
       expirationDate : this.shadowRoot.querySelector('[name="expirationDate"]'),
       producerName: this.shadowRoot.querySelector('[name="producerName"]'),
       description: this.shadowRoot.querySelector('[name="description"]'),
+      name: this.shadowRoot.querySelector('[name="name"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
       type : this.shadowRoot.querySelector('[name="type"]'),
       quantity: this.shadowRoot.querySelector('[name="quantity"]'),
@@ -239,7 +240,8 @@ export default class ItemSupplyPlatform extends GenericElement {
 
     this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
-    this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
+    this.elements.name.value = data['dfc-b:references']['dfc-b:name'];
+    // this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
 
     this.elements.origin.textContent = data['dfc-b:references']['dfc-b:hasGeographicalOrigin'] && data['dfc-b:references']['dfc-b:hasGeographicalOrigin']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.expirationDate.textContent = data['dfc-b:references']['dfc-b:lifeTime'];
@@ -345,7 +347,8 @@ export default class ItemSupplyPlatform extends GenericElement {
         'dfc-b:stockLimitation':this.elements.stockLimitation.value,
         'dfc-b:sku':this.elements.sku.value,
         'dfc-b:references':{...(this.item['dfc-b:references']),...{
-          'dfc-b:description':this.elements.description.value
+          'dfc-b:description':this.elements.description.value,
+          'dfc-b:name':this.elements.name.value
         }}
       }}
       // console.log(updated);

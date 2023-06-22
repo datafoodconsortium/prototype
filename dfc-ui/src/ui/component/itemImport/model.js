@@ -17,6 +17,7 @@ export default class ItemImport extends GenericElement {
     this.dxGridDom = this.shadowRoot.querySelector('#dxGrid');
     this.elements = {
       description: this.shadowRoot.querySelector('[name="description"]'),
+      name: this.shadowRoot.querySelector('[name="name"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
       type: this.shadowRoot.querySelector('[name="type"]'),
       quantity: this.shadowRoot.querySelector('[name="quantity"]'),
@@ -181,7 +182,8 @@ export default class ItemImport extends GenericElement {
 
   filter(value){
     let filteredData = this.rawSupplies.filter(record=>{
-      return this.normalize(record['dfc-b:references']['dfc-b:description'].toUpperCase()).includes(this.normalize(value.toUpperCase()));
+      const searchText = record['dfc-b:references']['dfc-b:name'].concat(record['dfc-b:references']['dfc-b:description'])
+      return this.normalize(searchText.toUpperCase()).includes(this.normalize(value.toUpperCase()));
     })
     this.setDataGrid(filteredData)
   }
@@ -238,6 +240,7 @@ export default class ItemImport extends GenericElement {
       return {
         id: counter,
         description: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:description'],
+        name: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:name'],
         source: d['dfc-t:hostedBy']['rdfs:label'],
         sku: d['dfc-b:sku'],
         stockLimitation : d['dfc-b:stockLimitation'],
@@ -272,6 +275,7 @@ export default class ItemImport extends GenericElement {
             stockLimitation : c['dfc-b:stockLimitation'],
             totalTheoriticalStock : c['dfc-b:references']&&c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
             description: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:description'],
+            name: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:name'],
             quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:quantity'],
             unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
             type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
@@ -289,8 +293,13 @@ export default class ItemImport extends GenericElement {
       "autoExpandAll": false,
       "columns": [
           {
-            dataField: 'description',
+            dataField: 'name',
             caption: 'Name',
+            minWidth: 400,
+          },
+          {
+            dataField: 'description',
+            caption: 'Description',
             minWidth: 400,
           },
           "quantity",
@@ -350,6 +359,7 @@ export default class ItemImport extends GenericElement {
     console.log('setData',data);
     this.item = data
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
+    this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
     this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']?data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'';
     this.elements.type.textContent = data['dfc-b:references']&&data['dfc-b:references']['dfc-p:hasType']?data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'';
     this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
