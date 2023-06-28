@@ -154,6 +154,7 @@ class Platform {
           let newPlaformId = await this.createOnePlatform(source.slug,{
             'rdfs:label':source.name
           });
+          console.log('_____________ newPlaformId',newPlaformId)
           let newPlaform = await this.getOnePlatform(newPlaformId);
           // console.log('newPlaform',newPlaform);
           this.configPlatforms[source.slug]=newPlaform;

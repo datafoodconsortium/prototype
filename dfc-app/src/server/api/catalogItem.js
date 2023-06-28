@@ -151,15 +151,15 @@ module.exports = function(router) {
     }
   })
 
-  router.post('/catalog/impact/:id', async (req, res, next) => {
+  router.post('/catalog/impact', async (req, res, next) => {
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
       try {
-        let out = await catalogItem_supply_offer.impactOneLinked(req.params.id,req.user,req.body);
+        let out = await catalogItem_supply_offer.impactOneLinked(req.body,req.user);
         res.json(out);
       } catch (e) {
-        res.statusCode = 409;
+        res.statusCode = 500;
         next(e);
       }
     }
