@@ -149,7 +149,7 @@ module.exports = {
       ]
     }
   ],
-  "context":"https://static.datafoodconsortium.org/ontologies/context.json",
+  "context":"https://github.com/datafoodconsortium/ontology/releases/latest/download/context.json",
   "express": {
     "session_secret": "4751c8b3-3a15-4ba9-8186-94c0fd330f30"
   },

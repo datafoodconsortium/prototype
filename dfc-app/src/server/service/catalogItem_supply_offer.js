@@ -24,14 +24,14 @@ const {
 const SparqlTools = require('./../util/sparqlTools.js')
 
 const PREFIX = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX dfc: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/DFC_FullModel.owl#>
-PREFIX dfc-b: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/DFC_BusinessOntology.owl#>
-PREFIX dfc-p: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/DFC_ProductOntology.owl#>
-PREFIX dfc-t: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/DFC_TechnicalOntology.owl#>
-PREFIX dfc-u: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/units.rdf#>
-PREFIX dfc-pt: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/productTypes.rdf#>
-PREFIX dfc-f: <hhttps://github.com/datafoodconsortium/ontology/releases/download/v1.7/facets.rdf#>
-PREFIX dfc-m: <https://github.com/datafoodconsortium/ontology/releases/download/v1.7/measures.rdf#>
+PREFIX dfc: <https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_FullModel.owl#>
+PREFIX dfc-b: <https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_BusinessOntology.owl#>
+PREFIX dfc-p: <https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_ProductOntology.owl#>
+PREFIX dfc-t: <https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_TechnicalOntology.owl#>
+PREFIX dfc-u: <https://github.com/datafoodconsortium/taxonomies/releases/latest/download/units.rdf#>
+PREFIX dfc-pt: <https://github.com/datafoodconsortium/taxonomies/releases/latest/download/productTypes.rdf#>
+PREFIX dfc-f: <hhttps://github.com/datafoodconsortium/taxonomies/releases/latest/download/facets.rdf#>
+PREFIX dfc-m: <https://github.com/datafoodconsortium/taxonomies/releases/latest/download/measures.rdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/#>
@@ -1461,7 +1461,7 @@ class CatalogService {
     const ldpNavigatorOrigin = ldpNavigatorFactory.make();
     const oldData = await ldpNavigatorOrigin.resolveById(data['@id']);
     const newData= {...oldData,...data}
-    console.log('newData',newData)
+    // console.log('newData',newData)
     // const ldpNavigatorOrigin2 = ldpNavigatorFactory.make();
     await ldpNavigatorOrigin.addToMemory(newData);
     await ldpNavigatorOrigin.persist();
@@ -1479,14 +1479,23 @@ class CatalogService {
         // console.log('oldData',oldData)
 
         //TODO forceArray have to be apply in ldp-navigator even dereference not used 
+        // const keptData = {
+        //   '@id':oldData['@id'],
+        //   'dfc-b:offeredThrough':oldData['dfc-b:offeredThrough']==undefined?undefined:Array.isArray(oldData['dfc-b:offeredThrough'])?oldData['dfc-b:offeredThrough']:[oldData['dfc-b:offeredThrough']],
+        //   'dfc-b:referencedBy':oldData['dfc-b:referencedBy']==undefined?undefined:Array.isArray(oldData['dfc-b:referencedBy'])?oldData['dfc-b:referencedBy']:[oldData['dfc-b:referencedBy']],
+        //   'dfc-b:references':oldData['dfc-b:references']==undefined?undefined:Array.isArray(oldData['dfc-b:references'])?oldData['dfc-b:references']:[oldData['dfc-b:references']],
+        //   'dfc-b:offers':oldData['dfc-b:offers']==undefined?undefined:Array.isArray(oldData['dfc-b:offers'])?oldData['dfc-b:offers']:[oldData['dfc-b:offers']],
+        //   'dfc-b:hasBrand':oldData['dfc-b:hasBrand']==undefined?undefined:Array.isArray(oldData['dfc-b:hasBrand'])?oldData['dfc-b:hasBrand']:[oldData['dfc-b:hasBrand']],
+        //   'dfc-b:hasProcess':oldData['dfc-b:hasProcess']==undefined?undefined:Array.isArray(oldData['dfc-b:hasProcess'])?oldData['dfc-b:hasProcess']:[oldData['dfc-b:hasProcess']],
+        // }
+
         const keptData = {
           '@id':oldData['@id'],
-          'dfc-b:offeredThrough':oldData['dfc-b:offeredThrough']==undefined?undefined:Array.isArray(oldData['dfc-b:offeredThrough'])?oldData['dfc-b:offeredThrough']:[oldData['dfc-b:offeredThrough']],
-          'dfc-b:referencedBy':oldData['dfc-b:referencedBy']==undefined?undefined:Array.isArray(oldData['dfc-b:referencedBy'])?oldData['dfc-b:referencedBy']:[oldData['dfc-b:referencedBy']],
-          'dfc-b:references':oldData['dfc-b:references']==undefined?undefined:Array.isArray(oldData['dfc-b:references'])?oldData['dfc-b:references']:[oldData['dfc-b:references']],
-          'dfc-b:offers':oldData['dfc-b:offers']==undefined?undefined:Array.isArray(oldData['dfc-b:offers'])?oldData['dfc-b:offers']:[oldData['dfc-b:offers']],
-          'dfc-b:hasBrand':oldData['dfc-b:hasBrand']==undefined?undefined:Array.isArray(oldData['dfc-b:hasBrand'])?oldData['dfc-b:hasBrand']:[oldData['dfc-b:hasBrand']],
-          'dfc-b:hasProcess':oldData['dfc-b:hasProcess']==undefined?undefined:Array.isArray(oldData['dfc-b:hasProcess'])?oldData['dfc-b:hasProcess']:[oldData['dfc-b:hasProcess']],
+          'dfc-b:offeredThrough':oldData['dfc-b:offeredThrough'],
+          'dfc-b:referencedBy':oldData['dfc-b:referencedBy'],
+          'dfc-b:references':oldData['dfc-b:references'],
+          'dfc-b:hasBrand':oldData['dfc-b:hasBrand'],
+          'dfc-b:hasProcess':oldData['dfc-b:hasProcess'],
         }
  
         const newData= {
