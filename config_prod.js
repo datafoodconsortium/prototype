@@ -1,91 +1,8 @@
 module.exports = {
   "mongoConnection" : "mongodb://mongodb:27017",
   "appUrl": "https://185.25.192.252:8080",
-  "data":{
-    "units":[
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#Piece",
-        "rdfs:label":"unité"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#piece",
-        "rdfs:label":"unité"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#Kilogram",
-        "rdfs:label":"kilogramme"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#kilogram",
-        "rdfs:label":"kilogramme"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#KG",
-        "rdfs:label":"kilogramme"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#Gram",
-        "rdfs:label":"gramme"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#G",
-        "rdfs:label":"gramme"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#U",
-        "rdfs:label":"unité"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#Unit",
-        "rdfs:label":"unité"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#gram",
-        "rdfs:label":"gramme"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#unit",
-        "rdfs:label":"unité"
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#kg",
-        "rdfs:label":"kilogramme",
-        "official":true
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#u",
-        "rdfs:label":"unité",
-        "official":true
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#g",
-        "rdfs:label":"gramme",
-        "official":true
-      },
-      {
-        "@id":"http://static.datafoodconsortium.org/data/units.rdf#l",
-        "rdfs:label":"litre",
-        "official":true
-      }
-    ]
-  },
-  "sources": [{
-      "name": "test v1.5",
-      "slug": "test_v1-5",
-      "url": "http://static.datafoodconsortium.org/businessAPI/user_1_5.json",
-      "version":"1.5"
-    },{
-      "name": "test v1.6.1",
-      "slug": "test_v1-6",
-      "url": "http://static.datafoodconsortium.org/businessAPI/user_1_6.json",
-      "version":"1.6"
-    },
+  "sources": [
     {
-      "name": "test v1.6.2",
-      "slug": "test_v1-6",
-      "url": "http://static.datafoodconsortium.org/businessAPI/user_1_6_2.json",
-      "version":"1.6"
-    },{
       "name": "Socleo",
       "slug" : "socleo",
       "url": "https://demo.socleo.org/api/dfc/person/",
@@ -117,17 +34,18 @@ module.exports = {
       "slug": "lecoqlibre",
       "url": "https://dfc.lecoqlibre.fr/api/dfc/person/617434aeda56d67eb07d1198",
       "version":"1.6"
-    },{
-      "name": "test v1.7",
-      "slug": "test_v1-7",
-      "url": "http://static.datafoodconsortium.org/businessAPI/user_1_7.json",
-      "version":"1.7"
     },
     {
       "name": "test v1.7.2",
       "slug": "test_v1-7",
       "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.7.2/user.json",
       "version":"1.7"
+    },
+    {
+      "name": "test v1.7.3",
+      "slug": "test_v1-7-3",
+      "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.7.3/user.json",
+      "version": "1.7"
     },
     {
       "name": "Garethe v1.6",
