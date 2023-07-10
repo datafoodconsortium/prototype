@@ -6,10 +6,10 @@ const CatalogItem_Supply_Offer = require('./../service/catalogItem_supply_offer.
 const Entreprise = require('./../service/entreprise.js');
 
 
-module.exports = function(router) {
+module.exports = async function(router) {
   // this.config = require('./../../configuration.js');
   // Get workspaces
-  let catalogItem_supply_offer = new CatalogItem_Supply_Offer();
+  let catalogItem_supply_offer = await CatalogItem_Supply_Offer.getInstance();
   router.post('/catalog/clean', async (req, res, next) => {
     if (req.user == undefined) {
       next(new Error('user not defined'))
@@ -143,6 +143,20 @@ module.exports = function(router) {
     } else {
       try {
         let out = await catalogItem_supply_offer.getOneLinkedItemSimple(req.params.id, req.user);
+        res.json(out);
+      } catch (e) {
+        res.statusCode = 409;
+        next(e);
+      }
+    }
+  })
+
+  router.get('/catalog/my-data/:id', async (req, res, next) => {
+    if (req.user == undefined) {
+      next(new Error('user not defined'))
+    } else {
+      try {
+        let out = await catalogItem_supply_offer.getOnePlatformData(req.params.id, req.user);
         res.json(out);
       } catch (e) {
         res.statusCode = 409;

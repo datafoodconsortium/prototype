@@ -42,6 +42,12 @@ class CatalogService {
     this.init();
   }
 
+  static async getInstance(){
+    const instance = new CatalogService();
+    await instance.init();
+    return instance;
+  }
+
   async init() {
     if (!this.context) {
       console.log('________________',config.context)
@@ -587,6 +593,7 @@ class CatalogService {
 
         // console.log('AFTER remove');
         let newRepresent = item["dfc-t:hasPivot"]["dfc-t:represent"];
+        // console.log('_________newRepresent',newRepresent)
         newRepresent = Array.isArray(newRepresent) ? newRepresent : [newRepresent];
         newRepresent = newRepresent.map(r => r['@id'] ? r['@id'] : r);
         const updatePivotBody = {
@@ -612,34 +619,40 @@ class CatalogService {
         const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
 
         const isDfcPlatform = item['dfc-t:hostedBy']['@id'] == dfcPlaform['@id'];
-        // console.log('IS DFC PLATFORM',isDfcPlatform);
+        console.log('IS DFC PLATFORM',isDfcPlatform,item['dfc-t:hostedBy']['@id']);
 
         if (item['dfc-b:references']) {
           //update remote data
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
-          let data = {
-            'dfc-b:description': item['dfc-b:references']['dfc-b:description'],
-            'dfc-b:name': item['dfc-b:references']['dfc-b:name'],
-            'dfc-b:totalTheoriticalStock': item['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-            'dfc-b:quantity': item['dfc-b:references']['dfc-b:quantity']
-          }
+          let dataReferences = {...(item['dfc-b:references'])};
 
 
-          // NOT supported by socleo
-          if (isDfcPlatform) {
-            data = {
-              'dfc-p:hasType': item['dfc-b:references']['dfc-p:hasType'],
-              'dfc-b:hasUnit': item['dfc-b:references']['dfc-b:hasUnit'],
-              ...data
+          dataReferences['dfc-b:hasBrand']=dataReferences['dfc-b:hasBrand']['@id'];
+          dataReferences['dfc-b:hasGeographicalOrigin']=dataReferences['dfc-b:hasGeographicalOrigin']['@id'];
+          dataReferences['dfc-p:hasType']=dataReferences['dfc-p:hasType']['@id'];
+          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']=dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'];
+
+
+
+          for (const key of Object.keys(dataReferences)) {
+            if(key.includes('dfc-t')){
+              delete dataReferences[key];
             }
           }
-          // console.log('data',data);
+          console.log(
+            {
+              "@context": this.context,
+              ...dataReferences
+            }
+          )
 
-          await fetch(item['dfc-b:references']['@id'], {
-            method: 'Patch',
+
+
+          const platformReferenceResponse = await fetch(item['dfc-b:references']['@id'], {
+            method: 'PUT',
             body: JSON.stringify({
               "@context": this.context,
-              ...data
+              ...dataReferences
             }),
             headers: {
               'accept': 'application/ld+json',
@@ -648,25 +661,39 @@ class CatalogService {
             }
           });
 
-          // console.log(item['dfc-b:references']);
+          if (platformReferenceResponse.status == 403) {
+            throw new Error("Authentification failed");
+          }
+          if (Math.floor(platformReferenceResponse.status/100) != 2) {
+            console.error(await platformReferenceResponse.text())
+            throw new Error(`statuts have to be 2xx and is ${platformCatalogItemResponse.status }`);
+          }
+  
+
           if (!isDfcPlatform) {
-            // console.log('REMOVE CALL');
-            // console.log(referencesSlimplified);
             await sparqlTools.remove(item['dfc-b:references']['@id'])
-            // console.log('UPDATE supply',item);
             await sparqlTools.insert(item['dfc-b:references'])
-            // console.log('UPDATE supply DONE');
+          }
+        }
+
+        let data = {...(item)};
+
+        delete data['dfc-b:offeredThrough'];
+        data['dfc-b:references']=data['dfc-b:references']['@id']
+
+        for (const key of Object.keys(data)) {
+          if(key.includes('dfc-t')){
+            delete data[key];
           }
         }
 
         //update remote data
         // console.log('UPDATE product ', item['@id']);
         const platformCatalogItemResponse =  await fetch(item['@id'], {
-          method: 'Patch',
+          method: 'PUT',
           body: JSON.stringify({
             "@context": this.context,
-            'dfc-b:stockLimitation': item['dfc-b:stockLimitation'],
-            'dfc-b:sku': item['dfc-b:sku'],
+            ...data
           }),
           headers: {
             'accept': 'application/ld+json',
@@ -678,16 +705,14 @@ class CatalogService {
         if (platformCatalogItemResponse.status == 403) {
           throw new Error("Authentification failed");
         }
-        if (platformCatalogItemResponse.status != 202) {
-          throw new Error(`statuts have to be 204 and is ${platformCatalogItemResponse.status }`);
+        if (Math.floor(platformCatalogItemResponse.status/100) != 2) {
+          console.error(await platformCatalogItemResponse.text())
+          throw new Error(`statuts have to be 2xx and is ${platformCatalogItemResponse.status }`);
         }
 
         if (!isDfcPlatform) {
-
           await sparqlTools.remove(item['@id'])
-          // console.log('UPDATE item',item);
           await sparqlTools.insert(item)
-          // console.log('UPDATE item DONE');
         }
 
 
@@ -888,7 +913,7 @@ class CatalogService {
             }
           })
 
-          if (sourceResponse.status != 200) {
+          if (Math.floor(sourceResponse.status/100) != 2) {
             throw new Error(`connexion to serveur return status ${sourceResponse.status}, try new authentification`)
           }
 
@@ -1165,7 +1190,7 @@ class CatalogService {
       console.log('dataToExport',dataToExport)
       const newDataSuppliedProduct = {
         "@context": [
-          "http://static.datafoodconsortium.org/ontologies/context.json"
+          this.context
         ],
         "@type": "dfc-b:SuppliedProduct",
         "dfc-b:hasQuantity": {
@@ -1245,7 +1270,7 @@ class CatalogService {
   
       const newDataCatalogItem = {
         "@context": [
-          "http://static.datafoodconsortium.org/ontologies/context.json"
+          this.context
         ],
         "@type": "dfc-b:CatalogItem",
         "dfc-b:sku": dataToExport['dfc-b:sku'],
@@ -1355,7 +1380,8 @@ class CatalogService {
         headers: {
           'authorization': 'JWT ' + user['token'],
           'accept': 'application/ld+json'
-        }
+        },
+        forceContext : this.context
       })
     ]);
     // console.log('RESOLVE', id);
@@ -1431,6 +1457,27 @@ class CatalogService {
     return shorter;
 
   }
+
+  async getOnePlatformData(id, user) {
+    const linked = await this.getOneLinkedItem(id, user);
+    // console.log(linked);
+    const shorter = {
+      ...linked,
+      'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(
+        r =>  r['@id']
+      ).filter(
+        r => !(r.includes(linked['@id']))
+      )
+    }
+    delete shorter['dfc-t:hasPivot'];
+    delete shorter['dfc-t:hostedBy'];
+    delete shorter['dfc:owner'];
+    return shorter;
+
+  }
+
+
+  
 
 
   async impactOneLinked(data, user) {
