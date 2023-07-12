@@ -3,6 +3,7 @@ import view from 'html-loader!./view.html';
 
 import 'devextreme/integration/jquery';
 import TreeList from "devextreme/ui/tree_list";
+import DataGrd from "devextreme/ui/data_grid";
 import dxcss from 'devextreme/dist/css/dx.light.css';
 
 export default class CatalogImport extends GenericElement {
@@ -71,14 +72,13 @@ export default class CatalogImport extends GenericElement {
         stockLimitation : d['dfc-b:stockLimitation'],
         unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasQuantity']&&d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']?d['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
         totalTheoriticalStock : d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
-        type: d['dfc-b:references']['dfc-p:hasType']?d['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'][0]['@value']:'',
+        type: d['dfc-b:references']['dfc-b:hasType']?d['dfc-b:references']['dfc-b:hasType']['skos:prefLabel'][0]['@value']:'',
         source: d['dfc-t:hostedBy']?d['dfc-t:hostedBy']['rdfs:label']:'',
         raw :d
       }
     })
 
-    this.dxGrid = new TreeList(this.dxGridDom, {
-      "autoExpandAll": true,
+    this.dxGrid = new DataGrd(this.dxGridDom, {
       "columns": [
           {
             dataField: 'name',
@@ -86,7 +86,7 @@ export default class CatalogImport extends GenericElement {
             minWidth: 500,
           },
           {
-            dataField: 'desription',
+            dataField: 'description',
             caption: 'Description',
             minWidth: 500,
           },
@@ -103,6 +103,10 @@ export default class CatalogImport extends GenericElement {
           {
             dataField: 'stockLimitation',
             caption: 'Stock'
+          },
+          {
+            dataField: 'source',
+            caption: 'Source'
           },
           {
               type: "buttons",
@@ -128,7 +132,14 @@ export default class CatalogImport extends GenericElement {
           }
       ],
       "dataSource": dxData,
-      "showRowLines": true
+      "showRowLines": true,
+
+      paging: { enabled: false },
+      "height" : "80vh",
+      "scrolling": {
+        useNative: true,
+        mode: "standard"
+       },
     });
     // this.dxGrid.dataSource= dataEasyUi;
   }

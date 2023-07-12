@@ -161,7 +161,7 @@ export default class ItemSupply extends GenericElement {
     // let counter = 0;
     // let dataEasyUi = data.map(d => {
     //   counter++;
-    //   let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+    //   let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasType'];
     //   if(type&&!Array.isArray(type)){
     //     type=[type];
     //   }
@@ -171,7 +171,7 @@ export default class ItemSupply extends GenericElement {
     //     raw:d,
     //     description: d['dfc-b:references']&& d['dfc-b:references']['dfc-b:description'],
     //     quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
-    //     unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+    //     unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasUnit']?d['dfc-b:references']['dfc-b:hasUnit']['rdfs:label']:'',
     //     type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
     //     sku: d['dfc-b:sku'],
     //     stockLimitation: d['dfc-b:stockLimitation'],
@@ -185,7 +185,7 @@ export default class ItemSupply extends GenericElement {
     let counter = 0;
     const dxData = data.map(d => {
       counter++;
-      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasType'];
       if(type&&!Array.isArray(type)){
         type=[type];
       }
@@ -344,7 +344,7 @@ export default class ItemSupply extends GenericElement {
 
   setData(data) {
     console.log(data);
-    let type = data['dfc-b:references']&&data['dfc-b:references']['dfc-p:hasType'];
+    let type = data['dfc-b:references']&&data['dfc-b:references']['dfc-b:hasType'];
     if(type&&!Array.isArray(type)){
       type=[type];
     }
@@ -427,7 +427,7 @@ export default class ItemSupply extends GenericElement {
         };
         // console.log('final item', this.item);
         // this.item['dfc-b:sku']=this.selectedImport['dfc-b:sku'];
-        // this.item['dfc-p:stockLimitation']=this.selectedImport['dfc-p:stockLimitation'];
+        // this.item['dfc-b:stockLimitation']=this.selectedImport['dfc-b:stockLimitation'];
 
         this.publish({
           channel: 'supply',

@@ -152,7 +152,7 @@ export default class CatalogSupply extends GenericElement {
     let counter = 0;
     let dxData = data.map(d => {
       counter++;
-      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasType'];
       if(type&&!Array.isArray(type)){
         type=[type];
       }
@@ -182,7 +182,7 @@ export default class CatalogSupply extends GenericElement {
         }
         children.forEach((c, i) => {
           counter++;
-          let type = c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasType'];
+          let type = c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasType'];
           if(type&&!Array.isArray(type)){
             type=[type];
           }
@@ -211,21 +211,12 @@ export default class CatalogSupply extends GenericElement {
     this.dxTreeGrid = new TreeList(this.dxTreeGridDom, {
       "autoExpandAll": true,
       "columnAutoWidth": true,
-      // "mode": "virtual",
-      // "paging": {
-      //   enabled: true,
-      //   pageSize: 15
-      // },
-      // "pager": {
-      //   showPageSizeSelector: true,
-      //   allowedPageSizes: [30, 50],
-      //   showNavigationButtons: true
-      // },
-      "height" : "1000px",
+      paging: { enabled: false },
+      "height" : "80vh",
       "scrolling": {
-       useNative: true,
-       mode: "standard"
-      },
+        useNative: true,
+        mode: "standard"
+       },
       "selection": {
         mode: 'multiple',
         recursive: 'true'

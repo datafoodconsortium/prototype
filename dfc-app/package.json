@@ -42,6 +42,7 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "fix-esm": "^1.0.1",
+    "http-link-header": "^1.1.1",
     "install": "^0.13.0",
     "isobject": "^4.0.0",
     "jquery": "^3.4.1",

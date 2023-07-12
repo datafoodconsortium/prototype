@@ -200,8 +200,8 @@ export default class ItemSupplyPlatform extends GenericElement {
   //       raw:d,
   //       description: d['dfc-b:references']['dfc-b:description'],
   //       quantity: d['dfc-b:references']['dfc-b:quantity'],
-  //       unit: d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label'],
-  //       type: d['dfc-b:references']['dfc-p:hasType']['rdfs:label'],
+  //       unit: d['dfc-b:references']['dfc-b:hasUnit']['rdfs:label'],
+  //       type: d['dfc-b:references']['dfc-b:hasType']['rdfs:label'],
   //       sku: d['dfc-b:sku'],
   //       stockLimitation: d['dfc-b:stockLimitation'],
   //       totalTheoriticalStock: d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
@@ -247,7 +247,7 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.expirationDate.textContent = data['dfc-b:references']['dfc-b:lifeTime'];
     this.elements.labelCertification.textContent =  data['dfc-b:references']['dfc-b:hasCertification'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'] && data['dfc-b:references']['dfc-b:hasCertification']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'] ;
     
-    this.elements.type.textContent = data['dfc-b:references']['dfc-p:hasType']&& data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
+    this.elements.type.textContent = data['dfc-b:references']['dfc-b:hasType']&& data['dfc-b:references']['dfc-b:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'];
     this.elements.quantity.value = data['dfc-b:references']['dfc-b:hasQuantity'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'];
     this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
@@ -412,7 +412,7 @@ export default class ItemSupplyPlatform extends GenericElement {
   //       console.log(cleanReferences);
   //       this.item['dfc-b:references']=cleanReferences;
   //       this.item['dfc-b:sku']=this.selectedImport['dfc-b:sku'];
-  //       this.item['dfc-p:stockLimitation']=this.selectedImport['dfc-p:stockLimitation'];
+  //       this.item['dfc-b:stockLimitation']=this.selectedImport['dfc-b:stockLimitation'];
   //
   //       this.publish({
   //         channel: 'supply',

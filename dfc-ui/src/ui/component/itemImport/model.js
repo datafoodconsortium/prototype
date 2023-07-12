@@ -193,7 +193,7 @@ export default class ItemImport extends GenericElement {
     // let dataEasyUi = data.map(d => {
     //   counter++;
     //   // console.log(d);
-    //   let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+    //   let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasType'];
     //   if(type&&!Array.isArray(type)){
     //     type=[type];
     //   }
@@ -203,7 +203,7 @@ export default class ItemImport extends GenericElement {
     //     raw:d,
     //     description: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:description'],
     //     quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
-    //     unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+    //     unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasUnit']?d['dfc-b:references']['dfc-b:hasUnit']['rdfs:label']:'',
     //     type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
     //     sku: d['dfc-b:sku'],
     //     stockLimitation: d['dfc-b:stockLimitation'],
@@ -220,8 +220,8 @@ export default class ItemImport extends GenericElement {
     //         totalTheoriticalStock : c['dfc-b:references']&&c['dfc-b:references']['dfc-b:totalTheoriticalStock'],
     //         description: c['dfc-b:references']&& c['dfc-b:references']['dfc-b:description'],
     //         quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:quantity'],
-    //         unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
-    //         type: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasType']?c['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
+    //         unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasUnit']?c['dfc-b:references']['dfc-b:hasUnit']['rdfs:label']:'',
+    //         type: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasType']?c['dfc-b:references']['dfc-b:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'',
     //
     //       }
     //     })
@@ -233,7 +233,7 @@ export default class ItemImport extends GenericElement {
     let counter = 0;
     let dxData = data.map(d => {
       counter++;
-      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasType'];
+      let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasType'];
       if(type&&!Array.isArray(type)){
         type=[type];
       }
@@ -246,7 +246,7 @@ export default class ItemImport extends GenericElement {
         stockLimitation : d['dfc-b:stockLimitation'],
         totalTheoriticalStock : d['dfc-b:references']&&d['dfc-b:references']['dfc-b:totalTheoriticalStock'],
         quantity: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:quantity'],
-        unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-p:hasUnit']?d['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+        unit: d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasUnit']?d['dfc-b:references']['dfc-b:hasUnit']['rdfs:label']:'',
         type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
         children:d['dfc-t:hasPivot']['dfc-t:represent'],
         raw: d,
@@ -263,7 +263,7 @@ export default class ItemImport extends GenericElement {
         }
         children.forEach((c, i) => {
           counter++;
-          let type = c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasType'];
+          let type = c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasType'];
           if(type&&!Array.isArray(type)){
             type=[type];
           }
@@ -277,7 +277,7 @@ export default class ItemImport extends GenericElement {
             description: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:description'],
             name: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:name'],
             quantity: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:quantity'],
-            unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-p:hasUnit']?c['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'',
+            unit: c['dfc-b:references']&&c['dfc-b:references']['dfc-b:hasUnit']?c['dfc-b:references']['dfc-b:hasUnit']['rdfs:label']:'',
             type: type?type.map(t=>t['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']):'',
             raw: c,
             parent: d,
@@ -360,8 +360,8 @@ export default class ItemImport extends GenericElement {
     this.item = data
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
     this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
-    this.elements.unit.textContent = data['dfc-b:references']['dfc-p:hasUnit']?data['dfc-b:references']['dfc-p:hasUnit']['rdfs:label']:'';
-    this.elements.type.textContent = data['dfc-b:references']&&data['dfc-b:references']['dfc-p:hasType']?data['dfc-b:references']['dfc-p:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'';
+    this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasUnit']?data['dfc-b:references']['dfc-b:hasUnit']['rdfs:label']:'';
+    this.elements.type.textContent = data['dfc-b:references']&&data['dfc-b:references']['dfc-b:hasType']?data['dfc-b:references']['dfc-b:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']:'';
     this.elements.quantity.textContent = data['dfc-b:references']['dfc-b:quantity'];
     this.elements.source.textContent = data['dfc-t:hostedBy']['rdfs:label'];
     this.elements.stockLimitation.textContent = data['dfc-b:stockLimitation'];
