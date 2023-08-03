@@ -48,6 +48,12 @@ module.exports = {
       "version": "1.7"
     },
     {
+    "name": "test v1.7.4",
+    "slug": "test_v1-7-4",
+    "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.7.4/user.json",
+    "version": "1.7"
+    },
+    {
       "name": "Garethe v1.6",
       "slug": "garethe_v1-6",
       "url": "https://raggedstaff.github.io/data/en_user_1_6.json",
