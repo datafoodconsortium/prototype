@@ -665,11 +665,11 @@ class CatalogService {
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
           let dataReferences = {...(item['dfc-b:references'])};
 
-
-          dataReferences['dfc-b:hasBrand']=dataReferences['dfc-b:hasBrand']['@id'];
-          dataReferences['dfc-b:hasGeographicalOrigin']=dataReferences['dfc-b:hasGeographicalOrigin']['@id'];
-          dataReferences['dfc-b:hasType']=dataReferences['dfc-b:hasType']['@id'];
-          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']=dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'];
+          //TODO item provide to updateOneItem param should by in good context: not @id but direct uri
+          dataReferences['dfc-b:hasBrand']=dataReferences['dfc-b:hasBrand']?dataReferences['dfc-b:hasBrand']['@id']:undefined;
+          dataReferences['dfc-b:hasGeographicalOrigin']=dataReferences['dfc-b:hasGeographicalOrigin']?dataReferences['dfc-b:hasGeographicalOrigin']['@id']:undefined;
+          dataReferences['dfc-b:hasType']=dataReferences['dfc-b:hasType']?dataReferences['dfc-b:hasType']['@id']:undefined;
+          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']=dataReferences['dfc-b:hasQuantity']?dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id']:undefined;
 
 
 
@@ -1440,11 +1440,12 @@ class CatalogService {
     let result = await ldpNavigator.resolveById(id);
     if (result) {
       // console.log('BEFORE dereference', result);
-      result = await ldpNavigator.dereference(result, {
-        p: 'dfc-b:references'
-      })
+      // result = await ldpNavigator.dereference(result, {
+      //   p: 'dfc-b:references'
+      // })
+      const fullResult = this.getOneItem(id);
       // console.log('AFTER dereference', result);
-      return result;
+      return fullResult;
     } else {
       throw new Error("refresh error")
     }

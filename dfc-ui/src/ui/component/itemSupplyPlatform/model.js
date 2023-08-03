@@ -28,7 +28,7 @@ export default class ItemSupplyPlatform extends GenericElement {
       expirationDate : this.shadowRoot.querySelector('[name="expirationDate"]'),
       producerName: this.shadowRoot.querySelector('[name="producerName"]'),
       description: this.shadowRoot.querySelector('[name="description"]'),
-      name: this.shadowRoot.querySelector('[name="name"]'),
+      title: this.shadowRoot.querySelector('[name="title"]'),
       unit: this.shadowRoot.querySelector('[name="unit"]'),
       type : this.shadowRoot.querySelector('[name="type"]'),
       quantity: this.shadowRoot.querySelector('[name="quantity"]'),
@@ -238,7 +238,7 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
 
-    this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
+    this.elements.title.textContent = data['dfc-b:references']['dfc-b:name']+data['dfc-b:references']['dfc-b:description'];
     this.elements.description.value = data['dfc-b:references']['dfc-b:description'];
     this.elements.name.value = data['dfc-b:references']['dfc-b:name'];
     // this.elements.producerName.textContent = data['dfc-b:references']['dfc-b:description'];
