@@ -13,14 +13,14 @@ module.exports = {
     }, {
       "name": "OFN FR Staging",
       "slug": "ofn-fr",
-      "url": "https://staging.coopcircuits.fr/api/dfc-v1.6/enterprises/default/catalog_items.json",
-      "version":"1.6",
+      "url": "https://staging.coopcircuits.fr/api/dfc/enterprises/default/catalog_items.json",
+      "version":"1.8",
       "supporWrite":"true"
   }, {
       "name": "OFN UK Staging",
       "slug": "ofn-uk",
-      "url": "https://staging.openfoodnetwork.org.uk/api/dfc-v1.6/enterprises/default/catalog_items.json",
-      "version":"1.6",
+      "url": "https://staging.openfoodnetwork.org.uk/api/dfc/enterprises/default/catalog_items.json",
+      "version":"1.8",
       "supporWrite":"true"
     },
     {
