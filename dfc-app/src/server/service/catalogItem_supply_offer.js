@@ -1052,7 +1052,7 @@ class CatalogService {
           let itemsToImport = [];
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
 
-          if (sourceObject.version == "1.5" || sourceObject.version == "1.6" || sourceObject.version == "1.7") {
+          if (sourceObject.version == "1.5" || sourceObject.version == "1.6" || sourceObject.version == "1.7" || sourceObject.version == "1.8") {
             // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
           
             // console.log('___________________filterInMemory')            
