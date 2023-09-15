@@ -1,0 +1,93 @@
+version: '3.5'
+
+services:
+  dfc-fuseki:
+    image: semapps/jena-fuseki-webacl
+    container_name: dfc-fuseki
+    environment:
+      ADMIN_PASSWORD: "admin"
+    volumes:
+      - ./data/fuseki:/fuseki
+      - ./data/staging:/staging
+    ports:
+      - "3030:3030"
+    expose:
+      - "3030"
+    networks:
+      - dfc
+    healthcheck:
+      test: curl --fail http://localhost:3030 || exit 1
+      interval: 1s
+      timeout: 1s
+      start_period: 5s
+  dfc-middleware:
+    build:
+      context: ./dfc-semapps
+      dockerfile: Dockerfile
+    container_name: dfc-middleware
+    depends_on:
+      dfc-fuseki:
+        condition: service_healthy
+    environment:
+      - SEMAPPS_SPARQL_ENDPOINT=http://dfc-fuseki:3030/
+      - SEMAPPS_MAIN_DATASET=localData
+      - SEMAPPS_JENA_USER=admin
+      - SEMAPPS_JENA_PASSWORD=admin
+      - SEMAPPS_HOME_URL=http://staging.datafoodconsortium.org:3000/
+    volumes:
+      - ./dfc-semapps:/server/app
+    networks:
+      - dfc
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    command: bash -c "yarn install && yarn start"
+  dfc-app:
+    build:
+      context: ./dfc-app
+      dockerfile: ./Dockerfile.dev
+    container_name: dfc-app
+    restart: always
+    environment:
+        - APP_PORT=8080
+        - NODE_ENV=development_docker
+        - CONFIG_URL=$CONFIG_URL
+        - SEMAPPS_JENA_USER=admin
+        - SEMAPPS_JENA_PASSWORD=admin
+    volumes:
+      - ./dfc-app:/app
+      - ./config_prod.js:/app/configuration.js
+    depends_on:
+      - dfc-middleware
+    networks:
+      - dfc
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    command: bash -c "yarn install && yarn start"
+  dfc-ui:
+    build:
+      context: ./dfc-ui
+      dockerfile: ./Dockerfile.dev
+    restart: always
+    container_name: dfc-ui
+    environment:
+      - URL_SERVER=http://staging.datafoodconsortium.org:8080
+    volumes:
+      - ./dfc-ui/src:/app/src
+    networks:
+      - dfc
+    ports:
+      - "80:8090"
+      - "8090:8090"
+    expose:
+      - "8090"
+    command: bash -c "npm start"
+volumes:
+  rdf_data:
+  staging:
+networks:
+  dfc:
+    name: dfc_network
