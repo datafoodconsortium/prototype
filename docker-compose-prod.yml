@@ -4,6 +4,7 @@ services:
   dfc-fuseki:
     image: semapps/jena-fuseki-webacl
     container_name: dfc-fuseki
+    restart: always
     environment:
       ADMIN_PASSWORD: "admin"
     volumes:
