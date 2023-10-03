@@ -252,6 +252,7 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity']&& data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 
+    console.log('---------------- BEFORE setDataGrid');
 
     // DataGrid for the allergens, the nutrients and physical characteristics
     this.setDataGrid(this.dxGridNutrients,this.dxGridDomNutrients,nutrients);

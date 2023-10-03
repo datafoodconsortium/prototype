@@ -8,18 +8,18 @@ module.exports = {
     "version": "1.2"
   },
   {
-    "name": "OFN FR staging",
-    "slug": "ofn",
+    "name": "OFN FR Staging",
+    "slug": "ofn-fr",
     "url": "https://staging.coopcircuits.fr/api/dfc/enterprises/default/catalog_items.json",
-    "version": "1.8",
-    "supporWrite": "true"
+    "version":"1.8",
+    "supporWrite":"true"
   },
   {
     "name": "OFN UK Staging",
     "slug": "ofn-uk",
     "url": "https://staging.openfoodnetwork.org.uk/api/dfc/enterprises/default/catalog_items.json",
-    "version": "1.8",
-    "supporWrite": "true"
+    "version":"1.8",
+    "supporWrite":"true"
   },
   {
     "name": "Elzeard",

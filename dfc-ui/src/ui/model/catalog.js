@@ -298,14 +298,20 @@ export default class Catalog extends GenericElement {
       method: 'POST',
       body: JSON.stringify(supply)
     };
+    console.log('---------------- SEND UPDATE',supply);
     this.util.ajaxCall(url, option).then(data => {
       this.selectedSupply = data.body;
       // console.log('loadOneSupply',this.selectedSupply);
+      console.log('---------------- WELL UPDATE',this.selectedSupply);
       this.publish({
         channel: 'supply',
         topic: 'changeOne',
         data: this.selectedSupply
       });
+      alert(this.selectedSupply['@id'] + ' well updated')
+    }).catch(e=>{
+      alert(supply['@id']  + ' update has failed')
+      alert(e)
     })
   }
 
