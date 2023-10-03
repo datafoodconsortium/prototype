@@ -12,6 +12,7 @@ module.exports = async function(router) {
   let catalogItem_supply_offer = await CatalogItem_Supply_Offer.getInstance();
   router.post('/catalog/clean', async (req, res, next) => {
     if (req.user == undefined) {
+      res.statusCode = 500;
       next(new Error('user not defined'))
     } else {
       let out = await catalogItem_supply_offer.cleanImport(req.user);
@@ -21,6 +22,7 @@ module.exports = async function(router) {
 
   router.get('/catalog/import', async (req, res, next) => {
     if (req.user == undefined) {
+      res.statusCode = 500;
       next(new Error('user not defined'))
     } else {
       let out = await catalogItem_supply_offer.getAllImport(req.user);
@@ -39,6 +41,7 @@ module.exports = async function(router) {
     let idImport = req.params.idImport;
     let idReconciled = req.params.idReconciled;
     if (req.user == undefined) {
+      res.statusCode = 500;
       next(new Error('user not defined'))
     } else {
       let out = await catalogItem_supply_offer.convertImportIdToReconciledId(idImport, idReconciled, req.user);
@@ -49,6 +52,7 @@ module.exports = async function(router) {
 
   router.get('/catalog/reconciled', async (req, res, next) => {
     if (req.user == undefined) {
+      res.statusCode = 500;
       next(new Error('user not defined'))
     } else {
       let out = await catalogItem_supply_offer.getAllItem(req.user);
@@ -63,6 +67,7 @@ module.exports = async function(router) {
       let out = await catalogItem_supply_offer.updateOneItem(req.body, req.user);
       res.json(out);
     } catch (e) {
+      res.statusCode = 500;
       next(e)
     }
   })
@@ -84,6 +89,7 @@ module.exports = async function(router) {
         res.json(out)
       }
     } catch (e) {
+      res.statusCode = 500;
       next(e)
     }
   })

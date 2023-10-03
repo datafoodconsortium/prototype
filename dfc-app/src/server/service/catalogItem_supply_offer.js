@@ -277,7 +277,7 @@ class CatalogService {
           forceArray: ['dfc-t:represent'],
           context: this.context
         }).make();
-        // console.log('ldpNavigator init', id);
+        console.log('ldpNavigator init', id);
         let item = await ldpNavigator.resolveById(id);
         // console.log('item', item);
         item = await ldpNavigator.dereference(item, [{
@@ -609,7 +609,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
         await this.init();
-        // console.log('item',item);
+        console.log('-------------------- UPDATE START',item);
         let oldItem = await this.getOneItem(item['@id']);
 
         let oldRepresent = oldItem["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
@@ -663,13 +663,13 @@ class CatalogService {
         if (item['dfc-b:references']) {
           //update remote data
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
-          let dataReferences = {...(item['dfc-b:references'])};
+          let dataReferences  = JSON.parse(JSON.stringify(item['dfc-b:references']));
 
           //TODO item provide to updateOneItem param should by in good context: not @id but direct uri
           dataReferences['dfc-b:hasBrand']=dataReferences['dfc-b:hasBrand']?dataReferences['dfc-b:hasBrand']['@id']:undefined;
           dataReferences['dfc-b:hasGeographicalOrigin']=dataReferences['dfc-b:hasGeographicalOrigin']?dataReferences['dfc-b:hasGeographicalOrigin']['@id']:undefined;
           dataReferences['dfc-b:hasType']=dataReferences['dfc-b:hasType']?dataReferences['dfc-b:hasType']['@id']:undefined;
-          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']=dataReferences['dfc-b:hasQuantity']?dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id']:undefined;
+          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']=dataReferences['dfc-b:hasQuantity']&&dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']?dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id']:undefined;
 
 
 
@@ -678,21 +678,17 @@ class CatalogService {
               delete dataReferences[key];
             }
           }
-          console.log(
-            {
-              "@context": this.context,
-              ...dataReferences
-            }
-          )
+          dataReferences=  {
+            "@context": this.context,
+            ...dataReferences
+          }
+          console.log('------------------------ dataReferences', dataReferences )
 
 
 
           const platformReferenceResponse = await fetch(item['dfc-b:references']['@id'], {
             method: 'PUT',
-            body: JSON.stringify({
-              "@context": this.context,
-              ...dataReferences
-            }),
+            body: JSON.stringify(dataReferences),
             headers: {
               'accept': 'application/ld+json',
               'content-type': 'application/ld+json',
@@ -705,7 +701,9 @@ class CatalogService {
           }
           if (Math.floor(platformReferenceResponse.status/100) != 2) {
             console.error(await platformReferenceResponse.text())
-            throw new Error(`statuts have to be 2xx and is ${platformCatalogItemResponse.status }`);
+            throw new Error(`statuts have to be 2xx and is ${platformReferenceResponse.status }`);
+          } else{
+            console.log(`${item['dfc-b:references']['@id']} well updated`);
           }
   
 
@@ -714,8 +712,7 @@ class CatalogService {
             await sparqlTools.insert(item['dfc-b:references'])
           }
         }
-
-        let data = {...(item)};
+        let data  = JSON.parse(JSON.stringify(item));
 
         delete data['dfc-b:offeredThrough'];
         data['dfc-b:references']=data['dfc-b:references']['@id']
@@ -725,15 +722,14 @@ class CatalogService {
             delete data[key];
           }
         }
+        data = {"@context": this.context,...data};
+        console.log('----------------------- data',data);
 
         //update remote data
         // console.log('UPDATE product ', item['@id']);
         const platformCatalogItemResponse =  await fetch(item['@id'], {
           method: 'PUT',
-          body: JSON.stringify({
-            "@context": this.context,
-            ...data
-          }),
+          body: JSON.stringify(data),
           headers: {
             'accept': 'application/ld+json',
             'content-type': 'application/ld+json',
@@ -747,12 +743,16 @@ class CatalogService {
         if (Math.floor(platformCatalogItemResponse.status/100) != 2) {
           console.error(await platformCatalogItemResponse.text())
           throw new Error(`statuts have to be 2xx and is ${platformCatalogItemResponse.status }`);
+        }else{
+          console.log(`${item['@id']} well updated`);
         }
 
         if (!isDfcPlatform) {
           await sparqlTools.remove(item['@id'])
           await sparqlTools.insert(item)
         }
+
+        console.log('-------------------- UPDATE RETURN',item);
 
 
         resolve(item);
@@ -767,16 +767,42 @@ class CatalogService {
       // console.log("convertImportIdToReconciledId",convertImportIdToReconciledId);
       let importItem = await this.getOneImport(importId);
 
-      let reconciled = reconciledId ? await this.getOneItem(reconciledId) : undefined;
+      const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+        sparql: {
+          query: {
+            endpoint: 'http://dfc-middleware:3000/sparql',
+            headers: {
+              'accept': 'application/ld+json'
+            },
+            prefix: PREFIX
+          },
+          update: {
+            endpoint: 'http://dfc-fuseki:3030/localData/update',
+            headers: {
+              'Content-Type': 'application/sparql-update',
+              Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+            }
+          },
+          dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
+          'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+        },
+        forceArray: ['dfc-t:represent'],
+        context: this.context
+      }).make();
+
+      let item = await ldpNavigator.resolveById(importId);
+      let reconciled = reconciledId ? await ldpNavigator.resolveById(reconciledId) : undefined;
+
+      // let reconciled = reconciledId ? await this.getOneItem(reconciledId) : undefined;
       // console.log('convertImportIdToCatalogId', importItem, catalogItem);
 
-      let newItem = await this.convertImportToReconciled(importItem, reconciled, user);
+      let newItem = await this.convertImportToReconciled(item, reconciled, user);
       resolve(newItem);
     })
   }
 
   convertImportToReconciled(importToConvert, reconciled, user) {
-    // console.log('convertImportToCatalog',importToConvert,reconciled);
+
     return new Promise(async (resolve, reject) => {
       try {
         await this.init();
@@ -868,8 +894,9 @@ class CatalogService {
             //   undefined,
             //   user
             // )
-            console.log('________________ convertImportIdToReconciledId without reconciled',importToConvert['dfc-b:references'])
-            await this.convertImportIdToReconciledId(importToConvert['dfc-b:references'], undefined, user)
+            // console.log('________________ convertImportIdToReconciledId without reconciled',importToConvert['dfc-b:references'])
+            const referenceId = importToConvert['dfc-b:references']['@id'] || importToConvert['dfc-b:references']
+            await this.convertImportIdToReconciledId(referenceId, undefined, user)
           }
 
           resolve(responseItemDFC.headers.get('location'));
@@ -880,9 +907,9 @@ class CatalogService {
             context: this.context
           });
 
-          // console.log('convert',reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],'<->',importToConvert['@id'])
-          // console.log('reconciled',reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'])
-          // console.log('importToConvert',importToConvert['@id'])
+          // console.log('-------- reconciled',reconciled);
+          // console.log('convert',reconciled['dfc-t:hasPivot'],'<->',importToConvert)
+
           await sparqlTools.insert({
             "@context": this.context,
             "@id": reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],
@@ -903,8 +930,10 @@ class CatalogService {
 
 
           if (importToConvert['dfc-b:references']&&reconciled['dfc-b:references']){
-            console.log('________________ convertImportIdToReconciledId',importToConvert['dfc-b:references'],reconciled['dfc-b:references'])
-            await this.convertImportToReconciled(importToConvert['dfc-b:references'], reconciled['dfc-b:references'], user)
+            // console.log('________________ convertImportIdToReconciledId',importToConvert['dfc-b:references'],reconciled['dfc-b:references'])
+            const referenceImportId = importToConvert['dfc-b:references']['@id'] || importToConvert['dfc-b:references'];
+            const referenceReconciledId = reconciled['dfc-b:references']['@id'] || reconciled['dfc-b:references'];
+            await this.convertImportIdToReconciledId(referenceImportId, referenceReconciledId , user)
           }
 
           resolve(importToConvert['@id']);
@@ -970,7 +999,7 @@ class CatalogService {
           //TODO remove when OFN not use ontology root url in type and othe 
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('http://static.datafoodconsortium.org/ontologies/DFC_BusinessOntology.owl#', 'gi'), 'dfc-b:');
           sourceResponseRaw = sourceResponseRaw.replace(new RegExp('http://static.datafoodconsortium.org/data/productTypes.rdf#', 'gi'), 'dfc-pt:');
-          console.log('sourceResponseRaw',sourceResponseRaw);
+          // console.log('sourceResponseRaw',sourceResponseRaw);
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
           // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
@@ -1134,9 +1163,6 @@ class CatalogService {
 
           let out = [];
           try {
-            // existing = true;
-            //TODO remove / test
-            // itemsToImport=[itemsToImport[0]]
 
             let promises = itemsToImport.map(item => this.importItem(item, user, platform, !existing));
             out = await Promise.all(promises);
@@ -1235,11 +1261,8 @@ class CatalogService {
   async exportSuppliedProduct(sourceSlug, dataToExport, user) {
     let sourceObject = config.sources.find(so => sourceSlug.includes(so.slug));
     const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceSlug);
-    // console.log('sourceObject', sourceObject);
     let createdItem;
     if (sourceObject.urlExportSuppliedProduct) {
-  
-      // console.log('dataToExport',dataToExport)
       const newDataSuppliedProduct = {
         "@context": [
           this.context
@@ -1272,7 +1295,6 @@ class CatalogService {
       }
   
       if (sourceResponse.status != 201) {
-        // console.log(await sourceResponse.text())
         throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
 
       }
@@ -1288,7 +1310,6 @@ class CatalogService {
           'accept': 'application/ld+json',
         },
       });
-      // console.log(await createdItemResponse.text())
       createdItem = await createdItemResponse.json();
 
       createdItem = await jsonld.frame(createdItem,{
@@ -1329,9 +1350,7 @@ class CatalogService {
         "dfc-b:references":suppliedProduct['@id'],
         "dfc-b:stockLimitation": dataToExport['dfc-b:stockLimitation'],
       };
-      // console.log('newDataCatalogItem',JSON.stringify(newDataCatalogItem))
-      // console.log('post token','JWT ' + user['token']);
-      // console.log('POST url',sourceObject.urlExportCatalogItem)
+
       const sourceResponse = await fetch(sourceObject.urlExportCatalogItem, {
         method: 'POST',
         headers: {
@@ -1347,7 +1366,7 @@ class CatalogService {
       }
   
       if (sourceResponse.status != 201) {
-        // console.log(await sourceResponse.text())
+
         throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
 
       }
@@ -1436,15 +1455,10 @@ class CatalogService {
         forceContext : this.context
       })
     ]);
-    // console.log('RESOLVE', id);
+
     let result = await ldpNavigator.resolveById(id);
     if (result) {
-      // console.log('BEFORE dereference', result);
-      // result = await ldpNavigator.dereference(result, {
-      //   p: 'dfc-b:references'
-      // })
       const fullResult = this.getOneItem(id);
-      // console.log('AFTER dereference', result);
       return fullResult;
     } else {
       throw new Error("refresh error")
@@ -1492,7 +1506,6 @@ class CatalogService {
 
   async getOneLinkedItemSimple(id, user) {
     const linked = await this.getOneLinkedItem(id, user);
-    // console.log(linked);
     const shorter = {
       '@id': linked['@id'],
       'dfc-t:hostedBy': linked['dfc-t:hostedBy'],
@@ -1511,7 +1524,6 @@ class CatalogService {
 
   async getOnePlatformData(id, user) {
     const linked = await this.getOneLinkedItem(id, user);
-    // console.log(linked);
     const shorter = {
       ...linked,
       'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(
@@ -1559,11 +1571,10 @@ class CatalogService {
     const ldpNavigatorOrigin = ldpNavigatorFactory.make();
     const oldData = await ldpNavigatorOrigin.resolveById(data['@id']);
     const newData= {...oldData,...data}
-    // console.log('newData',newData)
-    // const ldpNavigatorOrigin2 = ldpNavigatorFactory.make();
+
     await ldpNavigatorOrigin.addToMemory(newData);
     await ldpNavigatorOrigin.persist();
-    // console.log('___________after Persist')
+
 
     const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
     const sameAsList = await this.getOneLinkedItemSimple(data['@id'], user);
@@ -1572,23 +1583,10 @@ class CatalogService {
     
 
     for (const sameAs of sameAsList['owl:sameAs']) {
-      // console.log('sameAs ____________',sameAs['dfc-t:hostedBy'],uriDfcPlatform)
       if (sameAs['dfc-t:hostedBy']!=uriDfcPlatform && sameAs['dfc-t:hostedBy']!=data['dfc-t:hostedBy']){
         console.log('sameAs Other Platform____________',sameAs['dfc-t:hostedBy'],uriDfcPlatform)
         const ldpNavigatorOther = ldpNavigatorFactory.make();
         const oldData = await ldpNavigatorOther.resolveById(sameAs['@id']);
-        // console.log('oldData',oldData)
-
-        //TODO forceArray have to be apply in ldp-navigator even dereference not used 
-        // const keptData = {
-        //   '@id':oldData['@id'],
-        //   'dfc-b:offeredThrough':oldData['dfc-b:offeredThrough']==undefined?undefined:Array.isArray(oldData['dfc-b:offeredThrough'])?oldData['dfc-b:offeredThrough']:[oldData['dfc-b:offeredThrough']],
-        //   'dfc-b:referencedBy':oldData['dfc-b:referencedBy']==undefined?undefined:Array.isArray(oldData['dfc-b:referencedBy'])?oldData['dfc-b:referencedBy']:[oldData['dfc-b:referencedBy']],
-        //   'dfc-b:references':oldData['dfc-b:references']==undefined?undefined:Array.isArray(oldData['dfc-b:references'])?oldData['dfc-b:references']:[oldData['dfc-b:references']],
-        //   'dfc-b:offers':oldData['dfc-b:offers']==undefined?undefined:Array.isArray(oldData['dfc-b:offers'])?oldData['dfc-b:offers']:[oldData['dfc-b:offers']],
-        //   'dfc-b:hasBrand':oldData['dfc-b:hasBrand']==undefined?undefined:Array.isArray(oldData['dfc-b:hasBrand'])?oldData['dfc-b:hasBrand']:[oldData['dfc-b:hasBrand']],
-        //   'dfc-b:hasProcess':oldData['dfc-b:hasProcess']==undefined?undefined:Array.isArray(oldData['dfc-b:hasProcess'])?oldData['dfc-b:hasProcess']:[oldData['dfc-b:hasProcess']],
-        // }
 
         const keptData = {
           '@id':oldData['@id'],
@@ -1613,7 +1611,6 @@ class CatalogService {
           if (newOtherPlatformData['dfc-b:hasBrand']==undefined) delete newOtherPlatformData['dfc-b:hasBrand'];
           if (newOtherPlatformData['dfc-b:hasProcess']==undefined) delete newOtherPlatformData['dfc-b:hasProcess'];
   
-          // console.log('newOtherPlatformData',newOtherPlatformData)
   
           //TODO remove this line only temp for socle suport
           delete newOtherPlatformData['dfc-b:offeredThrough'];
@@ -1637,7 +1634,6 @@ class CatalogService {
           }
       
           if (Math.floor(sourceResponse.status/100) != 2) {
-            // console.log(await sourceResponse.text())
             console.log(await sourceResponse.text())
             throw new Error(`Platform have to return 2xx status on update; Platform return ${sourceResponse.status} status for ${sameAs['@id']}`);
     
@@ -1652,7 +1648,6 @@ class CatalogService {
           }
   
           console.log('newData',newData);
-          // const ldpNavigatorOther = ldpNavigatorFactory.make();
           await ldpNavigatorOther.addToMemory(newData)
           await ldpNavigatorOther.persist();
 
