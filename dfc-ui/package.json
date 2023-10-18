@@ -27,7 +27,7 @@
     "http-server": "^0.12.3",
     "image-webpack-loader": "^6.0.0",
     "mkdirp": "^1.0.4",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "rimraf": "^3.0.2",
     "style-loader": "^1.2.1",
     "webpack": "^5.72.0",
