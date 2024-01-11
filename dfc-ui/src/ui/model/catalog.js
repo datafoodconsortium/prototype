@@ -98,6 +98,14 @@ export default class Catalog extends GenericElement {
         this.cleanAll();
       }
     });
+
+    this.subscribe({
+      channel: 'order',
+      topic: 'loadAll',
+      callback: (data) => {
+        this.loadAllOrder();
+      }
+    });
   }
 
   cleanAll(source) {
@@ -270,6 +278,37 @@ export default class Catalog extends GenericElement {
         topic: 'changeOne',
         data: this.selectedSupply
       });
+    })
+  }
+
+  loadAllOrder() {
+    let url = `${url_server}/data/core/order`;
+    this.orders = [];
+    this.util.ajaxCall(url).then(data => {
+      // console.log(data);
+      if(data.body['@graph']){
+        let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
+          return {...record}
+        })
+        // console.log('newRecords',newRecords);
+
+        this.orders = newRecords;
+
+
+        // console.log('this.catalogs',this.catalogs);
+        this.publish({
+          channel: 'order',
+          topic: 'changeAll',
+          data: this.orders
+        });
+      }else{
+        this.publish({
+          channel: 'order',
+          topic: 'changeAll',
+          data: []
+        });
+      }
+
     })
   }
 

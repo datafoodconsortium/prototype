@@ -14,6 +14,7 @@ import profil from '../profil/model.js';
 import importCatalog from '../importCatalog/model.js';
 import oidc_test from '../OIDC-test/model.js';
 import ldp_test from '../LDP-test/model.js';
+import orders from '../orders/model.js';
 
 
 export default class Navigation extends GenericElement {

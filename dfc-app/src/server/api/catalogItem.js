@@ -59,6 +59,18 @@ module.exports = async function(router) {
       // let out ={};
       res.json(out)
     }
+  })
+
+
+  router.get('/order', async (req, res, next) => {
+    if (req.user == undefined) {
+      res.statusCode = 500;
+      next(new Error('user not defined'))
+    } else {
+      let out = await catalogItem_supply_offer.getAllOrder(req.user);
+      // let out ={};
+      res.json(out)
+    }
 
   })
 

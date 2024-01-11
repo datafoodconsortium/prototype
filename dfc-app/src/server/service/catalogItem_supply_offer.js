@@ -119,7 +119,7 @@ class CatalogService {
         });
 
         let datas = await response.json();
-        console.log(datas);
+        // console.log(datas);
         const sparqlTools = new SparqlTools({
           context: this.context
         });
@@ -277,7 +277,167 @@ class CatalogService {
           forceArray: ['dfc-t:represent'],
           context: this.context
         }).make();
-        console.log('ldpNavigator init', id);
+        // console.log('ldpNavigator init', id);
+        let item = await ldpNavigator.resolveById(id);
+        // console.log('item', item);
+        item = await ldpNavigator.dereference(item, [{
+            p: 'dfc-t:hostedBy'
+          },
+          {
+            p: 'dfc-b:references',
+            n: [{
+                p: 'dfc-b:hasQuantity',
+                n: {
+                  p: 'dfc-b:hasUnit'
+                }
+              },
+              {
+                p: 'dfc-b:hasType'
+              }
+            ]
+          }
+        ]);
+        // console.log('item', item);
+        resolve(item);
+
+
+      } catch (e) {
+        reject(e);
+      }
+    })
+  }
+
+  getAllOrder(user) {
+    // console.log('ALLLO');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch('http://dfc-middleware:3000/sparql', {
+          method: 'POST',
+          body: `${PREFIX}
+          CONSTRUCT  {
+            ?s ?p ?o.
+          }
+          WHERE {
+            ?s a dfc-b:Order;
+                      dfc:owner <${user['@id']}>;
+                      ?p ?o.
+          }
+          `,
+          headers: {
+            'accept': 'application/ld+json'
+          }
+        });
+
+        let items = await response.json();
+
+        items = await jsonld.compact(items, {'@context':this.context})
+
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
+                'accept': 'application/ld+json'
+              },
+              prefix: PREFIX
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+              }
+            },
+            dereference: ['dfc-b:hasPrice','dfc-b:hasQuantity']
+          },
+          forceArray: ['dfc-b:hasPart']
+        }).make();
+        // console.log('BEFORE app init');
+        await ldpNavigator.init(items);
+        // console.log('AFTER app init');
+        const importItemsRaw = await ldpNavigator.filterInMemory({});
+        // console.log('importItemsRaw',importItemsRaw);
+        let importItems = [];
+
+        importItems = await ldpNavigator.dereference(importItemsRaw, [{
+            p: 'dfc-b:hasPart',
+            n :[
+              {
+                p : 'dfc-b:concerns',
+                n :[
+                  {
+                    p:'dfc-b:offers',
+                    n:[{
+                      p:'dfc-b:references',
+                      n:[{
+                        p:'dfc-b:hasType'
+                      },{
+                        p: 'dfc-b:hasQuantity',
+                        n: {
+                          p: 'dfc-b:hasUnit'
+                        }
+                      }
+                    ]
+                    }]
+                  }
+                ]
+              },{
+                p : 'dfc-b:hasPrice',
+                n:[{
+                  p:'dfc-b:hasUnit'
+                }]
+              }
+            ]
+          }
+        ]);
+
+        const out = {
+          '@context': items['@context'],
+          '@graph': importItems
+        }
+        // console.log('out',out);
+
+        resolve(out);
+      } catch (e) {
+        reject(e);
+      }
+    })
+
+  }
+
+  getOneOrder(id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.init();
+        // let item;
+        // let item = await (await fetch(id, {
+        //   method: 'GET',
+        //   headers: {
+        //     'accept': 'application/ld+json'
+        //   }
+        // })).json() ;
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
+                'accept': 'application/ld+json'
+              },
+              prefix: PREFIX
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+              }
+            },
+            dereference: ['dfc-b:hasQuantity']
+          },
+          forceArray: ['dfc-t:represent'],
+          context: this.context
+        }).make();
+        // console.log('ldpNavigator init', id);
         let item = await ldpNavigator.resolveById(id);
         // console.log('item', item);
         item = await ldpNavigator.dereference(item, [{
@@ -489,7 +649,7 @@ class CatalogService {
 
         // console.log('item',item);
 
-        console.log('getOneItem DEREFERENCE');
+        // console.log('getOneItem DEREFERENCE');
 
         item = await ldpNavigator.dereference(item, [{
             p: 'dfc-t:hostedBy'
@@ -1002,21 +1162,9 @@ class CatalogService {
           // console.log('sourceResponseRaw',sourceResponseRaw);
 
           let sourceResponseObject = JSON.parse(sourceResponseRaw);
-          // console.log('sourceResponseObject',JSON.stringify(sourceResponseObject));
-          // console.log('sourceResponseObject',sourceResponseObject)
-
           let contextConfig = this.context
-
-          // let sourceContext = sourceResponseObject['@context'];
-          // console.log('sourceContext',sourceContext);
-          // if ((typeof sourceContext === 'string' || sourceContext instanceof String) && sourceContext.includes('http')) {
-          //   sourceContext = await this.resolveContext(sourceContext);
-          // }
-
-
-
           let base;
-          // console.log('contextConfig',contextConfig)
+
           if(Array.isArray(sourceResponseObject['@context'])){
             base=sourceResponseObject['@context'].find(c=>c['@base']!=undefined)['@base'];
           }else{
@@ -1031,9 +1179,6 @@ class CatalogService {
             sourceResponseObject['@context']=contextConfig
           }
 
-          // console.log('sourceResponseObject',sourceResponseObject)
-
-          // sourceResponseObject = await jsonld.compact(sourceResponseObject, sourceContext);
           //remove @base to context and inject into predicate
           sourceResponseObject = await jsonld.compact(sourceResponseObject, contextConfig)
 
@@ -1041,7 +1186,8 @@ class CatalogService {
             forceArray: [
               'dfc-b:manages',
               'dfc-t:represent',
-              'dfc-b:affiliates'
+              'dfc-b:affiliates',
+              'dfc-b:affiliatedBy'
             ]
           });
           ldpNavigator.setAdapters([
@@ -1061,7 +1207,7 @@ class CatalogService {
                 }
               },
               skipResolveById: true,
-              dereference: ['dfc-b:hasQuantity','dfc-b:hasPrice']
+              dereference: ['dfc-b:hasQuantity','dfc-b:hasPrice','dfc-b:hasAdress','dfc-b:hasPhoneNumber','dfc-b:hasSocialMedia','dfc-b:hasSocialMedia','dfc-b:hasAllergenCharacteristic','dfc-b:hasNutrientCharacteristic','dfc-b:hasPhysicalCharacteristic']
             }),
             new FetchAdapter({
               headers: {
@@ -1071,12 +1217,12 @@ class CatalogService {
             })
           ]);
 
-          // console.log('___________sourceResponseObject',sourceResponseObject)
+          // console.log('___________sourceResponseObject', JSON.stringify(sourceResponseObject))
 
           await ldpNavigator.init(sourceResponseObject)
-          // console.log('______________________ BEFORE')
+          // console.log('______________________ BEFORE PERSIST')
           await ldpNavigator.persist();
-          // console.log('______________________ AFTER')
+          // console.log('______________________ AFTER PERSIST')
 
           let itemsToImport = [];
           const platform = await platformServiceSingleton.getOnePlatformBySlug(sourceObject.slug);
@@ -1085,52 +1231,62 @@ class CatalogService {
             // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
           
             // console.log('___________________filterInMemory')            
-            const platformUser = await ldpNavigator.filterInMemory({
-              '@type': 'dfc-b:Person'
-            });
-            const platformCompany = await ldpNavigator.filterInMemory({
-              '@type': 'dfc-b:Enterprise'
-            });
+            // const platformUser = await ldpNavigator.filterInMemory({
+            //   '@type': 'dfc-b:Person'
+            // });
+            // const platformCompany = await ldpNavigator.filterInMemory({
+            //   '@type': 'dfc-b:Enterprise'
+            // });
 
-            // console.log('____________________',platformUser,platformCompany)
+            // // console.log('____________________',platformUser,platformCompany)
 
-            let platformCompaniesMix = [];
-            if(platformUser.length>0){
-              const platformUsersDereferenced = await ldpNavigator.dereference(platformUser, {
-                p: 'dfc-b:affiliates'
-              })
-              for (const platformUserDereferenced of platformUsersDereferenced) {
-                platformCompaniesMix=[...platformUserDereferenced['dfc-b:affiliates']]
-              }
-              // console.log('platformUserDereferenced',platformUserDereferenced)
+            // let platformCompaniesMix = [];
+            // if(platformUser.length>0){
+            //   const platformUsersDereferenced = await ldpNavigator.dereference(platformUser, {
+            //     p: 'dfc-b:affiliates'
+            //   })
+            //   for (const platformUserDereferenced of platformUsersDereferenced) {
+            //     platformCompaniesMix=[...platformCompaniesMix,...platformUserDereferenced['dfc-b:affiliates']]
+            //   }
 
-            } else if(platformCompany.length>0){
-              platformCompaniesMix =[...platformCompany]
-            } else {
-              throw new Error('no user nor companies in data from platform')
-            }
+            //   const platformUsersDereferenced2 = await ldpNavigator.dereference(platformUser, {
+            //     p: 'dfc-b:affiliatedBy'
+            //   })
+            //   for (const platformUserDereferenced of platformUsersDereferenced2) {
+            //     platformCompaniesMix=[...platformCompaniesMix,...platformUserDereferenced['dfc-b:affiliatedBy']]
+            //   }
 
-            if (platformCompaniesMix.length>0){
-              const platformCompaniesMixDereferenced = await ldpNavigator.dereference(platformCompaniesMix,
-                {
-                  p: 'dfc-b:manages',
-                  n: {
-                    p: 'dfc-b:references',
-                    n: {
-                      p: 'dfc-b:hasQuantity'
-                    }
-                  }
-                }
-              );
-              for (const platformCompanie of platformCompaniesMixDereferenced) {
-                // console.log('platformCompanie catalogitem',platformCompanie['dfc-b:manages']);
-                for (const catalogitem of platformCompanie['dfc-b:manages']) {
-                  itemsToImport.push({
-                    ...catalogitem,
-                  })
-                }
-              }
-            }
+
+            // } else if(platformCompany.length>0){
+            //   platformCompaniesMix =[...platformCompany]
+            // } else {
+            //   throw new Error('no user nor companies in data from platform')
+            // }
+
+            // if (platformCompaniesMix.length>0){
+            //   const platformCompaniesMixDereferenced = await ldpNavigator.dereference(platformCompaniesMix,
+            //     {
+            //       p: 'dfc-b:manages',
+            //       n: {
+            //         p: 'dfc-b:references',
+            //         n: {
+            //           p: 'dfc-b:hasQuantity'
+            //         }
+            //       }
+            //     }
+            //   );
+            //   for (const platformCompanie of platformCompaniesMixDereferenced) {
+            //     // console.log('platformCompanie catalogitem',platformCompanie['dfc-b:manages']);
+            //     for (const catalogitem of platformCompanie['dfc-b:manages']) {
+            //       itemsToImport.push({
+            //         ...catalogitem,
+            //       })
+            //     }
+            //   }
+            // }
+
+
+
 
 
           } else {
@@ -1160,12 +1316,29 @@ class CatalogService {
           if (everExistDfcItems['@id'] || (everExistDfcItems['@graph'] && everExistDfcItems['@graph'].length > 0)) {
             existing = true;
           }
+          const catalogItemsSource = await ldpNavigator.filterInMemory({
+            '@type': 'dfc-b:CatalogItem'
+          });
+
+          const catalogItemsSourceDereferenced = await ldpNavigator.dereference(catalogItemsSource,
+            {
+              p: 'dfc-b:references',
+              n: {
+                p: 'dfc-b:hasQuantity'
+              }
+            }
+          );
+
+          const ordersSource = await ldpNavigator.filterInMemory({
+            '@type': 'dfc-b:Order'
+          });
 
           let out = [];
           try {
-
-            let promises = itemsToImport.map(item => this.importItem(item, user, platform, !existing));
-            out = await Promise.all(promises);
+            let catalogItemsSourcePromises = catalogItemsSourceDereferenced.map(item => this.importItem(item, user, platform, !existing));
+            out.push(await Promise.all(catalogItemsSourcePromises));
+            let ordersSourcePromises = ordersSource.map(item => this.importItem(item, user, platform, false));
+            out.push(await Promise.all(ordersSourcePromises));
           } catch (e) {
             console.log(e);
             throw new Error('error during import')
@@ -1229,10 +1402,11 @@ class CatalogService {
         let importedItem = await sparqlTools.insert(itemToInsert)
 
         let references = item['dfc-b:references']
-        let dfcReferences;
+        // let dfcReferences;
         if (references) {
-          dfcReferences = await this.importItem(references, user, platform, false)
+          await this.importItem(references, user, platform, false)
         }
+        
         let idDFC;
         if (claimConvert) {
           // if (dfcReferences) {
