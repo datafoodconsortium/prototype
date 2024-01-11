@@ -72,6 +72,12 @@ module.exports = {
     "version": "1.7"
   },
   {
+  "name": "test v1.8.2",
+    "slug": "test_v1-8-2",
+    "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.8.2/user.json",
+    "version": "1.8"
+  },
+  {
     "name": "Garethe v1.6",
     "slug": "garethe_v1-6",
     "url": "https://raggedstaff.github.io/data/en_user_1_6.json",
@@ -99,7 +105,7 @@ module.exports = {
     "supporWrite": "true"
   }
   ],
-  "context": "https://www.datafoodconsortium.org",
+  "context": "https://grappe.io/data/api/657b001fa0ae7a293d3b30d7-context",
   "express": {
     "session_secret": "4751c8b3-3a15-4ba9-8186-94c0fd330f30"
   },
