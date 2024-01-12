@@ -86,7 +86,7 @@ services:
       - "8090:8090"
     expose:
       - "8090"
-    command: bash -c "npm rebuild && npm install && npm run dev"
+    command: bash -c "npm start"
 volumes:
   rdf_data:
   staging:
