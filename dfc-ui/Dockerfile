@@ -26,9 +26,6 @@ ADD webpack.prod.js  .
 
 ADD src  ./src
 
-# build src in dist
-RUN npm run build
-
 # Expose ports (for orchestrators and dynamic reverse proxies)
 EXPOSE 8080
 
