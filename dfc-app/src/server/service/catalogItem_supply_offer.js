@@ -329,6 +329,7 @@ class CatalogService {
         });
 
         let items = await response.json();
+        console.log('__items',items)
 
         items = await jsonld.compact(items, {'@context':this.context})
 
@@ -1333,6 +1334,8 @@ class CatalogService {
             '@type': 'dfc-b:Order'
           });
 
+
+
           let out = [];
           try {
             let catalogItemsSourcePromises = catalogItemsSourceDereferenced.map(item => this.importItem(item, user, platform, !existing));
@@ -1383,7 +1386,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
 
-        console.log('INIT importItem');
+        console.log('___ INIT importItem',item['@id']);
         await this.init();
 
         const sparqlTools = new SparqlTools({
