@@ -59,50 +59,63 @@ export default class Orders extends GenericElement {
       masterDetail: {
         enabled: true,
         template: function (container, info) {
-            console.log('info',info);
-            let OrderLines = info.data.raw['dfc-b:hasPart'].map(d=>({
-              quantity:d['dfc-b:quantity'],
-              quantityProduct:d['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:value'],
-              unitProduct:d['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value'],
-              name:d['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:name'],
-              description:d['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:description'],
-              type: d['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:hasType']['skos:prefLabel'].find(l=>l['@language']=='fr')['@value']
-
-            }));
-
-            const tabPanelItems = [{
-              ID: 1,
-              title: 'OrderLines',
-              data: OrderLines,
-              template: function (itemData, itemIndex, element) {
-                console.log(itemData, itemIndex, element);
-                let offersGrid = new DataGrid(element, {
-                  "columns": [
-                    "quantity",
-                    "quantityProduct",
-                    "unitProduct",
-                    "name",
-                    "description",
-                    'type'
-                  ],
-                  "dataSource": itemData.data
-                })
-              },
-            }];
+            try {
+              console.log('marker1.0');
+              let OrderLines=[];
+                OrderLines = info.data.raw['dfc-b:hasPart'].map(d=>{
+                  // console.log('allo');
+                      console.log('in',d)
+                      let part = {
+                        quantity:d['dfc-b:quantity'],
+                        name:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'],
+                        quantityProduct:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasQuantity']?.['dfc-b:value'],
+                        unitProduct:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
+                        description:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:description'],
+                        type: d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasType']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
+      
+                      }
+                      // console.log(part);
+                      return part;
 
 
-            const panel =$("<div></div>").dxTabPanel({
-                itemTitleTemplate:  function (data,index,container){
-                  // console.log('template',data,index,container);
-                  const title=$(`<span>${data.title}</span>`);
-                  container.append(title);
+                  }
+                );
+
+              const tabPanelItems = [{
+                ID: 1,
+                title: 'OrderLines',
+                data: OrderLines,
+                template: function (itemData, itemIndex, element) {
+                  console.log(itemData, itemIndex, element);
+                  let offersGrid = new DataGrid(element, {
+                    "columns": [
+                      "quantity",
+                      "quantityProduct",
+                      "unitProduct",
+                      "name",
+                      "description",
+                      'type'
+                    ],
+                    "dataSource": itemData.data
+                  })
                 },
-                dataSource:tabPanelItems
-            });
-
-            container.append(panel);
+              }];
 
 
+              const panel =$("<div></div>").dxTabPanel({
+                  itemTitleTemplate:  function (data,index,container){
+                    // console.log('template',data,index,container);
+                    const title=$(`<span>${data.title}</span>`);
+                    container.append(title);
+                  },
+                  dataSource:tabPanelItems
+              });
+
+              container.append(panel);
+            } catch (error) {
+              // console.log('error2')
+              console.error(error);
+            }
         }
     },
       "columns": [

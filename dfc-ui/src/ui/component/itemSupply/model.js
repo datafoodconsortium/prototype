@@ -210,14 +210,15 @@ export default class ItemSupply extends GenericElement {
         masterDetail: {
           enabled: true,
           template: function (container, info) {
-              //console.log('info',info);
+              console.log('info',info);
               let dataOffers = info.data.raw['dfc-b:offeredThrough'].map(d=>({
-                price:d['dfc-b:price'],
+                price:d['dfc-b:hasPrice']?.['dfc-b:value'],
                 stockLimitation:d['dfc-b:stockLimitation'],
-                name:d['dfc-b:offeres']['dfc-b:name'],
-                description:d['dfc-b:offeres']['dfc-b:description']
-
+                description:d['dfc-b:offersTo']?.['dfc-b:description'],
+                children:d['dfc-b:listedIn']// continue  https://github.com/datafoodconsortium/ontology/issues/118 ?.map(saleSession=>saleSession?.)
               }));
+
+
 
               const tabPanelItems = [{
                 ID: 1,
@@ -227,7 +228,6 @@ export default class ItemSupply extends GenericElement {
                   console.log(itemData, itemIndex, element);
                   let offersGrid = new DataGrid(element, {
                     "columns": [
-                      "name",
                       "description",
                       "stockLimitation",
                       "price",

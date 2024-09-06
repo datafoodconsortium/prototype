@@ -110,7 +110,7 @@ class CatalogService {
           }
           WHERE {
             ?s1 ?p1 ?o1 ;
-              dfc:owner <${user['@id']}>.
+              dfc-t:owner <${user['@id']}>.
           }
           `,
           headers: {
@@ -150,6 +150,7 @@ class CatalogService {
         // let contextConfigRaw = config.context;
         // let contextConfigResponse = await fetch(contextConfigRaw);
         // let contextConfig = await contextConfigResponse.json();
+        console.log('getAllImport for user ', user['@id'], );
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
           body: `${PREFIX}
@@ -158,7 +159,7 @@ class CatalogService {
           }
           WHERE {
             ?sPlatform a dfc-b:CatalogItem;
-                      dfc:owner <${user['@id']}>;
+                      dfc-t:owner <${user['@id']}>;
                       ?p ?o.
             NOT EXISTS {
               ?sPlatform dfc-t:hasPivot ?o2
@@ -319,7 +320,7 @@ class CatalogService {
           }
           WHERE {
             ?s a dfc-b:Order;
-                      dfc:owner <${user['@id']}>;
+                      dfc-t:owner <${user['@id']}>;
                       ?p ?o.
           }
           `,
@@ -329,7 +330,7 @@ class CatalogService {
         });
 
         let items = await response.json();
-        console.log('__items',items)
+        // console.log('__ orders',items)
 
         items = await jsonld.compact(items, {'@context':this.context})
 
@@ -474,6 +475,7 @@ class CatalogService {
         await this.init();
         const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
         // console.log('uriDfcPlatform',uriDfcPlatform)
+        console.log('getAllImport for user ', user['@id'], );
         const query = ` ${PREFIX}
                         CONSTRUCT  {
                           ?sDFC ?p ?o.
@@ -481,7 +483,7 @@ class CatalogService {
                         WHERE {
                             ?sDFC a dfc-b:CatalogItem ;
                                 dfc-t:hostedBy <${uriDfcPlatform}> ;
-                                dfc:owner <${user['@id']}>;
+                                dfc-t:owner <${user['@id']}>;
                                 ?p ?o.
                         }
                         `
@@ -497,7 +499,7 @@ class CatalogService {
         });
         let items = await response.json();
 
-        // console.log('items',items);
+        console.log('____ items',items);
 
         items = await jsonld.compact(items, this.context);
 
@@ -638,7 +640,7 @@ class CatalogService {
               }
             },
             dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
-            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic','dfc-b:hasPrice']
           },
           context: this.context,
           forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough','dfc-b:hasAllergenCharacteristic',
@@ -657,7 +659,7 @@ class CatalogService {
           }, {
             p: 'dfc-b:offeredThrough',
             n: {
-              p: 'dfc-b:offeres'
+              p: 'dfc-b:offers'
             }
           },
           {
@@ -669,9 +671,12 @@ class CatalogService {
                 },
                 {
                   p: 'dfc-b:offeredThrough',
-                  n: {
-                    p: 'dfc-b:offeres'
+                  n: [{
+                    p: 'dfc-b:offersTo'
+                  },{
+                    p: 'dfc-b:hasPrice'
                   }
+                  ]
                 },
                 {
                   p: 'dfc-b:references',
@@ -975,7 +980,7 @@ class CatalogService {
           const body = {
             '@context': this.context,
             '@type': 'dfc-t:RepresentationPivot',
-            "dfc:owner": {
+            "dfc-t:owner": {
               "@id": user['@id'],
               "@type": "@id"
             }
@@ -998,7 +1003,7 @@ class CatalogService {
             ...noUriImportToConvert,
             "@context": this.context,
             "dfc-t:hostedBy": dfcPlaform['@id'],
-            "dfc:owner": user['@id'],
+            "dfc-t:owner": user['@id'],
             "dfc-t:hasPivot": responsePivot.headers.get('location'),
           };
 
@@ -1218,7 +1223,7 @@ class CatalogService {
             })
           ]);
 
-          // console.log('___________sourceResponseObject', JSON.stringify(sourceResponseObject))
+          console.log('___________sourceResponseObject', JSON.stringify(sourceResponseObject))
 
           await ldpNavigator.init(sourceResponseObject)
           // console.log('______________________ BEFORE PERSIST')
@@ -1303,7 +1308,7 @@ class CatalogService {
               WHERE {
                  ?s1 ?p1 ?o1;
                    rdf:type dfc-b:CatalogItem;
-                   dfc:owner <${user['@id']}>;
+                   dfc-t:owner <${user['@id']}>;
                    dfc-t:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}>.
                }
               `,
@@ -1398,7 +1403,7 @@ class CatalogService {
           "@id": item['@id'],
           'dfc-b:offeredThrough': undefined,
           "dfc-t:hostedBy": platform['@id'],
-          "dfc:owner": user['@id'],
+          "dfc-t:owner": user['@id'],
           "@context": this.context,
         }
 
@@ -1497,7 +1502,7 @@ class CatalogService {
         "@type":"dfc-b:SuppliedProduct"
       })
       createdItem['dfc-t:hostedBy']=platform['@id'];
-      createdItem['dfc:owner']= user['@id'];
+      createdItem['dfc-t:owner']= user['@id'];
       const sparqlTools = new SparqlTools({
         context: this.context
       });
@@ -1569,7 +1574,7 @@ class CatalogService {
         "@type":"dfc-b:CatalogItem"
       })
       createdItem['dfc-t:hostedBy']=platform['@id'];
-      createdItem['dfc:owner']= user['@id'];
+      createdItem['dfc-t:owner']= user['@id'];
       const sparqlTools = new SparqlTools({
         context: this.context
       });
@@ -1711,7 +1716,7 @@ class CatalogService {
     }
     delete shorter['dfc-t:hasPivot'];
     delete shorter['dfc-t:hostedBy'];
-    delete shorter['dfc:owner'];
+    delete shorter['dfc-t:owner'];
     return shorter;
 
   }
