@@ -4,6 +4,7 @@
 DOCKER_COMPOSE=docker-compose -f docker-compose.yml
 DOCKER_COMPOSE_PROD=docker-compose -f docker-compose-prod.yml
 DOCKER_COMPOSE_DEV=docker-compose -f docker-compose-dev.yml
+DOCKER_COMPOSE_STAGING=docker-compose -f docker-compose-staging.yml
 
 # Docker
 docker-build:
@@ -12,6 +13,8 @@ docker-build:
 docker-build-prod:
 	$(DOCKER_COMPOSE_PROD) build
 
+docker-build-staging:
+	$(DOCKER_COMPOSE_STAGING) build
 
 docker-up:
 	$(DOCKER_COMPOSE) up -d --remove-orphans mongo
@@ -25,6 +28,9 @@ docker-stop-prod:
 docker-stop-dev:
 	$(DOCKER_COMPOSE_DEV) down
 
+docker-stop-staging:
+	$(DOCKER_COMPOSE_STAGING) down
+
 docker-clean:
 	$(DOCKER_COMPOSE) kill
 	$(DOCKER_COMPOSE) rm -fv
@@ -37,6 +43,9 @@ docker-start-prod:
 
 docker-start-dev:
 	$(DOCKER_COMPOSE_DEV) up -d --force-recreate
+
+docker-start-staging:  
+	$(DOCKER_COMPOSE_STAGING) up -d --force-recreate
 
 docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
@@ -53,11 +62,13 @@ start:
 start-prod: docker-start-prod
 start-dev:
 	make docker-start-dev
+start-staging: docker-start-staging
 
 stop: docker-stop
 stop-prod: docker-stop-prod
 stop-dev: docker-stop-dev
-
+stop-staging: docker-stop-staging
+Z
 restart: docker-restart
 
 build: docker-build
