@@ -97,7 +97,7 @@ module.exports = {
       ]
     }
   ],
-  "context": "https://grappe.io/data/api/657b001fa0ae7a293d3b30d7-context",
+  "context": "https://raw.githubusercontent.com/datafoodconsortium/business-api/main/context.json",
   "express": {
     "session_secret": "4751c8b3-3a15-4ba9-8186-94c0fd330f30"
   },
