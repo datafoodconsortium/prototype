@@ -19,7 +19,7 @@ services:
       test: curl --fail http://localhost:3030 || exit 1
       interval: 1s
       timeout: 1s
-      start_period: 5s
+      start_period: 20s
   dfc-middleware:
     build:
       context: ./dfc-semapps
