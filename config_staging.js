@@ -60,6 +60,24 @@ module.exports = {
         "version": "1.8"
     },
     {
+      "name": "test v1.9",
+      "slug": "test_v1-9",
+      "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.13/user.json",
+      "version": "1.8"
+    },
+    {
+      "name": "test v1.9 extended",
+      "slug": "test_v1-9-extended",
+      "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.13/user-extended.json",
+      "version": "1.8"
+    },
+    {
+      "name": "test v1.9 extended 2",
+      "slug": "test_v1-9-extended-2",
+      "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.13/user-extended-2.json",
+      "version": "1.8"
+    },
+    {
       "name": "Garethe v1.6",
       "slug": "garethe_v1-6",
       "url": "https://raggedstaff.github.io/data/en_user_1_6.json",

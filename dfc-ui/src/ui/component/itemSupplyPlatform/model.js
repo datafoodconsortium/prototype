@@ -270,11 +270,11 @@ export default class ItemSupplyPlatform extends GenericElement {
         return {
           id: counter,
           value: d['dfc-b:value'],
-          notation : d['dfc-b:hasUnit']['skos:notation'],
-          unit: d['dfc-b:hasUnit']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'],
-          type: (d['dfc-b:hasNutrientDimension'] && d['dfc-b:hasNutrientDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
-           || (d['dfc-b:hasPhysicalDimension'] && d['dfc-b:hasPhysicalDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
-           || (d['dfc-b:hasAllergenDimension'] && d['dfc-b:hasAllergenDimension']['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+          notation : d['dfc-b:hasUnit']?.['skos:notation'],
+          unit: d['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l =>l['@language']=='fr')?.['@value'],
+          type: (d['dfc-b:hasNutrientDimension']?.['skos:prefLabel'].find(l =>l['@language']=='fr')['@value'])
+           || d['dfc-b:hasPhysicalDimension']?.['skos:prefLabel']?.find(l =>l['@language']=='fr')?.['@value']
+           || d['dfc-b:hasAllergenDimension']?.['skos:prefLabel']?.find(l =>l['@language']=='fr')?.['@value']
         }
       })
   

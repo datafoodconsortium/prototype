@@ -29,7 +29,7 @@ class SupplyAndImport {
           }
           WHERE {
             ?s1 ?p1 ?o1 ;
-              dfc:owner <${user['@id']}>.
+              dfc-t:owner <${user['@id']}>.
           }
           `,
           headers: {
@@ -85,7 +85,7 @@ class SupplyAndImport {
               rdf:type dfc-b:Product ;
               dfc-t:hostedBy ?s3 ;
               dfc-b:hasUnit ?s4 ;
-              dfc:owner <${user['@id']}> .
+              dfc-t:owner <${user['@id']}> .
             ?s3 ?p3 ?o3.
             ?s4 ?p4 ?o4.
             NOT EXISTS {
@@ -214,7 +214,7 @@ class SupplyAndImport {
                 a dfc-b:Product ;
                 dfc-t:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}> ;
                 dfc-t:hasPivot ?s3;
-                dfc:owner <${user['@id']}>;
+                dfc-t:owner <${user['@id']}>;
                 dfc-b:hasUnit ?s6.
             ?s1 dfc-t:hostedBy ?s2.
             ?s2 ?p2 ?o2.
@@ -250,7 +250,7 @@ class SupplyAndImport {
             "dfc-t:represent":{
               "@type":"@id"
             },
-            "dfc:owner":{
+            "dfc-t:owner":{
               "@type":"@id"
             },
             "dfc-t:hasPivot":{
@@ -540,7 +540,7 @@ class SupplyAndImport {
               "dfc-pt": "http://static.datafoodconsortium.org/data/productTypes.rdf#"
             },
             '@type': 'dfc-t:RepresentationPivot',
-            "dfc:owner": {
+            "dfc-t:owner": {
               "@id": user['@id'],
               "@type": "@id"
             }
@@ -570,7 +570,7 @@ class SupplyAndImport {
               "@type": "@id",
               "@id": (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'],
             },
-            "dfc:owner": {
+            "dfc-t:owner": {
               "@id": user['@id'],
               "@type": "@id"
             },
@@ -789,7 +789,7 @@ class SupplyAndImport {
               WHERE {
                  ?s1 ?p1 ?o1;
                    rdf:type dfc-b:Product;
-                   dfc:owner <${user['@id']}>;
+                   dfc-t:owner <${user['@id']}>;
                    dfc-t:hostedBy <${(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']}>.
                }
               `,
@@ -890,7 +890,7 @@ class SupplyAndImport {
               '@type': '@id',
               '@id': `${(await platformServiceSingleton.getOnePlatformBySlug(plateformConfig.slug))['@id']}`
             },
-            "dfc:owner": {
+            "dfc-t:owner": {
               "@id": user['@id'],
               "@type": "@id"
             }
@@ -922,3 +922,4 @@ class SupplyAndImport {
 }
 
 module.exports = SupplyAndImport;
+

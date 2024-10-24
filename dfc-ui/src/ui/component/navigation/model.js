@@ -15,6 +15,7 @@ import importCatalog from '../importCatalog/model.js';
 import oidc_test from '../OIDC-test/model.js';
 import ldp_test from '../LDP-test/model.js';
 import orders from '../orders/model.js';
+import flows from '../flows/model.js';
 
 
 export default class Navigation extends GenericElement {
@@ -29,7 +30,7 @@ export default class Navigation extends GenericElement {
       channel: 'main',
       topic: 'screen',
       callback: (data) => {
-        // console.log('screen', data);
+        console.log('screen', data);
         this.loadComponent(data);
       }
     });
@@ -91,15 +92,15 @@ export default class Navigation extends GenericElement {
       if (urlToken != undefined) {
         // console.log('urlToken', urlToken.value);
         localStorage.setItem('token', urlToken.value);
-        let cleanurl=window.location.origin+window.location.pathname+window.location.hash;
-        window.location=cleanurl;
+        let cleanurl = window.location.origin + window.location.pathname + window.location.hash;
+        window.location = cleanurl;
         // console.log('location',window.location,window.origin.host+window.location.pathname+window.location.hash);
         // this.shadowRoot.getElementById('appLink').click();
       } else {
 
       }
     }
-    console.log('urlToken',urlToken);
+    console.log('urlToken', urlToken);
     if (urlToken == undefined) {
       let token = localStorage.getItem('token');
 
@@ -131,7 +132,7 @@ export default class Navigation extends GenericElement {
           let jsonResponse = await response.json();
 
           console.log('response', jsonResponse);
-          
+
           this.publish({
             channel: 'profil',
             topic: 'set',
@@ -146,7 +147,7 @@ export default class Navigation extends GenericElement {
             // let oidcLink = this.shadowRoot.getElementById('oidcLink');
             // oidcLink.setAttribute('href', oidcLink.getAttribute('href-source') + '?app_referer=' + window.location.hash.substr(1));
             // oidcLink.click();
-            window.location=`${url_server}/login/auth?app_referer=${window.location.hash.substr(1)}`
+            window.location = `${url_server}/login/auth?app_referer=${window.location.hash.substr(1)}`
 
           }, 1);
 

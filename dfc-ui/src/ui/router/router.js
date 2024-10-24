@@ -10,6 +10,7 @@ export default class Router extends GenericElement {
     this.router = new Navigo(root, useHash, hash);
 
     this.router.on('/:screen*', (params, query) => {
+      // console.log('params', params);
       if (params.screen == undefined) {
         this.firstRoute = true;
       }

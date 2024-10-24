@@ -11,15 +11,15 @@ module.exports = {
     "name": "OFN FR Staging",
     "slug": "ofn-fr",
     "url": "https://staging.coopcircuits.fr/api/dfc/enterprises/default/catalog_items.json",
-    "version":"1.8",
-    "supporWrite":"true"
+    "version": "1.8",
+    "supporWrite": "true"
   },
   {
     "name": "OFN UK Staging",
     "slug": "ofn-uk",
     "url": "https://staging.openfoodnetwork.org.uk/api/dfc/enterprises/default/catalog_items.json",
-    "version":"1.8",
-    "supporWrite":"true"
+    "version": "1.8",
+    "supporWrite": "true"
   },
   {
     "name": "Elzeard",
@@ -72,15 +72,27 @@ module.exports = {
     "version": "1.7"
   },
   {
-  "name": "test v1.8.2",
+    "name": "test v1.8.2",
     "slug": "test_v1-8-2",
     "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.8.2/user.json",
     "version": "1.8"
   },
   {
-  "name": "test v1.9",
+    "name": "test v1.9",
     "slug": "test_v1-9",
-    "url": "https://raw.githubusercontent.com/datafoodconsortium/business-api/main/user.json",
+    "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.13/user.json",
+    "version": "1.8"
+  },
+  {
+    "name": "test v1.9 extended",
+    "slug": "test_v1-9-extended",
+    "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.13/user-extended.json",
+    "version": "1.8"
+  },
+  {
+    "name": "test v1.9 extended 2",
+    "slug": "test_v1-9-extended-2",
+    "url": "https://github.com/datafoodconsortium/business-api/releases/download/v1.13/user-extended-2.json",
     "version": "1.8"
   },
   {

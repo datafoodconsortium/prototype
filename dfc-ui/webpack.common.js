@@ -55,8 +55,6 @@ module.exports = {
           options: {}
         }]
       },
-
-
       {
         test: /\.(png|jpe?g|gif|woff(2)?|ttf)$/,
         use: [{
@@ -80,6 +78,11 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'url_server': JSON.stringify(process.env.URL_SERVER)||JSON.stringify('http://localhost:8080')
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/ui/assets', to: 'assets' } 
+      ]
     })
   ]
 };

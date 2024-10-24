@@ -44,7 +44,7 @@ class CatalogService {
     this.init();
   }
 
-  static async getInstance(){
+  static async getInstance() {
     const instance = new CatalogService();
     await instance.init();
     return instance;
@@ -66,33 +66,33 @@ class CatalogService {
     try {
       body = await contextConfigResponseRoot.json()
     } catch (error) {
-      
+
     }
     let context
-    if(body && body['@context']){
-      context=body;
-    } else if (link){
+    if (body && body['@context']) {
+      context = body;
+    } else if (link) {
       const linkHeader = LinkHeader.parse(link);
       const alternates = linkHeader.get('rel', 'alternate');
       for (const alternate of alternates) {
-        let contextConfigResponseAlternate = await fetch(urlJoin(contextUrl,alternate.uri));
+        let contextConfigResponseAlternate = await fetch(urlJoin(contextUrl, alternate.uri));
         try {
           const bodyAlternate = await contextConfigResponseAlternate.json();
-          if(bodyAlternate['@context']){
-            context=bodyAlternate;
+          if (bodyAlternate['@context']) {
+            context = bodyAlternate;
           }
           break;
         } catch (error) {
-          
+
         }
       }
     } else {
       throw new Error('context config not retrun json with @©ontext or link header')
     }
 
-    if (context){
+    if (context) {
       return context['@context']
-    }else{
+    } else {
       throw new Error('no solution to obtain context with context config')
     }
   }
@@ -101,7 +101,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
         await this.init();
-        console.log('cleanImport for user ', user['@id'], );
+        console.log('cleanImport for user ', user['@id'],);
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
           body: `${PREFIX}
@@ -150,7 +150,7 @@ class CatalogService {
         // let contextConfigRaw = config.context;
         // let contextConfigResponse = await fetch(contextConfigRaw);
         // let contextConfig = await contextConfigResponse.json();
-        console.log('getAllImport for user ', user['@id'], );
+        console.log('getAllImport for user ', user['@id'],);
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
           body: `${PREFIX}
@@ -177,7 +177,7 @@ class CatalogService {
         // console.log('items',items);
 
 
-        items = await jsonld.compact(items, {'@context':this.context})
+        items = await jsonld.compact(items, { '@context': this.context })
 
         const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
           sparql: {
@@ -210,21 +210,21 @@ class CatalogService {
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
           // console.log('BEFORE app derefrence');
           importItem = await ldpNavigator.dereference(importItem, [{
-              p: 'dfc-t:hostedBy'
+            p: 'dfc-t:hostedBy'
+          },
+          {
+            p: 'dfc-b:references',
+            n: [{
+              p: 'dfc-b:hasQuantity',
+              n: {
+                p: 'dfc-b:hasUnit'
+              }
             },
             {
-              p: 'dfc-b:references',
-              n: [{
-                  p: 'dfc-b:hasQuantity',
-                  n: {
-                    p: 'dfc-b:hasUnit'
-                  }
-                },
-                {
-                  p: 'dfc-b:hasType'
-                }
-              ]
+              p: 'dfc-b:hasType'
             }
+            ]
+          }
           ]);
 
           importItems.push(importItem);
@@ -282,21 +282,21 @@ class CatalogService {
         let item = await ldpNavigator.resolveById(id);
         // console.log('item', item);
         item = await ldpNavigator.dereference(item, [{
-            p: 'dfc-t:hostedBy'
+          p: 'dfc-t:hostedBy'
+        },
+        {
+          p: 'dfc-b:references',
+          n: [{
+            p: 'dfc-b:hasQuantity',
+            n: {
+              p: 'dfc-b:hasUnit'
+            }
           },
           {
-            p: 'dfc-b:references',
-            n: [{
-                p: 'dfc-b:hasQuantity',
-                n: {
-                  p: 'dfc-b:hasUnit'
-                }
-              },
-              {
-                p: 'dfc-b:hasType'
-              }
-            ]
+            p: 'dfc-b:hasType'
           }
+          ]
+        }
         ]);
         // console.log('item', item);
         resolve(item);
@@ -332,7 +332,7 @@ class CatalogService {
         let items = await response.json();
         // console.log('__ orders',items)
 
-        items = await jsonld.compact(items, {'@context':this.context})
+        items = await jsonld.compact(items, { '@context': this.context })
 
         const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
           sparql: {
@@ -350,7 +350,7 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference: ['dfc-b:hasPrice','dfc-b:hasQuantity']
+            dereference: ['dfc-b:hasPrice', 'dfc-b:hasQuantity', 'dfc-b:hasAddress']
           },
           forceArray: ['dfc-b:hasPart']
         }).make();
@@ -362,35 +362,65 @@ class CatalogService {
         let importItems = [];
 
         importItems = await ldpNavigator.dereference(importItemsRaw, [{
-            p: 'dfc-b:hasPart',
-            n :[
-              {
-                p : 'dfc-b:concerns',
-                n :[
-                  {
-                    p:'dfc-b:offers',
-                    n:[{
-                      p:'dfc-b:references',
-                      n:[{
-                        p:'dfc-b:hasType'
-                      },{
-                        p: 'dfc-b:hasQuantity',
-                        n: {
-                          p: 'dfc-b:hasUnit'
-                        }
+          p: 'dfc-b:hasPart',
+          n: [
+            {
+              p: 'dfc-b:concerns',
+              n: [
+                {
+                  p: 'dfc-b:offers',
+                  n: [{
+                    p: 'dfc-b:references',
+                    n: [{
+                      p: 'dfc-b:hasType'
+                    }, {
+                      p: 'dfc-b:hasQuantity',
+                      n: {
+                        p: 'dfc-b:hasUnit'
                       }
+                    }
                     ]
-                    }]
-                  }
-                ]
-              },{
-                p : 'dfc-b:hasPrice',
-                n:[{
-                  p:'dfc-b:hasUnit'
+                  }]
+                }
+              ]
+            }, {
+              p: 'dfc-b:hasPrice',
+              n: [{
+                p: 'dfc-b:hasUnit'
+              }]
+            },
+            {
+              p: 'dfc-b:hasQuantity',
+              n: [{
+                p: 'dfc-b:hasUnit'
+              }]
+            },
+            {
+              p: 'dfc-b:fulfilledBy',
+              n: [{
+                p: 'dfc-b:constitutedBy',
+                n: [{
+                  p: 'dfc-b:isStoredIn',
+                  n: [{
+                    p: 'dfc-b:hasAddress',
+                  }]
                 }]
-              }
-            ]
-          }
+              }]
+            }
+          ]
+        },
+        {
+          p: 'dfc-b:selects',
+          n: [{
+            p: 'dfc-b:pickedUpAt',
+            n: [{
+              p: 'dfc-b:hasAddress',
+            }]
+          }]
+        },
+        {
+          p: 'dfc-t:hostedBy'
+        }
         ]);
 
         const out = {
@@ -443,21 +473,21 @@ class CatalogService {
         let item = await ldpNavigator.resolveById(id);
         // console.log('item', item);
         item = await ldpNavigator.dereference(item, [{
-            p: 'dfc-t:hostedBy'
+          p: 'dfc-t:hostedBy'
+        },
+        {
+          p: 'dfc-b:references',
+          n: [{
+            p: 'dfc-b:hasQuantity',
+            n: {
+              p: 'dfc-b:hasUnit'
+            }
           },
           {
-            p: 'dfc-b:references',
-            n: [{
-                p: 'dfc-b:hasQuantity',
-                n: {
-                  p: 'dfc-b:hasUnit'
-                }
-              },
-              {
-                p: 'dfc-b:hasType'
-              }
-            ]
+            p: 'dfc-b:hasType'
           }
+          ]
+        }
         ]);
         // console.log('item', item);
         resolve(item);
@@ -475,7 +505,7 @@ class CatalogService {
         await this.init();
         const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
         // console.log('uriDfcPlatform',uriDfcPlatform)
-        console.log('getAllImport for user ', user['@id'], );
+        console.log('getAllImport for user ', user['@id'],);
         const query = ` ${PREFIX}
                         CONSTRUCT  {
                           ?sDFC ?p ?o.
@@ -488,7 +518,7 @@ class CatalogService {
                         }
                         `
         // console.log('query',query);
-        
+
         // console.log('uriDfcPlatform',uriDfcPlatform);
         const response = await fetch('http://dfc-middleware:3000/sparql', {
           method: 'POST',
@@ -499,7 +529,7 @@ class CatalogService {
         });
         let items = await response.json();
 
-        console.log('____ items',items);
+        console.log('____ items', items);
 
         items = await jsonld.compact(items, this.context);
 
@@ -533,34 +563,18 @@ class CatalogService {
           // catalogItem = await ldpNavigator.dereference(catalogItem,['dfc-t:hostedBy','dfc-t:hasPivot']);
           // console.log('BEFORE');
           catalogItem = await ldpNavigator.dereference(catalogItem, [{
-              p: 'dfc-t:hostedBy'
-            },
-            {
-              p: 'dfc-t:hasPivot',
-              n: {
-                p: 'dfc-t:represent',
-                n: [{
-                    p: 'dfc-t:hostedBy'
-                  },
-                  {
-                    p: 'dfc-b:references',
-                    n: [{
-                        p: 'dfc-b:hasQuantity',
-                        n: [{
-                          p: 'dfc-b:hasUnit'
-                        }]
-                      },
-                      {
-                        p: 'dfc-b:hasType'
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            {
-              p: 'dfc-b:references',
+            p: 'dfc-t:hostedBy'
+          },
+          {
+            p: 'dfc-t:hasPivot',
+            n: {
+              p: 'dfc-t:represent',
               n: [{
+                p: 'dfc-t:hostedBy'
+              },
+              {
+                p: 'dfc-b:references',
+                n: [{
                   p: 'dfc-b:hasQuantity',
                   n: [{
                     p: 'dfc-b:hasUnit'
@@ -569,8 +583,24 @@ class CatalogService {
                 {
                   p: 'dfc-b:hasType'
                 }
+                ]
+              }
               ]
             }
+          },
+          {
+            p: 'dfc-b:references',
+            n: [{
+              p: 'dfc-b:hasQuantity',
+              n: [{
+                p: 'dfc-b:hasUnit'
+              }]
+            },
+            {
+              p: 'dfc-b:hasType'
+            }
+            ]
+          }
           ]);
           // console.log('catalogItem', catalogItem['dfc-t:hasPivot']['dfc-t:represent']);
           catalogItems.push(catalogItem);
@@ -587,7 +617,7 @@ class CatalogService {
                   console.error('Pivot with un represents', ci['dfc-t:hasPivot']);
                 }
 
-                return r && (r['dfc-t:hostedBy']==undefined || (r['dfc-t:hostedBy'] && r['dfc-t:hostedBy']['@id'] != uriDfcPlatform))
+                return r && (r['dfc-t:hostedBy'] == undefined || (r['dfc-t:hostedBy'] && r['dfc-t:hostedBy']['@id'] != uriDfcPlatform))
               })
             } else {
               console.error('ORPHAN PIVOT', ci['dfc-t:hasPivot']);
@@ -611,7 +641,7 @@ class CatalogService {
   getOneItem(id) {
     return new Promise(async (resolve, reject) => {
       try {
-       // console.log('getoneitem------------');
+        // console.log('getoneitem------------');
         await this.init();
         const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
         // console.log('ID',id);
@@ -639,12 +669,12 @@ class CatalogService {
                 Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
               }
             },
-            dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
-            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic','dfc-b:hasPrice']
+            dereference: ['dfc-b:hasQuantity', 'dfc-b:hasAllergenCharacteristic', 'dfc-b:hasCertification',
+              'dfc-b:hasPhysicalCharacteristic', 'dfc-b:hasNutrientCharacteristic', 'dfc-b:hasPrice']
           },
           context: this.context,
-          forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough','dfc-b:hasAllergenCharacteristic',
-            'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic'
+          forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough', 'dfc-b:hasAllergenCharacteristic',
+            'dfc-b:hasPhysicalCharacteristic', 'dfc-b:hasNutrientCharacteristic'
           ]
         }).make();
         // console.log('resolveById', id);
@@ -655,48 +685,32 @@ class CatalogService {
         // console.log('getOneItem DEREFERENCE');
 
         item = await ldpNavigator.dereference(item, [{
-            p: 'dfc-t:hostedBy'
-          }, {
-            p: 'dfc-b:offeredThrough',
-            n: {
-              p: 'dfc-b:offers'
-            }
-          },
-          {
-            p: 'dfc-t:hasPivot',
-            n: {
-              p: 'dfc-t:represent',
-              n: [{
-                  p: 'dfc-t:hostedBy'
-                },
-                {
-                  p: 'dfc-b:offeredThrough',
-                  n: [{
-                    p: 'dfc-b:offersTo'
-                  },{
-                    p: 'dfc-b:hasPrice'
-                  }
-                  ]
-                },
-                {
-                  p: 'dfc-b:references',
-                  n: [{
-                      p: 'dfc-b:hasQuantity',
-                      n: [{
-                        p: 'dfc-b:hasUnit'
-                      }]
-                    },
-                    {
-                      p: 'dfc-b:hasType'
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            p: 'dfc-b:references',
+          p: 'dfc-t:hostedBy'
+        }, {
+          p: 'dfc-b:offeredThrough',
+          n: {
+            p: 'dfc-b:offers'
+          }
+        },
+        {
+          p: 'dfc-t:hasPivot',
+          n: {
+            p: 'dfc-t:represent',
             n: [{
+              p: 'dfc-t:hostedBy'
+            },
+            {
+              p: 'dfc-b:offeredThrough',
+              n: [{
+                p: 'dfc-b:offersTo'
+              }, {
+                p: 'dfc-b:hasPrice'
+              }
+              ]
+            },
+            {
+              p: 'dfc-b:references',
+              n: [{
                 p: 'dfc-b:hasQuantity',
                 n: [{
                   p: 'dfc-b:hasUnit'
@@ -704,46 +718,62 @@ class CatalogService {
               },
               {
                 p: 'dfc-b:hasType'
-              },
-              {
-                p : 'dfc-b:hasGeographicalOrigin'
-              },
-              {
-                p: 'dfc-b:hasCertification'
-              },
-              {
-                p: 'dfc-b:hasPhysicalCharacteristic',
-                n: [{
-                    p: 'dfc-b:hasUnit'
-                  },
-                  {
-                    p: 'dfc-b:hasPhysicalDimension'
-                  }
-                ]
-              },
-              {
-                p: 'dfc-b:hasNutrientCharacteristic',
-                n: [
-                  {
-                    p: 'dfc-b:hasUnit'
-                  },
-                  {
-                    p: 'dfc-b:hasNutrientDimension'
-                  }
-                ]
-              },
-              {
-                p: 'dfc-b:hasAllergenCharacteristic',
-                n: [{
-                    p: 'dfc-b:hasUnit'
-                  },
-                  {
-                    p: 'dfc-b:hasAllergenDimension'
-                  }
-                ]
               }
+              ]
+            }
             ]
           }
+        },
+        {
+          p: 'dfc-b:references',
+          n: [{
+            p: 'dfc-b:hasQuantity',
+            n: [{
+              p: 'dfc-b:hasUnit'
+            }]
+          },
+          {
+            p: 'dfc-b:hasType'
+          },
+          {
+            p: 'dfc-b:hasGeographicalOrigin'
+          },
+          {
+            p: 'dfc-b:hasCertification'
+          },
+          {
+            p: 'dfc-b:hasPhysicalCharacteristic',
+            n: [{
+              p: 'dfc-b:hasUnit'
+            },
+            {
+              p: 'dfc-b:hasPhysicalDimension'
+            }
+            ]
+          },
+          {
+            p: 'dfc-b:hasNutrientCharacteristic',
+            n: [
+              {
+                p: 'dfc-b:hasUnit'
+              },
+              {
+                p: 'dfc-b:hasNutrientDimension'
+              }
+            ]
+          },
+          {
+            p: 'dfc-b:hasAllergenCharacteristic',
+            n: [{
+              p: 'dfc-b:hasUnit'
+            },
+            {
+              p: 'dfc-b:hasAllergenDimension'
+            }
+            ]
+          }
+          ]
+        }
         ]);
 
         // console.log('item',item['dfc-t:hasPivot']);
@@ -775,7 +805,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
         await this.init();
-        console.log('-------------------- UPDATE START',item);
+        console.log('-------------------- UPDATE START', item);
         let oldItem = await this.getOneItem(item['@id']);
 
         let oldRepresent = oldItem["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
@@ -824,31 +854,31 @@ class CatalogService {
         const dfcPlaform = await platformServiceSingleton.getOnePlatformBySlug('dfc');
 
         const isDfcPlatform = item['dfc-t:hostedBy']['@id'] == dfcPlaform['@id'];
-        console.log('IS DFC PLATFORM',isDfcPlatform,item['dfc-t:hostedBy']['@id']);
+        console.log('IS DFC PLATFORM', isDfcPlatform, item['dfc-t:hostedBy']['@id']);
 
         if (item['dfc-b:references']) {
           //update remote data
           // console.log('UPDATE supply', item['dfc-b:references']['@id'],item['dfc-b:references']);
-          let dataReferences  = JSON.parse(JSON.stringify(item['dfc-b:references']));
+          let dataReferences = JSON.parse(JSON.stringify(item['dfc-b:references']));
 
           //TODO item provide to updateOneItem param should by in good context: not @id but direct uri
-          dataReferences['dfc-b:hasBrand']=dataReferences['dfc-b:hasBrand']?dataReferences['dfc-b:hasBrand']['@id']:undefined;
-          dataReferences['dfc-b:hasGeographicalOrigin']=dataReferences['dfc-b:hasGeographicalOrigin']?dataReferences['dfc-b:hasGeographicalOrigin']['@id']:undefined;
-          dataReferences['dfc-b:hasType']=dataReferences['dfc-b:hasType']?dataReferences['dfc-b:hasType']['@id']:undefined;
-          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']=dataReferences['dfc-b:hasQuantity']&&dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']?dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id']:undefined;
+          dataReferences['dfc-b:hasBrand'] = dataReferences['dfc-b:hasBrand'] ? dataReferences['dfc-b:hasBrand']['@id'] : undefined;
+          dataReferences['dfc-b:hasGeographicalOrigin'] = dataReferences['dfc-b:hasGeographicalOrigin'] ? dataReferences['dfc-b:hasGeographicalOrigin']['@id'] : undefined;
+          dataReferences['dfc-b:hasType'] = dataReferences['dfc-b:hasType'] ? dataReferences['dfc-b:hasType']['@id'] : undefined;
+          dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit'] = dataReferences['dfc-b:hasQuantity'] && dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit'] ? dataReferences['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'] : undefined;
 
 
 
           for (const key of Object.keys(dataReferences)) {
-            if(key.includes('dfc-t')){
+            if (key.includes('dfc-t')) {
               delete dataReferences[key];
             }
           }
-          dataReferences=  {
+          dataReferences = {
             "@context": this.context,
             ...dataReferences
           }
-          console.log('------------------------ dataReferences', dataReferences )
+          console.log('------------------------ dataReferences', dataReferences)
 
 
 
@@ -865,35 +895,35 @@ class CatalogService {
           if (platformReferenceResponse.status == 403) {
             throw new Error("Authentification failed");
           }
-          if (Math.floor(platformReferenceResponse.status/100) != 2) {
+          if (Math.floor(platformReferenceResponse.status / 100) != 2) {
             console.error(await platformReferenceResponse.text())
-            throw new Error(`statuts have to be 2xx and is ${platformReferenceResponse.status }`);
-          } else{
+            throw new Error(`statuts have to be 2xx and is ${platformReferenceResponse.status}`);
+          } else {
             console.log(`${item['dfc-b:references']['@id']} well updated`);
           }
-  
+
 
           if (!isDfcPlatform) {
             await sparqlTools.remove(item['dfc-b:references']['@id'])
             await sparqlTools.insert(item['dfc-b:references'])
           }
         }
-        let data  = JSON.parse(JSON.stringify(item));
+        let data = JSON.parse(JSON.stringify(item));
 
         delete data['dfc-b:offeredThrough'];
-        data['dfc-b:references']=data['dfc-b:references']['@id']
+        data['dfc-b:references'] = data['dfc-b:references']['@id']
 
         for (const key of Object.keys(data)) {
-          if(key.includes('dfc-t')){
+          if (key.includes('dfc-t')) {
             delete data[key];
           }
         }
-        data = {"@context": this.context,...data};
-        console.log('----------------------- data',data);
+        data = { "@context": this.context, ...data };
+        console.log('----------------------- data', data);
 
         //update remote data
         // console.log('UPDATE product ', item['@id']);
-        const platformCatalogItemResponse =  await fetch(item['@id'], {
+        const platformCatalogItemResponse = await fetch(item['@id'], {
           method: 'PUT',
           body: JSON.stringify(data),
           headers: {
@@ -906,10 +936,10 @@ class CatalogService {
         if (platformCatalogItemResponse.status == 403) {
           throw new Error("Authentification failed");
         }
-        if (Math.floor(platformCatalogItemResponse.status/100) != 2) {
+        if (Math.floor(platformCatalogItemResponse.status / 100) != 2) {
           console.error(await platformCatalogItemResponse.text())
-          throw new Error(`statuts have to be 2xx and is ${platformCatalogItemResponse.status }`);
-        }else{
+          throw new Error(`statuts have to be 2xx and is ${platformCatalogItemResponse.status}`);
+        } else {
           console.log(`${item['@id']} well updated`);
         }
 
@@ -918,7 +948,7 @@ class CatalogService {
           await sparqlTools.insert(item)
         }
 
-        console.log('-------------------- UPDATE RETURN',item);
+        console.log('-------------------- UPDATE RETURN', item);
 
 
         resolve(item);
@@ -949,8 +979,8 @@ class CatalogService {
               Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
             }
           },
-          dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
-          'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+          dereference: ['dfc-b:hasQuantity', 'dfc-b:hasAllergenCharacteristic', 'dfc-b:hasCertification',
+            'dfc-b:hasPhysicalCharacteristic', 'dfc-b:hasNutrientCharacteristic']
         },
         forceArray: ['dfc-t:represent'],
         context: this.context
@@ -1051,8 +1081,8 @@ class CatalogService {
             ...importToConvert
           };
 
-      
-          if (importToConvert['dfc-b:references']){
+
+          if (importToConvert['dfc-b:references']) {
             //   await this.convertImportToReconciled({
             //     '@context':this.context,
             //     ...(importToConvert['dfc-b:references'])
@@ -1078,7 +1108,7 @@ class CatalogService {
 
           await sparqlTools.insert({
             "@context": this.context,
-            "@id": reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],
+            "@id": reconciled['dfc-t:hasPivot']['@id'] || reconciled['dfc-t:hasPivot'],
             "dfc-t:represent": {
               "@id": importToConvert['@id'],
               "@type": "@id"
@@ -1089,17 +1119,17 @@ class CatalogService {
             "@context": this.context,
             "@id": importToConvert['@id'],
             "dfc-t:hasPivot": {
-              "@id": reconciled['dfc-t:hasPivot']['@id']||reconciled['dfc-t:hasPivot'],
+              "@id": reconciled['dfc-t:hasPivot']['@id'] || reconciled['dfc-t:hasPivot'],
               "@type": "@id"
             }
           });
 
 
-          if (importToConvert['dfc-b:references']&&reconciled['dfc-b:references']){
+          if (importToConvert['dfc-b:references'] && reconciled['dfc-b:references']) {
             // console.log('________________ convertImportIdToReconciledId',importToConvert['dfc-b:references'],reconciled['dfc-b:references'])
             const referenceImportId = importToConvert['dfc-b:references']['@id'] || importToConvert['dfc-b:references'];
             const referenceReconciledId = reconciled['dfc-b:references']['@id'] || reconciled['dfc-b:references'];
-            await this.convertImportIdToReconciledId(referenceImportId, referenceReconciledId , user)
+            await this.convertImportIdToReconciledId(referenceImportId, referenceReconciledId, user)
           }
 
           resolve(importToConvert['@id']);
@@ -1147,12 +1177,12 @@ class CatalogService {
             }
           })
 
-          if (sourceResponse.status==403) {
+          if (sourceResponse.status == 403) {
             throw new Error(`connexion to serveur return status ${sourceResponse.status}, try new authentification`)
           }
 
 
-          if (Math.floor(sourceResponse.status/100) != 2) {
+          if (Math.floor(sourceResponse.status / 100) != 2) {
             console.error(await sourceResponse.text())
             throw new Error(`connexion to serveur return status ${sourceResponse.status}`)
           }
@@ -1171,18 +1201,18 @@ class CatalogService {
           let contextConfig = this.context
           let base;
 
-          if(Array.isArray(sourceResponseObject['@context'])){
-            base=sourceResponseObject['@context'].find(c=>c['@base']!=undefined)['@base'];
-          }else{
-            base=sourceResponseObject['@context']['@base'];
+          if (Array.isArray(sourceResponseObject['@context'])) {
+            base = sourceResponseObject['@context'].find(c => c['@base'] != undefined)['@base'];
+          } else {
+            base = sourceResponseObject['@context']['@base'];
           }
-          if(base){
-            sourceResponseObject['@context']={
+          if (base) {
+            sourceResponseObject['@context'] = {
               ...contextConfig,
-              "@base":base
+              "@base": base
             }
-          }else{
-            sourceResponseObject['@context']=contextConfig
+          } else {
+            sourceResponseObject['@context'] = contextConfig
           }
 
           //remove @base to context and inject into predicate
@@ -1213,7 +1243,7 @@ class CatalogService {
                 }
               },
               skipResolveById: true,
-              dereference: ['dfc-b:hasQuantity','dfc-b:hasPrice','dfc-b:hasAdress','dfc-b:hasPhoneNumber','dfc-b:hasSocialMedia','dfc-b:hasSocialMedia','dfc-b:hasAllergenCharacteristic','dfc-b:hasNutrientCharacteristic','dfc-b:hasPhysicalCharacteristic']
+              dereference: ['dfc-b:hasQuantity', 'dfc-b:hasPrice', 'dfc-b:hasAdress', 'dfc-b:hasPhoneNumber', 'dfc-b:hasSocialMedia', 'dfc-b:hasSocialMedia', 'dfc-b:hasAllergenCharacteristic', 'dfc-b:hasNutrientCharacteristic', 'dfc-b:hasPhysicalCharacteristic']
             }),
             new FetchAdapter({
               headers: {
@@ -1235,7 +1265,7 @@ class CatalogService {
 
           if (sourceObject.version == "1.5" || sourceObject.version == "1.6" || sourceObject.version == "1.7" || sourceObject.version == "1.8") {
             // const affiliates = Array.isArray(sourceResponseObject['dfc-b:affiliates'])?sourceResponseObject['dfc-b:affiliates'][0]:sourceResponseObject['dfc-b:affiliates']
-          
+
             // console.log('___________________filterInMemory')            
             // const platformUser = await ldpNavigator.filterInMemory({
             //   '@type': 'dfc-b:Person'
@@ -1368,7 +1398,7 @@ class CatalogService {
           // throw new Error ('fake')
         }
       } catch (e) {
-        console.log('abord import',user['@id'])
+        console.log('abord import', user['@id'])
         const responseProgressOn = await fetch(user['@id'], {
           method: 'PATCH',
           body: JSON.stringify({
@@ -1391,7 +1421,7 @@ class CatalogService {
     return new Promise(async (resolve, reject) => {
       try {
 
-        console.log('___ INIT importItem',item['@id']);
+        console.log('___ INIT importItem', item['@id']);
         await this.init();
 
         const sparqlTools = new SparqlTools({
@@ -1414,7 +1444,7 @@ class CatalogService {
         if (references) {
           await this.importItem(references, user, platform, false)
         }
-        
+
         let idDFC;
         if (claimConvert) {
           // if (dfcReferences) {
@@ -1451,16 +1481,16 @@ class CatalogService {
         ],
         "@type": "dfc-b:SuppliedProduct",
         "dfc-b:hasQuantity": {
-          "dfc-b:hasUnit": dataToExport['dfc-b:hasQuantity']&&dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']?dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id']:undefined,
-          "dfc-b:value": dataToExport['dfc-b:hasQuantity']?dataToExport['dfc-b:hasQuantity']['dfc-b:value']:undefined,
+          "dfc-b:hasUnit": dataToExport['dfc-b:hasQuantity'] && dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit'] ? dataToExport['dfc-b:hasQuantity']['dfc-b:hasUnit']['@id'] : undefined,
+          "dfc-b:value": dataToExport['dfc-b:hasQuantity'] ? dataToExport['dfc-b:hasQuantity']['dfc-b:value'] : undefined,
           "@type": "dfc-b:QuantitiveValue",
         },
-        "dfc-b:hasType": dataToExport['dfc-b:hasType']?dataToExport['dfc-b:hasType']['@id']:undefined,
+        "dfc-b:hasType": dataToExport['dfc-b:hasType'] ? dataToExport['dfc-b:hasType']['@id'] : undefined,
         "dfc-b:description": dataToExport['dfc-b:description'],
         "dfc-b:name": dataToExport['dfc-b:name'],
         "dfc-b:totalTheoriticalStock": dataToExport['dfc-b:totalTheoriticalStock']
       };
-  
+
       const sourceResponse = await fetch(sourceObject.urlExportSuppliedProduct, {
         method: 'POST',
         headers: {
@@ -1470,12 +1500,12 @@ class CatalogService {
         },
         body: JSON.stringify(newDataSuppliedProduct)
       });
-  
-  
+
+
       if (sourceResponse.status == 403) {
         throw new Error("Authentification failed");
       }
-  
+
       if (sourceResponse.status != 201) {
         throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
 
@@ -1485,7 +1515,7 @@ class CatalogService {
       if (location == undefined) {
         throw new Error("Platform have to return location header on creation");
       }
-  
+
       const createdItemResponse = await fetch(location, {
         headers: {
           'authorization': 'JWT ' + user['token'],
@@ -1494,22 +1524,22 @@ class CatalogService {
       });
       createdItem = await createdItemResponse.json();
 
-      createdItem = await jsonld.frame(createdItem,{
-        "@context":{
+      createdItem = await jsonld.frame(createdItem, {
+        "@context": {
           ...createdItem['@context'],
-          '@base':null
+          '@base': null
         },
-        "@type":"dfc-b:SuppliedProduct"
+        "@type": "dfc-b:SuppliedProduct"
       })
-      createdItem['dfc-t:hostedBy']=platform['@id'];
-      createdItem['dfc-t:owner']= user['@id'];
+      createdItem['dfc-t:hostedBy'] = platform['@id'];
+      createdItem['dfc-t:owner'] = user['@id'];
       const sparqlTools = new SparqlTools({
         context: this.context
       });
 
       await sparqlTools.insert(createdItem)
 
-  
+
     } else {
       throw new Error("Platform api is not configured to create supply product");
     }
@@ -1522,14 +1552,14 @@ class CatalogService {
     // console.log('suppliedProduct', suppliedProduct);
     let createdItem;
     if (sourceObject.urlExportCatalogItem) {
-  
+
       const newDataCatalogItem = {
         "@context": [
           this.context
         ],
         "@type": "dfc-b:CatalogItem",
         "dfc-b:sku": dataToExport['dfc-b:sku'],
-        "dfc-b:references":suppliedProduct['@id'],
+        "dfc-b:references": suppliedProduct['@id'],
         "dfc-b:stockLimitation": dataToExport['dfc-b:stockLimitation'],
       };
 
@@ -1542,11 +1572,11 @@ class CatalogService {
         },
         body: JSON.stringify(newDataCatalogItem)
       });
-  
+
       if (sourceResponse.status == 403) {
         throw new Error("Authentification failed");
       }
-  
+
       if (sourceResponse.status != 201) {
 
         throw new Error(`Platform have to return 201 status on creation; Platform return ${sourceResponse.status} status for ${sourceObject.urlExportCatalogItem}`);
@@ -1566,21 +1596,21 @@ class CatalogService {
 
       createdItem = await createdItemResponse.json();
 
-      createdItem = await jsonld.frame(createdItem,{
-        "@context":{
+      createdItem = await jsonld.frame(createdItem, {
+        "@context": {
           ...createdItem['@context'],
-          '@base':null
+          '@base': null
         },
-        "@type":"dfc-b:CatalogItem"
+        "@type": "dfc-b:CatalogItem"
       })
-      createdItem['dfc-t:hostedBy']=platform['@id'];
-      createdItem['dfc-t:owner']= user['@id'];
+      createdItem['dfc-t:hostedBy'] = platform['@id'];
+      createdItem['dfc-t:owner'] = user['@id'];
       const sparqlTools = new SparqlTools({
         context: this.context
       });
       await sparqlTools.insert(createdItem)
 
-  
+
     } else {
       throw new Error("Platform api is not configured to create supply product");
     }
@@ -1591,11 +1621,11 @@ class CatalogService {
   async exportOneToSource(sourceSlug, dataToExport, user) {
 
     const product = await this.exportSuppliedProduct(sourceSlug, dataToExport['dfc-b:references'], user);
-    await this.convertImportToReconciled(product,  dataToExport['dfc-b:references'], user);
+    await this.convertImportToReconciled(product, dataToExport['dfc-b:references'], user);
 
 
-    const catalog = await this.exportCatalogItem (sourceSlug, dataToExport, user,product);
-    await this.convertImportToReconciled(catalog,  dataToExport, user);
+    const catalog = await this.exportCatalogItem(sourceSlug, dataToExport, user, product);
+    await this.convertImportToReconciled(catalog, dataToExport, user);
 
   }
 
@@ -1634,7 +1664,7 @@ class CatalogService {
           'authorization': 'JWT ' + user['token'],
           'accept': 'application/ld+json'
         },
-        forceContext : this.context
+        forceContext: this.context
       })
     ]);
 
@@ -1709,7 +1739,7 @@ class CatalogService {
     const shorter = {
       ...linked,
       'owl:sameAs': linked['dfc-t:hasPivot']['dfc-t:represent'].map(
-        r =>  r['@id']
+        r => r['@id']
       ).filter(
         r => !(r.includes(linked['@id']))
       )
@@ -1722,7 +1752,7 @@ class CatalogService {
   }
 
 
-  
+
 
 
   async impactOneLinked(data, user) {
@@ -1742,17 +1772,17 @@ class CatalogService {
             Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
           }
         },
-        dereference: ['dfc-b:hasQuantity','dfc-b:hasAllergenCharacteristic','dfc-b:hasCertification',
-        'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+        dereference: ['dfc-b:hasQuantity', 'dfc-b:hasAllergenCharacteristic', 'dfc-b:hasCertification',
+          'dfc-b:hasPhysicalCharacteristic', 'dfc-b:hasNutrientCharacteristic']
       },
-      context: this.context ,
-      forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough','dfc-b:hasAllergenCharacteristic',
-      'dfc-b:hasPhysicalCharacteristic','dfc-b:hasNutrientCharacteristic']
+      context: this.context,
+      forceArray: ['dfc-t:represent', 'dfc-b:offeredThrough', 'dfc-b:hasAllergenCharacteristic',
+        'dfc-b:hasPhysicalCharacteristic', 'dfc-b:hasNutrientCharacteristic']
     })
 
     const ldpNavigatorOrigin = ldpNavigatorFactory.make();
     const oldData = await ldpNavigatorOrigin.resolveById(data['@id']);
-    const newData= {...oldData,...data}
+    const newData = { ...oldData, ...data }
 
     await ldpNavigatorOrigin.addToMemory(newData);
     await ldpNavigatorOrigin.persist();
@@ -1760,43 +1790,43 @@ class CatalogService {
 
     const uriDfcPlatform = (await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id'];
     const sameAsList = await this.getOneLinkedItemSimple(data['@id'], user);
-    let impactOk=[]
-    let impactKo=[]
-    
+    let impactOk = []
+    let impactKo = []
+
 
     for (const sameAs of sameAsList['owl:sameAs']) {
-      if (sameAs['dfc-t:hostedBy']!=uriDfcPlatform && sameAs['dfc-t:hostedBy']!=data['dfc-t:hostedBy']){
-        console.log('sameAs Other Platform____________',sameAs['dfc-t:hostedBy'],uriDfcPlatform)
+      if (sameAs['dfc-t:hostedBy'] != uriDfcPlatform && sameAs['dfc-t:hostedBy'] != data['dfc-t:hostedBy']) {
+        console.log('sameAs Other Platform____________', sameAs['dfc-t:hostedBy'], uriDfcPlatform)
         const ldpNavigatorOther = ldpNavigatorFactory.make();
         const oldData = await ldpNavigatorOther.resolveById(sameAs['@id']);
 
         const keptData = {
-          '@id':oldData['@id'],
-          'dfc-b:offeredThrough':oldData['dfc-b:offeredThrough'],
-          'dfc-b:referencedBy':oldData['dfc-b:referencedBy'],
-          'dfc-b:references':oldData['dfc-b:references'],
-          'dfc-b:hasBrand':oldData['dfc-b:hasBrand'],
-          'dfc-b:hasProcess':oldData['dfc-b:hasProcess'],
+          '@id': oldData['@id'],
+          'dfc-b:offeredThrough': oldData['dfc-b:offeredThrough'],
+          'dfc-b:referencedBy': oldData['dfc-b:referencedBy'],
+          'dfc-b:references': oldData['dfc-b:references'],
+          'dfc-b:hasBrand': oldData['dfc-b:hasBrand'],
+          'dfc-b:hasProcess': oldData['dfc-b:hasProcess'],
         }
- 
+
         try {
 
-          const newOtherPlatformData= {
-            ...data, 
+          const newOtherPlatformData = {
+            ...data,
             ...keptData
           }
-  
-          if (newOtherPlatformData['dfc-b:offeredThrough']==undefined) delete newOtherPlatformData['dfc-b:offeredThrough'];
-          if (newOtherPlatformData['dfc-b:references']==undefined) delete newOtherPlatformData['dfc-b:references'];
-          if (newOtherPlatformData['dfc-b:offers']==undefined) delete newOtherPlatformData['dfc-b:offers'];
-          if (newOtherPlatformData['dfc-b:referencedBy']==undefined) delete newOtherPlatformData['dfc-b:referencedBy'];
-          if (newOtherPlatformData['dfc-b:hasBrand']==undefined) delete newOtherPlatformData['dfc-b:hasBrand'];
-          if (newOtherPlatformData['dfc-b:hasProcess']==undefined) delete newOtherPlatformData['dfc-b:hasProcess'];
-  
-  
+
+          if (newOtherPlatformData['dfc-b:offeredThrough'] == undefined) delete newOtherPlatformData['dfc-b:offeredThrough'];
+          if (newOtherPlatformData['dfc-b:references'] == undefined) delete newOtherPlatformData['dfc-b:references'];
+          if (newOtherPlatformData['dfc-b:offers'] == undefined) delete newOtherPlatformData['dfc-b:offers'];
+          if (newOtherPlatformData['dfc-b:referencedBy'] == undefined) delete newOtherPlatformData['dfc-b:referencedBy'];
+          if (newOtherPlatformData['dfc-b:hasBrand'] == undefined) delete newOtherPlatformData['dfc-b:hasBrand'];
+          if (newOtherPlatformData['dfc-b:hasProcess'] == undefined) delete newOtherPlatformData['dfc-b:hasProcess'];
+
+
           //TODO remove this line only temp for socle suport
           delete newOtherPlatformData['dfc-b:offeredThrough'];
-  
+
           const sourceResponse = await fetch(sameAs['@id'], {
             method: 'PATCH',
             headers: {
@@ -1806,30 +1836,30 @@ class CatalogService {
             },
             body: JSON.stringify(newOtherPlatformData)
           });
-  
+
           if (sourceResponse.status == 403) {
             throw new Error("Authentification failed");
           }
-  
+
           if (sourceResponse.status == 404) {
             throw new Error(`uri 404 for ${sameAs['@id']}`);
           }
-      
-          if (Math.floor(sourceResponse.status/100) != 2) {
+
+          if (Math.floor(sourceResponse.status / 100) != 2) {
             console.log(await sourceResponse.text())
             throw new Error(`Platform have to return 2xx status on update; Platform return ${sourceResponse.status} status for ${sameAs['@id']}`);
-    
+
           }
           console.log(`impact platform ${sameAs['dfc-t:hostedBy']} done`)
           impactOk.push(sameAs['dfc-t:hostedBy']);
-          
-          const newData= {
+
+          const newData = {
             ...oldData,
             ...data,
             ...keptData
           }
-  
-          console.log('newData',newData);
+
+          console.log('newData', newData);
           await ldpNavigatorOther.addToMemory(newData)
           await ldpNavigatorOther.persist();
 
@@ -1840,9 +1870,9 @@ class CatalogService {
         }
 
 
-      
+
       }
-    }    
+    }
 
     return {
       impactOk,

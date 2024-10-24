@@ -41,8 +41,11 @@ docker-start-dev:
 docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
-log:
+log-app:
 	$(DOCKER_COMPOSE) logs -f dfc-app
+
+log-ui:
+	$(DOCKER_COMPOSE) logs -f dfc-ui
 
 # Start
 start:

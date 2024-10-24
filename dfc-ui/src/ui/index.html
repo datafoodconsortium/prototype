@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="fr">
+
 <head>
   <meta charset="utf-8">
   <title>DFC proto V3.7</title>
@@ -10,7 +11,7 @@
 
   <% for (var index in htmlWebpackPlugin.files.js) { %>
     <script src="./<%= htmlWebpackPlugin.files.js[index] %>"></script>
-  <% } %>
+    <% } %>
 
 
 </head>
@@ -22,15 +23,14 @@
 
   <x-navigation>
     <style>
-      <%=require('./style/containers.css') %>
-      <%=require('./style/shared.css') %>
+      <%=require('./style/containers.css') %><%=require('./style/shared.css') %>
     </style>
   </x-navigation>
   <x-router default="x-home"></x-router>
 
 </body>
 <style>
-<%=require('./style/colors.css') %>
-<%=require('./style/shared.css') %>
+  <%=require('./style/colors.css') %><%=require('./style/shared.css') %>
 </style>
+
 </html>

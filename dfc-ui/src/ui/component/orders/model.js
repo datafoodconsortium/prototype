@@ -4,6 +4,7 @@ import 'devextreme/integration/jquery';
 import 'devextreme/ui/button';
 import dxcss from 'devextreme/dist/css/dx.light.css';
 import DataGrid from "devextreme/ui/data_grid";
+import dayjs from 'dayjs'; // Import dayjs library
 
 
 export default class Orders extends GenericElement {
@@ -47,10 +48,15 @@ export default class Orders extends GenericElement {
 
     let counter = 0;
     let dxData = data.map(d => {
+      console.log('order',d);
       counter++;
       return {
         id: counter,
         orderNumber: d['dfc-b:orderNumber'],
+        hasAddress: d['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress']?.['dfc-b:city'],
+        startDate: dayjs(d['dfc-b:selects']?.['dfc-b:startDate']).format('DD/MM/YYYY'), // Format startDate
+        endDate: dayjs(d['dfc-b:selects']?.['dfc-b:endDate']).format('DD/MM/YYYY'), // Format endDate
+        hostedBy: d['dfc-t:hostedBy']?.['rdfs:label'],
         raw: d,
       }
     })
@@ -66,13 +72,14 @@ export default class Orders extends GenericElement {
                   // console.log('allo');
                       console.log('in',d)
                       let part = {
-                        quantity:d['dfc-b:quantity'],
+                        quantity:d['dfc-b:hasQuantity']?.['dfc-b:value'],
+                        unitOrderLine:d['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
                         name:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'],
                         quantityProduct:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasQuantity']?.['dfc-b:value'],
                         unitProduct:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
                         description:d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:description'],
                         type: d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasType']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
-      
+                        hasAddress: d['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']?.['dfc-b:hasAddress']?.['dfc-b:city'],
                       }
                       // console.log(part);
                       return part;
@@ -90,11 +97,13 @@ export default class Orders extends GenericElement {
                   let offersGrid = new DataGrid(element, {
                     "columns": [
                       "quantity",
+                      "unitOrderLine",
                       "quantityProduct",
                       "unitProduct",
                       "name",
                       "description",
-                      'type'
+                      'type',
+                      'hasAddress'
                     ],
                     "dataSource": itemData.data
                   })
@@ -122,6 +131,22 @@ export default class Orders extends GenericElement {
           {
             dataField: 'orderNumber',
             caption: 'orderNumber',
+          },
+          {
+            dataField: 'hasAddress',
+            caption: 'shipping Address',
+          },
+          {
+            dataField: 'hostedBy',
+            caption: 'hostedBy',
+          },
+          {
+            dataField: 'startDate',
+            caption: 'startDate',
+          },
+          {
+            dataField: 'endDate',
+            caption: 'endDate',
           }
       ],
       "dataSource": dxData,
