@@ -68,7 +68,7 @@ stop: docker-stop
 stop-prod: docker-stop-prod
 stop-dev: docker-stop-dev
 stop-staging: docker-stop-staging
-Z
+
 restart: docker-restart
 
 build: docker-build
