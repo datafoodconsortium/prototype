@@ -4,6 +4,7 @@ import L from 'leaflet'; // Import Leaflet
 import leafletcss from 'leaflet/dist/leaflet.css'; // Importer le CSS de Leaflet si nécessaire
 // import 'leaflet-arrowheads'; // Importer la bibliothèque leaflet-arrowheads
 import dayjs from 'dayjs';
+import hash from 'hash.js';
 
 export default class Flows extends GenericElement {
   constructor() {
@@ -32,6 +33,11 @@ export default class Flows extends GenericElement {
       iconSize: [30, 30],
       iconAnchor: [15, 32],
       popupAnchor: [1, -34]
+    });
+
+    // Add event listener for the button
+    this.shadowRoot.querySelector('#optimizeRouteButton').addEventListener('click', () => {
+      this.callOptimizeRouteAPI();
     });
   }
 
@@ -137,6 +143,77 @@ export default class Flows extends GenericElement {
 
   setData(data) {
     // Méthode pour définir les données si nécessaire
+  }
+
+  // Function to generate a simple hash from a string
+  hashCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  }
+
+  // Method to call the VERSO API
+  async callOptimizeRouteAPI() {
+    const apiUrl = 'https://api.verso-optim.com/vrp/v1/solve';
+    const apiKey = 'vh61l1mw1b8doqnmjh397jtctq7em81n'; // Remplacez par votre clé API
+
+    // Construire les shipments à partir des orders
+    const shipments = this.rawOrders.map(order => {
+      const pickupAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
+      const sourcePart = order['dfc-b:hasPart']?.find(part => part['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']);
+      const sourceAddress = sourcePart?.['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']?.['dfc-b:hasAddress'];
+
+      if (pickupAddress && sourceAddress) {
+        const fullHash = hash.sha256().update(order['@id']).digest('hex');
+        const shortHash = parseInt(fullHash.substring(0, 8), 16); // Convert first 8 characters to an integer
+
+        return {
+          pickup: {
+            id: shortHash, // Use integer for pickup ID
+            location: [parseFloat(sourceAddress['dfc-b:latitude']), parseFloat(sourceAddress['dfc-b:longitude'])]
+          },
+          delivery: {
+            id: shortHash, // Use integer for delivery ID
+            location: [parseFloat(pickupAddress['dfc-b:latitude']), parseFloat(pickupAddress['dfc-b:longitude'])]
+          }
+        };
+      }
+      return null;
+    }).filter(shipment => shipment !== null);
+
+    const requestBody = {
+      vehicles: [
+        {
+          id: 1,
+          start: [2.35044, 48.71764],
+          end: [2.35044, 48.71764],
+        }
+      ],
+      shipments: shipments // Utiliser les shipments construits
+    };
+
+    try {
+      const response = await fetch(`${apiUrl}?api_key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('API Result:', result);
+    } catch (error) {
+      console.error('Error calling API:', error);
+    }
   }
 }
 
