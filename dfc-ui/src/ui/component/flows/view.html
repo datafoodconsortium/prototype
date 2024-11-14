@@ -1,9 +1,12 @@
 <div class="panelContainer">
   <div id="container">
     <div id="map"></div>
-    <button id="optimizeRouteButton">Optimize Route</button>
+    <div class="inputContainer">
+      <input type="number" id="hoursInput" placeholder="Enter hours" min="0" value="4">
+      <span>H</span>
+    </div>
+    <!-- <button id="optimizeRouteButton">Optimize Route</button> -->
   </div>
-  
 </div>
 <style>
   #map {
@@ -14,6 +17,13 @@
     display: flex;
     flex-direction: column;
     height: 85vh;
+  }
+  .inputContainer {
+    display: flex;
+    align-items: center;
+  }
+  #hoursInput {
+    margin-right: 10px;
   }
 </style>
 
