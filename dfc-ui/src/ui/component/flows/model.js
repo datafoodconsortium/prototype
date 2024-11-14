@@ -4,9 +4,8 @@ import L from 'leaflet'; // Import Leaflet
 import leafletcss from 'leaflet/dist/leaflet.css'; // Importer le CSS de Leaflet si nécessaire
 // import 'leaflet-arrowheads'; // Importer la bibliothèque leaflet-arrowheads
 import dayjs from 'dayjs';
-import hash from 'hash.js';
-// Importer la bibliothèque
 import 'polyline-encoded';
+import config from '../../../../configuration.js';
 
 export default class Flows extends GenericElement {
   constructor() {
@@ -15,13 +14,13 @@ export default class Flows extends GenericElement {
       channel: 'order',
       topic: 'changeAll',
       callback: (data) => {
-        console.log('data', data);
+        // console.log('data', data);
         this.rawOrders = data;
         this.setDataOrders(data)
       }
     });
 
-    console.log('L.Icon.Default.prototype.options', L.Icon.Default.prototype.options);
+    // console.log('L.Icon.Default.prototype.options', L.Icon.Default.prototype.options);
     // Utiliser les icônes par défaut de Leaflet
     this.sourceIcon = L.icon({
       iconUrl: "assets/Up.png", // Icône par défaut
@@ -115,7 +114,7 @@ export default class Flows extends GenericElement {
 
 
   setDataOrders(data) {
-    console.log('setData', data);
+    // console.log('setData', data);
 
     data.forEach(order => {
       let sourceLatLng, destinationLatLng;
@@ -141,9 +140,9 @@ export default class Flows extends GenericElement {
       }
 
       if (order['dfc-b:hasPart']) {
-        console.log('order hasPart', order['dfc-b:hasPart']);
+        // console.log('order hasPart', order['dfc-b:hasPart']);
         order['dfc-b:hasPart'].forEach(part => {
-          console.log('part', part);
+          // console.log('part', part);
           if (part!=null &&  part['dfc-b:fulfilledBy'] && part['dfc-b:fulfilledBy']['dfc-b:constitutedBy'] && part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']) {
             const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
             const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
@@ -223,7 +222,7 @@ export default class Flows extends GenericElement {
   // Method to call the VERSO API
   async callOptimizeRouteAPI() {
     const apiUrl = 'https://api.verso-optim.com/vrp/v1/solve';
-    const apiKey = 'vh61l1mw1b8doqnmjh397jtctq7em81n';
+    const apiKey = config.verso.apiKey;
 
     // Initialize a counter for shipment IDs
     let shipmentIdCounter = 1;

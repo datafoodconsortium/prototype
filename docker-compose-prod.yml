@@ -58,7 +58,7 @@ services:
         - SEMAPPS_JENA_PASSWORD=admin
     volumes:
       - ./dfc-app:/app
-      - ./config_prod.js:/app/configuration.js
+      - ../secrets/production/config_prod.json:/app/configuration.js
     depends_on:
       - dfc-middleware
     networks:
@@ -78,6 +78,7 @@ services:
       - URL_SERVER=http://proto.datafoodconsortium.org:8080
     volumes:
       - ./dfc-ui/src:/app/src
+      - ../secrets/production/config_prod.js:/app/configuration.js
     networks:
       - dfc
     ports:

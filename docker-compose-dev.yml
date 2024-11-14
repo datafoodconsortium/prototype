@@ -60,7 +60,7 @@ services:
     volumes:
       - ./dfc-app:/app
       - ./../../LDP-navigator:/LDP-navigator
-      - ./config.js:/app/configuration.js
+      - ../secrets/production/config.js:/app/configuration.js
     depends_on:
       - dfc-middleware
     networks:
@@ -79,6 +79,7 @@ services:
       - URL_SERVER=http://localhost:8080
     volumes:
       - ./dfc-ui/src:/app/src
+      - ../secrets/production/config.js:/app/configuration.js
     depends_on:
       - dfc-app
     networks:
