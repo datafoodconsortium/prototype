@@ -47,6 +47,9 @@ export default class Flows extends GenericElement {
       this.callOptimizeRouteAPI();
     });
 
+    // Define opacity variables
+    this.defaultOpacity = 0.8;
+    this.transparentOpacity = 0.4;
   }
 
 
@@ -233,7 +236,7 @@ export default class Flows extends GenericElement {
     const hoursInput = this.shadowRoot.querySelector('#hoursInput').value.replace(',', '.'); // Remplacer la virgule par un point
     const hours = parseFloat(hoursInput) || 0; // Utiliser parseFloat pour gérer les décimales
 
-    console.log('hours', hours);
+    // console.log('hours', hours);
 
     const endOfDay = startOfDay + (3600 * hours); // Calculate endOfDay based on input
 
@@ -308,29 +311,22 @@ export default class Flows extends GenericElement {
     // Clear logistics needs when displaying new routes
     this.routesLayer.clearLayers();
 
-    // Hide the needsLayer
-    // this.map.removeLayer(this.needsLayer);
-
     if (results && results.routes && results.routes.length > 0) {
         results.routes.forEach((route, index) => {
-            // console.log('route', route);
-
-            // Utiliser L.PolylineUtil.decode pour décoder la géométrie
             const decodedPath = L.PolylineUtil.decode(route.geometry, 5);
-            const routeColor = this.getRouteColor(index); // Obtenir la couleur de la route
+            const routeColor = this.getRouteColor(index);
             const polyline = L.polyline(decodedPath, {
-                color: routeColor, // Utiliser la couleur de la route
+                color: routeColor,
                 weight: 3,
-                opacity: 0.7
+                opacity: this.defaultOpacity
             });
 
             this.routesLayer.addLayer(polyline);
+            this.currentRoutes.push(polyline); // Store the polyline for later reference
 
-            // Add a marker for the first step of the route
             if (route.steps && route.steps.length > 0) {
                 const firstStep = route.steps[0];
-
-                // Créer une icône DivIcon avec la couleur de la route
+                const lastStep = route.steps[route.steps.length - 1]; // Get the last step
                 const customIcon = L.divIcon({
                     html: `<div style="background-color: ${routeColor}; width: 25px; height: 25px; display: flex; justify-content: center; align-items: center; border-radius: 50%;"><span style="color: white; font-size: 16px;">${index + 1}</span></div>`,
                     iconSize: [25, 25],
@@ -339,8 +335,30 @@ export default class Flows extends GenericElement {
                 });
 
                 const marker = L.marker([firstStep.location[1], firstStep.location[0]], { icon: customIcon })
-                    .bindPopup(`<b>First Step:</b><br>Type: ${firstStep.type}<br>Arrival: ${new Date(firstStep.arrival * 1000).toLocaleString()}`);
-                
+                    .bindPopup(`<b>Route:</b><br>Start: ${new Date(firstStep.arrival * 1000).toLocaleString()}<br>End: ${new Date(lastStep.arrival * 1000).toLocaleString()}`)
+                    .on('click', () => {
+                        const isAnyTransparent = this.currentRoutes.some(r => r.options.opacity === this.transparentOpacity);
+                        const isCurrentTransparent = polyline.options.opacity === this.transparentOpacity;
+
+                        if (!isAnyTransparent) {
+                            this.currentRoutes.forEach((r, i) => {
+                                if (i !== index) {
+                                    r.setStyle({ opacity: this.transparentOpacity });
+                                }
+                            });
+                        } else if (!isCurrentTransparent) {
+                            this.currentRoutes.forEach(r => r.setStyle({ opacity: this.defaultOpacity }));
+                        } else {
+                            this.currentRoutes.forEach((r, i) => {
+                                if (i === index) {
+                                    r.setStyle({ opacity: this.defaultOpacity });
+                                } else {
+                                    r.setStyle({ opacity: this.transparentOpacity });
+                                }
+                            });
+                        }
+                    });
+
                 this.routesLayer.addLayer(marker);
             }
         });
