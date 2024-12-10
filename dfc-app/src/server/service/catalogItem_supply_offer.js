@@ -312,9 +312,19 @@ class CatalogService {
     // console.log('ALLLO');
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch('http://dfc-middleware:3000/sparql', {
-          method: 'POST',
-          body: `${PREFIX}
+        console.log('____getAllOrder', user);
+        let SPARQL_QUERY;
+        if (user['dfc:role'] == 'logistician') {
+          SPARQL_QUERY = `${PREFIX}
+          CONSTRUCT  {
+            ?s ?p ?o.
+          }
+          WHERE {
+            ?s a dfc-b:Order;
+                      ?p ?o.
+          }`
+        } else {
+          SPARQL_QUERY = `${PREFIX}
           CONSTRUCT  {
             ?s ?p ?o.
           }
@@ -323,7 +333,11 @@ class CatalogService {
                       dfc-t:owner <${user['@id']}>;
                       ?p ?o.
           }
-          `,
+          `
+        }
+        const response = await fetch('http://dfc-middleware:3000/sparql', {
+          method: 'POST',
+          body: SPARQL_QUERY,
           headers: {
             'accept': 'application/ld+json'
           }

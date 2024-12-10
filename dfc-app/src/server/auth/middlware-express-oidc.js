@@ -5,10 +5,11 @@ const config=require("../../../configuration.js")
 const {UserService,singletonUserService}=require("../service/user.js")
 
 async function middlware_express_oidc (req,res,next) {
+  // console.log('____MIDDLEWARE');
   // console.log('MIDDLEWARE',req.originalUrl);
   var tokenRaw = req.headers.authorization||decodeURIComponent(req.query.token);
-  // console.log('req',req.query.token);
-  // console.log('req.headers',req.headers.authorization);
+  // console.log('req.query.token',req.query.token);
+  // console.log('req.headers.authorization',req.headers.authorization);
   if(tokenRaw==undefined){
     res.status(401)
     next(new Error('Missing Bearer Token'));
@@ -37,7 +38,7 @@ async function middlware_express_oidc (req,res,next) {
           .verify(token)
         // console.log('AFTER verify');
         req.oidcPayload=payload;
-       // console.log('payload',payload);
+      //  console.log('payload',payload);
         // let userService = new UserService();
         // console.log('middleware',req.protocol + '://' + req.get('host') + req.originalUrl);
         let user = await singletonUserService.connectUser(payload.preferred_username);

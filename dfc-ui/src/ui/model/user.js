@@ -1,6 +1,7 @@
 import Navigo from 'navigo';
 import GenericElement from '../core/genericElement.js';
 import Util from './util.js'
+import { encode } from 'polyline-encoded';
 export default class User extends GenericElement {
   constructor() {
     super();
@@ -11,6 +12,14 @@ export default class User extends GenericElement {
       topic: 'set',
       callback: (data) => {
         this.setProfil(data);
+      }
+    });
+
+    this.subscribe({
+      channel: 'user',
+      topic: 'update',
+      callback: (data) => {
+        this.updateUser(data);
       }
     });
 
@@ -45,6 +54,23 @@ export default class User extends GenericElement {
       topic: 'changeOne',
       data: this.profil.user
     });
+    }
+
+  updateUser(data){
+    console.log('this.profil.user',this.profil.user);
+    let url = `${url_server}/data/core/user/${encodeURIComponent(this.profil.user['@id'])}`;
+    let option = {
+      method: 'PUT',
+      body:JSON.stringify(data)
+    };
+    this.util.ajaxCall(url, option).then(data => {
+      this.profil.user=data.body;
+      this.publish({
+      channel: 'user',
+        topic: 'changeOne',
+        data: this.profil.user
+      });
+    })
   }
   createEntrepriseForUser(data){
     // this.user['dfc:Entreprise']=data;

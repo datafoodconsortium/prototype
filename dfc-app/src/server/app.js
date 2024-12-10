@@ -41,12 +41,8 @@ async function start() {
   const redirectAPI = require('./api/redirectAPI.js');
   const userAPI = require('./api/user.js');
   const configAPI = require('./api/config.js');
-  const {PlatformService,platformServiceSingleton} = require ('./service/platform.js')
-  const {UnitService,unitServiceSingleton} = require ('./service/unit.js')
-  const {ProductTypeService,productTypeServiceSingleton} = require ('./service/productType.js')
-  // const contextResponse = await fetch(config.context);
-  // const context = await contextResponse.json();
-
+  const {platformServiceSingleton} = require ('./service/platform.js')
+ 
   // console.log('CONTEXT',context);
   // console.log('catalogAPI',catalogAPI);
   console.log('config',config);
@@ -62,8 +58,7 @@ async function start() {
   await waitOn(opts);
   console.log('after waitOn');
   await platformServiceSingleton.updatePlatformsFromConfig();
-  // await unitServiceSingleton.updateUnitsFromConfig();
-  // await productTypeServiceSingleton.updateProductsFromReference();
+
   app.use(session({
     secret: config.express.session_secret,
     maxAge: null

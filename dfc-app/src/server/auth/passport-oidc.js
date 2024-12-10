@@ -34,6 +34,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     client,
     params
   }, (tokenset, userinfo, done) => {
+    // console.log('____PASSPORT');
     // console.log('OIDC CallBack success');
     // console.log('tokenset', tokenset);
     // console.log('userinfo', userinfo);
@@ -41,6 +42,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     // console.log('tokenset',tokenset);
     userinfo.accesstoken = tokenset.access_token;
     userinfo.idtoken = tokenset.id_token;
+    // console.log('userinfo',userinfo);
           // var components = userinfo.accesstoken.split('.');
           // console.log(components);
           // var header = JSON.parse(base64url.decode(components[0]));
@@ -92,7 +94,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     session: false
   }), async (req, res) => {
 
-    // console.log('/auth/cb',res,req);
+    console.log('/auth/cb',res.req.user);
     // console.log('req.session.referer',req.session.referer);
 
     // console.log('res.req.user',res.req.user);
@@ -118,7 +120,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
 
   router.get('/auth/logout', middlware_express_oidc, async function(req, res, next) {
     // console.log(req.query.redirectUri);
-
+    console.log('____LOGOUT');
     // console.log('req.user idToken',req.user['ontosec:idToken']);
     let user = req.user
     // console.log('user',user);
@@ -131,8 +133,10 @@ let addOidcLesCommunsPassportToApp = async function(router) {
         post_logout_redirect_uri:req.query.redirectUri,
     }
 
-    if(user['idToken']!=undefined){
-      options.id_token_hint=user['idToken']
+    // console.log('user',user);
+
+    if(user['ontosec:idToken']!=undefined){
+      options.id_token_hint=user['ontosec:idToken']
     }
 
     // res.redirect(client.endSessionUrl(options));

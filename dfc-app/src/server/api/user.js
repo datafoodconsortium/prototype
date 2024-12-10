@@ -13,4 +13,10 @@ module.exports = function (router) {
     let out= await singletonUserService.createEntreprise(req.params.id,req.body);
     res.json(out);
   })
+
+  router.put('/user/:id', async (req, res, next)=>{
+    const user = {...req.body, '@id': req.params.id};
+    let out= await singletonUserService.mergeOneUser(user);
+    res.json(out);
+  })  
 }

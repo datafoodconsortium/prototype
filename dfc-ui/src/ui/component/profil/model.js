@@ -6,8 +6,9 @@ export default class Profil extends GenericElement {
     this.elements = {
         email: this.shadowRoot.querySelector('[name="email"]'),
         token: this.shadowRoot.querySelector('[name="token"]'),
+        role: this.shadowRoot.querySelector('[name="role"]'),
         logout: this.shadowRoot.querySelector('#logout'),
-
+        update: this.shadowRoot.querySelector('#update'),
     };
     this.subscribe({
       channel: 'user',
@@ -32,6 +33,11 @@ export default class Profil extends GenericElement {
         topic: 'logout'
       });
     });
+
+    this.elements.update.addEventListener('click', e => {
+      this.handleUpdate();
+    }); 
+;
   }
 
   disconnectedCallback() {
@@ -49,8 +55,26 @@ export default class Profil extends GenericElement {
 
   setUser(user) {
 
-    this.elements.email.textContent = user.email;
-    this.elements.token.value = user.token;
+    console.log('user',user);
+    this.user = user;
+
+    this.elements.email.textContent = user['dfc:email'] || '';
+    this.elements.token.value = user['ontosec:token'] || '';
+    this.elements.role.value = user['dfc:role'] || '';
   }
+
+  handleUpdate() {
+    delete this.user.role;
+    const newData = {
+      ...this.user,
+      'dfc:role': this.elements.role.value,
+    };
+    this.publish({
+      channel: 'user',
+      topic: 'update',
+      data: newData
+    });
+  }
+
 }
 window.customElements.define('x-profil', Profil);

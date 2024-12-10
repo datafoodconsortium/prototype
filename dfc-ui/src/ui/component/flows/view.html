@@ -1,4 +1,4 @@
-<div class="panelContainer">
+<div id="panelContainer">
   <div id="container">
     <div id="map"></div>
     <div class="inputContainer">
@@ -6,6 +6,8 @@
       <span>H</span>
     </div>
     <!-- <button id="optimizeRouteButton">Optimize Route</button> -->
+  </div>
+  <div id="legendContainer">
   </div>
 </div>
 <style>
@@ -17,6 +19,12 @@
     display: flex;
     flex-direction: column;
     height: 85vh;
+    flex-grow: 1; /* Allow the map container to grow */
+  }
+  #panelContainer {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
   }
   .inputContainer {
     display: flex;
@@ -24,6 +32,11 @@
   }
   #hoursInput {
     margin-right: 10px;
+  }
+  #legendContainer {
+    flex-basis: 50%;
+    height: 85vh;
+    overflow-y: auto;
   }
 </style>
 

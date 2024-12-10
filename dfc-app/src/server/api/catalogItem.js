@@ -130,7 +130,7 @@ module.exports = async function(router) {
       next(new Error('user not defined'))
     } else {
       try {
-        console.log(req.body);
+        // console.log(req.body);
         let out = await catalogItem_supply_offer.exportAllToSource(req.body.sourceSlug,req.body.data, req.user);
         // console.log('END API');
         res.json({});

@@ -8,9 +8,22 @@
   <div class="field">
     <label>token</label>
     <div>
-      <textarea cols="100" rows="15" name="token" ></textarea>
+      <textarea cols="100" rows="15" name="token"></textarea>
     </div>
   </div>
+  <div style="display:flex;flex-direction:row;">
+    <div class="field">
+      <label>Role</label>
+      <select name="role">
+        <option value="producer">Producer</option>
+        <option value="logistician">Logistician</option>
+      </select>
+    </div>
+    <div class="containerH">
+      <button id="update">update</button>
+    </div>
+  </div>
+
   <div class="containerH">
     <button id="logout">logout</button>
   </div>

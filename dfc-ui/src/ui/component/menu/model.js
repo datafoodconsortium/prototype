@@ -3,6 +3,14 @@ import view from 'html-loader!./view.html';
 export default class Menu extends GenericElement {
   constructor() {
     super(view);
+    this.elements = {
+      userRole: this.shadowRoot.querySelector('.user-role'),
+      importCatalogMenu: this.shadowRoot.querySelector('[href*=x-import-catalog]'),
+      catalogImportMenu: this.shadowRoot.querySelector('[href*=x-catalog-import]'),
+      catalogSupplyMenu: this.shadowRoot.querySelector('[href*=x-catalog-supply]'),
+      ordersMenu: this.shadowRoot.querySelector('[href*=x-orders]'),
+      flowsMenu: this.shadowRoot.querySelector('[href*=x-flows]'),
+  };
     this.subscribe({
       channel: 'main',
       topic: 'screen',
@@ -11,10 +19,23 @@ export default class Menu extends GenericElement {
         this.changeMenu(data)
       }
     });
+    this.subscribe({
+      channel: 'user',
+      topic: 'changeOne',
+      callback: (data) => {
+        // console.log('screen', data);
+        this.setUser(data);
+      }
+    });
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.publish({
+      channel: 'user',
+      topic: 'get',
+    });
+
   }
 
   disconnectedCallback() {
@@ -43,6 +64,22 @@ export default class Menu extends GenericElement {
   }
   setData(data) {
 
+  }
+
+  setUser(user) {
+    // console.log('user',user);
+    this.elements.userRole.textContent = user['dfc:role'];
+    if (user['dfc:role']=='logistician'){
+      this.elements.importCatalogMenu.classList.add('hide');
+      this.elements.catalogImportMenu.classList.add('hide');
+      this.elements.catalogSupplyMenu.classList.add('hide');
+      this.elements.ordersMenu.classList.add('hide');
+    }else{
+      this.elements.importCatalogMenu.classList.remove('hide');
+      this.elements.catalogImportMenu.classList.remove('hide');
+      this.elements.catalogSupplyMenu.classList.remove('hide');
+      this.elements.ordersMenu.classList.remove('hide');
+    }
   }
 }
 window.customElements.define('x-menu', Menu);
