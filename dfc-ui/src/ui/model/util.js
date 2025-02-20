@@ -58,9 +58,9 @@ export default class Util {
               let error = await response.json();
               errorMessage= error.message;
               // throw new Error (error.message)
-              reject(new Error(error.message));
+              // reject(new Error(error.message));
             } catch (e) {
-              errorMessage= await response.text();
+              errorMessage= response.statusText;
             } finally {
 
             }

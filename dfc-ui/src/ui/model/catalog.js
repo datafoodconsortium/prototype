@@ -106,6 +106,14 @@ export default class Catalog extends GenericElement {
         this.loadAllOrder();
       }
     });
+
+    this.subscribe({
+      channel: 'order',
+      topic: 'optimize',
+      callback: (data) => {
+        this.optimizeOrders();
+      }
+    });
   }
 
   cleanAll(source) {
@@ -283,32 +291,30 @@ export default class Catalog extends GenericElement {
 
   loadAllOrder() {
     let url = `${url_server}/data/core/order`;
-    this.orders = [];
+    this.orders= {};
     this.util.ajaxCall(url).then(data => {
-      // console.log(data);
-      if(data.body['@graph']){
-        let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
-          return {...record}
-        })
-        // console.log('newRecords',newRecords);
-
-        this.orders = newRecords;
 
 
-        // console.log('this.catalogs',this.catalogs);
-        this.publish({
-          channel: 'order',
-          topic: 'changeAll',
-          data: this.orders
-        });
-      }else{
-        this.publish({
-          channel: 'order',
-          topic: 'changeAll',
-          data: []
-        });
-      }
+      this.orders = data.body;
+      this.publish({
+        channel: 'order',
+        topic: 'changeAll',
+        data: this.orders
+      });
+    })
+  }
 
+  optimizeOrders() {
+    let url = `${url_server}/data/core/order/optimize`;
+    console.log('optimizeOrders',url);
+    this.util.ajaxCall(url).then(data => {
+      console.log('optimizeOrders',data);
+      this.routes = data.body;
+      this.publish({
+        channel: 'route',
+        topic: 'changeAll',
+        data: this.routes
+      });
     })
   }
 

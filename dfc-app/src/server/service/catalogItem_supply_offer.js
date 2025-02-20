@@ -3,7 +3,7 @@
 // const catalogModel = require('../ORM/catalog');
 // const representationPivotModel = require('../ORM/representationPivot');
 
-const request = require('request');
+// const request = require('request');
 const config = require('./../../../configuration.js');
 const fetch = require('node-fetch');
 const jsonld = require('jsonld');
@@ -346,6 +346,8 @@ class CatalogService {
         let items = await response.json();
         // console.log('__ orders',items)
 
+        
+
         items = await jsonld.compact(items, { '@context': this.context })
 
         const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
@@ -368,14 +370,13 @@ class CatalogService {
           },
           forceArray: ['dfc-b:hasPart']
         }).make();
-        // console.log('BEFORE app init');
+
         await ldpNavigator.init(items);
+
         // console.log('AFTER app init');
         const importItemsRaw = await ldpNavigator.filterInMemory({});
-        // console.log('importItemsRaw',importItemsRaw);
-        let importItems = [];
 
-        importItems = await ldpNavigator.dereference(importItemsRaw, [{
+        const dereferenceSchema = [{
           p: 'dfc-b:hasPart',
           n: [
             {
@@ -435,15 +436,302 @@ class CatalogService {
         {
           p: 'dfc-t:hostedBy'
         }
-        ]);
+        ];
 
-        const out = {
-          '@context': items['@context'],
-          '@graph': importItems
+
+        const dereferencedImportItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema, {flat:false});
+        // console.log('_____flatImportItems',flatImportItems);
+        // const jsonldDereferencedImportItems = {
+        //   "@context": items['@context'],
+        //   "@graph": dereferencedImportItems
+        // }
+
+
+
+        resolve(dereferencedImportItems);
+      } catch (e) {
+        reject(e);
+      }
+    })
+
+  }
+
+  optimizeOrders(user) {
+    // console.log('ALLLO');
+    return new Promise(async (resolve, reject) => {
+      try {
+        // console.log('____getAllOrder', user);
+        let SPARQL_QUERY;
+        if (user['dfc:role'] == 'logistician') {
+          SPARQL_QUERY = `${PREFIX}
+          CONSTRUCT  {
+            ?s ?p ?o.
+          }
+          WHERE {
+            ?s a dfc-b:Order;
+                      ?p ?o.
+          }`
+        } else {
+          SPARQL_QUERY = `${PREFIX}
+          CONSTRUCT  {
+            ?s ?p ?o.
+          }
+          WHERE {
+            ?s a dfc-b:Order;
+                      dfc-t:owner <${user['@id']}>;
+                      ?p ?o.
+          }
+          `
         }
-        // console.log('out',out);
+        const response = await fetch('http://dfc-middleware:3000/sparql', {
+          method: 'POST',
+          body: SPARQL_QUERY,
+          headers: {
+            'accept': 'application/ld+json'
+          }
+        });
 
-        resolve(out);
+        let items = await response.json();
+        // console.log('__ orders',items)
+
+        items = await jsonld.compact(items, { '@context': this.context })
+
+        const ldpNavigator = new LDPNavigator_SparqlAndFetch_Factory({
+          sparql: {
+            query: {
+              endpoint: 'http://dfc-middleware:3000/sparql',
+              headers: {
+                'accept': 'application/ld+json'
+              },
+              prefix: PREFIX
+            },
+            update: {
+              endpoint: 'http://dfc-fuseki:3030/localData/update',
+              headers: {
+                'Content-Type': 'application/sparql-update',
+                Authorization: 'Basic ' + Buffer.from('admin' + ':' + 'admin').toString('base64')
+              }
+            },
+            dereference: ['dfc-b:hasPrice', 'dfc-b:hasQuantity', 'dfc-b:hasAddress']
+          },
+          forceArray: ['dfc-b:hasPart']
+        }).make();
+        // console.log('BEFORE app init');
+        await ldpNavigator.init(items);
+        // console.log('AFTER app init');
+        const importItemsRaw = await ldpNavigator.filterInMemory({});
+        // console.log('_____importItemsRaw',importItemsRaw);
+        let importItems = [];
+        const dereferencePartToSupplieProduct=[
+          {
+            p: 'dfc-b:concerns',
+            n: [
+              {
+                p: 'dfc-b:offers',
+                n: [{
+                  p: 'dfc-b:references',
+                  n: [{
+                    p: 'dfc-b:hasType'
+                  }, {
+                    p: 'dfc-b:hasQuantity',
+                    n: {
+                      p: 'dfc-b:hasUnit'
+                    }
+                  }
+                  ]
+                }]
+              }
+            ]
+          }, {
+            p: 'dfc-b:hasPrice',
+            n: [{
+              p: 'dfc-b:hasUnit'
+            }]
+          },
+          {
+            p: 'dfc-b:hasQuantity',
+            n: [{
+              p: 'dfc-b:hasUnit'
+            }]
+          }
+        ];
+        const dereferencePartToPhysicalProduct = [
+          {
+            p: 'dfc-b:fulfilledBy',
+            n: [{
+              p: 'dfc-b:constitutedBy',
+              n: [{
+                p: 'dfc-b:isStoredIn',
+                n: [{
+                  p: 'dfc-b:hasAddress',
+                }]
+              }]
+            }]
+          }
+        ]
+
+        const dereferencePart = [...dereferencePartToSupplieProduct, ...dereferencePartToPhysicalProduct];
+
+        const dereferenceSchema = [{
+          p: 'dfc-b:hasPart',
+          n: dereferencePart
+        },
+        {
+          p: 'dfc-b:selects',
+          n: [{
+            p: 'dfc-b:pickedUpAt',
+            n: [{
+              p: 'dfc-b:hasAddress',
+            }]
+          }]
+        },
+        {
+          p: 'dfc-t:hostedBy'
+        }
+        ];
+
+        // importItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema);
+
+        const flatImportItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema, {flat:true});
+        // console.log('_____flatImportItems',flatImportItems);
+        const jsonldFlatImportItems = {
+          "@context": items['@context'],
+          "@graph": flatImportItems
+        }
+
+
+        // console.log('_____jsonldFlatImportItems',jsonldFlatImportItems);
+        const urlOptim = config.verso.apiMiddleware+'/optim';
+
+
+        const responseOptimized = await fetch(urlOptim, {  
+          method: 'POST',
+          body: JSON.stringify(jsonldFlatImportItems),
+          headers: {
+            'Content-Type': 'application/json'
+          } 
+        });
+        const responseOptimizedJson = await responseOptimized.json();
+        const ldpNavigatorOut = new LDPNavigator({  
+          forceArray: ['dfc-b:hasPart']
+        });
+        await ldpNavigatorOut.init(responseOptimizedJson);
+
+        // const routes = await jsonld.frame(responseOptimizedJson, {
+        //   "@context": responseOptimizedJson['@context'],
+        //   "@type": "dfc-b:Route", 
+        //   "dfc-b:steps": {
+        //     "@embed": "@always",
+        //     "dfc-b:pickup": {
+        //       "@embed": "@never"
+        //     },
+        //     "dfc-b:delivery": {
+        //       "@embed": "@never"
+        //     }
+        //   },
+        //   "dfc-b:vehicle": {
+        //     "@embed": "@always",
+        //     "dfc-b:ships": {
+        //       "@embed": "@always",
+        //       "dfc-b:transports": {
+        //         "@embed": "@never"
+        //       }
+        //     }
+        //   }
+        // });
+
+
+        const routes = await jsonld.frame(responseOptimizedJson, {
+          "@context": responseOptimizedJson['@context'],
+          "@type": "dfc-b:Route", 
+          "dfc-b:steps": {
+            "@embed": "@never"
+          },
+          "dfc-b:vehicle": {
+            "@embed": "@never"
+          }
+        });
+
+        const dereferencePartWhithOfferAndSuppliedProduct=[
+          ...dereferencePartToSupplieProduct,
+          {
+            p: 'dfc-b:partOf',
+            n: [{
+              p: 'dfc-t:hostedBy',
+            }]
+          }
+        ]
+
+        const extendedRoutes = await ldpNavigatorOut.dereference(routes['@graph'], [{
+          p: 'dfc-b:vehicle',
+          n: [{
+            p: 'dfc-b:ships',
+            n: [{
+              p: 'dfc-b:transports',
+              n: [{
+                p: 'dfc-b:constitutes',
+                n :[
+                  {
+                    p: 'dfc-b:fulfills',
+                    n: dereferencePartWhithOfferAndSuppliedProduct
+                  }
+                ]
+              },{
+                p: 'dfc-b:isStoredIn',
+              }]
+            }]
+          }]
+        },{
+          p: 'dfc-b:steps',
+          n: [{
+            p: 'dfc-b:pickup',
+            n: [{
+              p: 'dfc-b:transports',
+              n: [{
+                p: 'dfc-b:constitutes',
+                n :[
+                  {
+                    p: 'dfc-b:fulfills',
+                    n: dereferencePartWhithOfferAndSuppliedProduct
+                  }
+                ]
+              },{
+                p: 'dfc-b:isStoredIn',
+              }]
+            }]  
+          },
+          {
+            p: 'dfc-b:delivery',
+            n: [{
+              p: 'dfc-b:transports',
+              n: [{
+                p: 'dfc-b:constitutes',
+                n :[
+                  {
+                    p: 'dfc-b:fulfills',
+                    n: dereferencePartWhithOfferAndSuppliedProduct
+                  }
+                ]
+              },{
+                p: 'dfc-b:isStoredIn',
+              }]
+            }]
+          }
+        ]
+        }]);  
+
+        // const optimizedGraph = await ldpNavigatorOut.filterInMemory({});
+       
+
+
+
+        // console.log('_____optimizedGraph',optimizedGraph);
+        // for (let order of responseOptimizedJson['@graph']) {
+        //   console.log('__order', order);
+        // }
+        // console.log('_____responseOptimizedJson',responseOptimizedJson);
+
+        resolve(extendedRoutes);
       } catch (e) {
         reject(e);
       }

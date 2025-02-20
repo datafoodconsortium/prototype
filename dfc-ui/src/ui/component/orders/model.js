@@ -5,7 +5,7 @@ import 'devextreme/ui/button';
 import dxcss from 'devextreme/dist/css/dx.light.css';
 import DataGrid from "devextreme/ui/data_grid";
 import dayjs from 'dayjs'; // Import dayjs library
-
+import jsonld from 'jsonld';
 
 export default class Orders extends GenericElement {
   constructor() {
@@ -14,12 +14,11 @@ export default class Orders extends GenericElement {
     this.subscribe({
       channel: 'order',
       topic: 'changeAll',
-      callback: (data) => {
-        this.rawOrders = data;
-        this.setDataGrid(data)
+      callback: async (data) => {
+        this.orders = data;
+        this.setDataGrid(this.orders)
       }
     });
-
 
   }
   connectedCallback() {
@@ -71,6 +70,7 @@ export default class Orders extends GenericElement {
                 OrderLines = info.data.raw['dfc-b:hasPart'].map(d=>{
                   // console.log('allo');
                       console.log('in',d)
+
                       let part = {
                         quantity:d['dfc-b:hasQuantity']?.['dfc-b:value'],
                         unitOrderLine:d['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
@@ -81,7 +81,7 @@ export default class Orders extends GenericElement {
                         type: d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasType']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
                         hasAddress: d['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']?.['dfc-b:hasAddress']?.['dfc-b:city'],
                       }
-                      // console.log(part);
+                      console.log(part);
                       return part;
 
 

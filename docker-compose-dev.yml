@@ -14,7 +14,7 @@ services:
     expose:
       - "3030"
     networks:
-      - dfc
+      - dfc_shared_network
     healthcheck:
       test: curl --fail http://localhost:3030 || exit 1
       interval: 1s
@@ -38,7 +38,7 @@ services:
       - ./dfc-semapps:/server/app
       - ./../semapps:/semapps
     networks:
-      - dfc
+      - dfc_shared_network
     ports:
       - "3000:3000"
     expose:
@@ -64,7 +64,7 @@ services:
     depends_on:
       - dfc-middleware
     networks:
-      - dfc
+      - dfc_shared_network
     ports:
       - "8080:8080"
     expose:
@@ -83,7 +83,7 @@ services:
     depends_on:
       - dfc-app
     networks:
-      - dfc
+      - dfc_shared_network
     ports:
       - "80:8090"
       - "8090:8090"
@@ -94,5 +94,5 @@ volumes:
   rdf_data:
   staging:
 networks:
-  dfc:
-    name: dfc_network
+  dfc_shared_network:
+    external: true

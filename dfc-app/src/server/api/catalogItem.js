@@ -74,6 +74,18 @@ module.exports = async function(router) {
 
   })
 
+  router.get('/order/optimize', async (req, res, next) => {
+    if (req.user == undefined) {
+      res.statusCode = 500;
+      next(new Error('user not defined'))
+    } else {
+      let out = await catalogItem_supply_offer.optimizeOrders(req.user);
+      // let out ={};
+      res.json(out)
+    }
+
+  })
+
   router.post('/catalog/reconciled', async (req, res, next) => {
     try {
       let out = await catalogItem_supply_offer.updateOneItem(req.body, req.user);

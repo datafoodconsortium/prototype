@@ -20,6 +20,15 @@ export default class Flows extends GenericElement {
       }
     });
 
+    this.subscribe({
+      channel: 'route',
+      topic: 'changeAll',
+      callback: (data) => {
+        this.routes = data;
+        this.setRoutes(data);
+      }
+    }); 
+
     // console.log('L.Icon.Default.prototype.options', L.Icon.Default.prototype.options);
     // Utiliser les icônes par défaut de Leaflet
     this.sourceIcon = L.icon({
@@ -277,92 +286,45 @@ export default class Flows extends GenericElement {
     // Clear the platform and route color maps to avoid rendering obsolete data
     this.routeColorMap = {};
     
-    const apiUrl = 'https://api.verso-optim.com/vrp/v1/solve';
-    const apiKey = config.verso.apiKey;
-
-    // Initialize a counter for shipment IDs
-    let shipmentIdCounter = 1;
-
-    // Get the start and end of the current day in Unix timestamps
-    const now = new Date();
-    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 1000;
-
-    // Get the number of hours from the input
-    const hoursInput = this.shadowRoot.querySelector('#hoursInput').value.replace(',', '.'); // Remplacer la virgule par un point
-    const hours = parseFloat(hoursInput) || 0; // Utiliser parseFloat pour gérer les décimales
-
-    // console.log('hours', hours);
-
-    const endOfDay = startOfDay + (3600 * hours); // Calculate endOfDay based on input
-
-    // Build shipments from orders
-    const shipments = this.rawOrders.flatMap(order => {
-      const pickupAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
-      const sourceParts = order['dfc-b:hasPart']?.filter(part => part['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']);
-
-      if (pickupAddress && sourceParts && sourceParts.length > 0) {
-        return sourceParts.map(sourcePart => {
-          const sourceAddress = sourcePart['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress'];
-
-          // Create shipment and add shipmentId to the order line
-          const pickupId = shipmentIdCounter++;
-          const deliveryId = shipmentIdCounter++;
-          sourcePart.pickupShipmentId = pickupId; // Add pickupShipmentId to the part
-          sourcePart.deliveryShipmentId = deliveryId; // Add deliveryShipmentId to the part
-
-          return {
-            pickup: {
-              id: pickupId, // Use incremented ID for pickup
-              location: [parseFloat(sourceAddress['dfc-b:longitude']), parseFloat(sourceAddress['dfc-b:latitude'])],
-              time_windows: [[startOfDay, endOfDay]], // Add time window for pickup
-              service: 1000
-            },
-            delivery: {
-              id: deliveryId, // Use incremented ID for delivery
-              location: [parseFloat(pickupAddress['dfc-b:longitude']), parseFloat(pickupAddress['dfc-b:latitude'])],
-              time_windows: [[startOfDay, endOfDay]], // Add time window for delivery
-              service: 1000
-            }
-          };
-        });
-      }
-      return [];
-    });
-
-    // Create a vehicle for each shipment
-    const vehicles = shipments.map((shipment, index) => ({
-      id: index + 1,
-      start: shipment.pickup.location,
-      end: shipment.pickup.location,
-    }));
-
-    const requestBody = {
-      vehicles: vehicles,
-      shipments: shipments
-    };
-
-    try {
-      const response = await fetch(`${apiUrl}?api_key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const result = await response.json();
-      // console.log('API Result:', result);
-      this.displayRouteResults(result);
-
-      // Generate the legend dynamically after routes are processed
-      this.generateLegend();
-    } catch (error) {
-      console.error('Error calling API:', error);
+    const semanticGraphData = {
+      "@context":"https://cdn.jsdelivr.net/gh/datafoodconsortium/business-api@main/context.json",
+      "@graph": this.rawOrders
     }
+
+    this.publish({
+      channel: 'order',
+      topic: 'optimize'
+    }); 
+
+    // console.log('__semanticGraphData', JSON.stringify(semanticGraphData));
+
+    // try {
+    //   const response = await fetch(`http://localhost:3001/optim`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(semanticGraphData)
+    //   });
+    //   // console.log('optim', response);
+    //   const result = await response.json();
+    //   // console.log('API Result:', result);
+    //   this.displayRouteResults(result);
+
+    //   // Generate the legend dynamically after routes are processed
+    //   this.generateLegend();
+    // } catch (error) {
+    //   console.error('Error calling API:', error);
+    // }
+
+  }
+
+  async setRoutes(data) {
+    console.log('setRoutes', data);
+
+    this.displayRouteResults(data);
+
+    this.generateLegend();
   }
 
   displayRouteResults(results) {
@@ -374,12 +336,13 @@ export default class Flows extends GenericElement {
 
     // Clear logistics needs when displaying new routes
     this.routesLayer.clearLayers();
+    const routes = Array.isArray(results) ? results : [results];
 
-    if (results && results.routes && results.routes.length > 0) {
-        results.routes.forEach((route, index) => {
-            const decodedPath = L.PolylineUtil.decode(route.geometry, 5);
-            const routeColor = this.getRouteColor(index);
-            const polyline = L.polyline(decodedPath, {
+    if (routes) {
+      routes.forEach((route, index) => {
+          const decodedPath = L.PolylineUtil.decode(route['dfc-b:geometry'], 5);
+          const routeColor = this.getRouteColor(index);
+          const polyline = L.polyline(decodedPath, {
                 color: routeColor,
                 weight: 3,
                 opacity: this.defaultOpacity
@@ -393,9 +356,9 @@ export default class Flows extends GenericElement {
                 details: route // Store the entire route details
             });
 
-            if (route.steps && route.steps.length > 0) {
-                const firstStep = route.steps[0];
-                const lastStep = route.steps[route.steps.length - 1]; // Get the last step
+            if (route['dfc-b:steps'] && route['dfc-b:steps'].length > 0) {
+                const firstStep = route['dfc-b:steps'][0];
+                const lastStep = route['dfc-b:steps'][route['dfc-b:steps'].length - 1]; // Get the last step
                 const customIcon = L.divIcon({
                     html: `<div style="background-color: ${routeColor}; width: 25px; height: 25px; display: flex; justify-content: center; align-items: center; border-radius: 50%; box-shadow: none;"><span style="color: white; font-size: 16px;">${index + 1}</span></div>`,
                     iconSize: [25, 25],
@@ -403,9 +366,10 @@ export default class Flows extends GenericElement {
                     popupAnchor: [1, -34],
                     className: '' // Ensure no default class is applied
                 });
+                console.log('firstStep', firstStep);
 
-                const marker = L.marker([firstStep.location[1], firstStep.location[0]], { icon: customIcon })
-                    .bindPopup(`<b>Route:</b><br>Start: ${new Date(firstStep.arrival * 1000).toLocaleString()}<br>End: ${new Date(lastStep.arrival * 1000).toLocaleString()}`)
+                const marker = L.marker([firstStep['dfc-b:geo'][1], firstStep['dfc-b:geo'][0]], { icon: customIcon })
+                    .bindPopup(`<b>Route:</b><br>Start: ${new Date(firstStep['dfc-b:arrival'] * 1000).toLocaleString()}<br>End: ${new Date(lastStep['dfc-b:arrival']  * 1000).toLocaleString()}`)
                     .on('click', () => {
                         const isAnyTransparent = this.currentRoutes.some(r => r.polyline.options.opacity === this.transparentOpacity);
                         const isCurrentTransparent = polyline.options.opacity === this.transparentOpacity;
@@ -725,16 +689,16 @@ export default class Flows extends GenericElement {
 
     const route = this.currentRoutes[routeIndex];
     const allLatLngs = []; // Array to store all marker positions
-
-    if (route && route.details.steps) {
-        route.details.steps.forEach(step => {
+    // console.log('getRouteStepsDetails route', route);
+    if (route && route.details['dfc-b:steps']) {
+        route.details['dfc-b:steps'].forEach(step => {
             const locationInfo = this.getLocationInfoByShipmentId(step);
             const orderLines = locationInfo.orderLines.map(line => `${line.quantity} ${line.unit} - ${line.productName}`).join('<br>');
             const hostedBy = locationInfo.hostedBy;
             const row = document.createElement('tr');
             row.style.borderBottom = '1px solid black';
 
-            [step.type, locationInfo.city, orderLines,hostedBy, locationInfo.cityPickup].forEach(cellText => {
+            [locationInfo.type, locationInfo.city, orderLines,hostedBy, locationInfo.cityPickup].forEach(cellText => {
                 const td = document.createElement('td');
                 td.style.border = '1px solid black';
                 td.textContent = cellText;
@@ -791,7 +755,8 @@ export default class Flows extends GenericElement {
   }
 
   getLocationInfoByShipmentId(step) {
-    const { id: shipmentId, type } = step;
+    console.log('getLocationInfoByShipmentId step', step);
+    // const { id: shipmentId, type } = step;
     let info = {
       city: '',
       street: '',
@@ -804,48 +769,41 @@ export default class Flows extends GenericElement {
 
     };
 
-    this.rawOrders.forEach(order => {
-      const pickupAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
-      const sourceParts = order['dfc-b:hasPart']?.filter(part => part['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']);
-
-      // console.log('order', order);  
-      if (type === 'delivery' && pickupAddress) {
-        order['dfc-b:hasPart'].forEach(part => {
-          // console.log('part', part);
-          if (part.deliveryShipmentId === shipmentId) {
-            info.hostedBy = order['dfc-t:hostedBy']?.['rdfs:label'];
-            info.city = pickupAddress['dfc-b:city'];
-            info.street = pickupAddress['dfc-b:street'];
-            info.lat = parseFloat(pickupAddress['dfc-b:latitude']);
-            info.lng = parseFloat(pickupAddress['dfc-b:longitude']);
-            info.cityPickup = part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress']['dfc-b:city'];
-            info.cityPickupLat = parseFloat(part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress']['dfc-b:latitude']);
-            info.cityPickupLng = parseFloat(part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress']['dfc-b:longitude']);
-            const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
-            const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
-            const unit = part['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
-            info.orderLines.push({ quantity, unit, productName });
-          }
-        });
+    let chipment;
+    let type;
+    if (step['dfc-b:pickup']){
+      chipment = step['dfc-b:pickup'];
+      info.type = 'pickup';
+      info.city = chipment['dfc-b:startAt']['dfc-b:city'];
+      info.street = chipment['dfc-b:startAt']['dfc-b:street'];
+      info.lat = parseFloat(chipment['dfc-b:startAt']['dfc-b:latitude']);
+      info.lng = parseFloat(chipment['dfc-b:startAt']['dfc-b:longitude']);
+      info.hostedBy = chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:partOf']['dfc-t:hostedBy']['rdfs:label'];
+      const orderLine = {
+        quantity: chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:hasQuantity']['dfc-b:value'],
+        unit: chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l => l['@language'] == 'fr')?.['@value'],
+        productName: chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:name']
       }
-
-      if (type === 'pickup' && sourceParts) {
-        sourceParts.forEach(sourcePart => {
-          if (sourcePart.pickupShipmentId === shipmentId) {
-            info.hostedBy = order['dfc-t:hostedBy']?.['rdfs:label'];
-            const sourceAddress = sourcePart['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress'];
-            info.city = sourceAddress['dfc-b:city'];
-            info.street = sourceAddress['dfc-b:street'];
-            info.lat = parseFloat(sourceAddress['dfc-b:latitude']);
-            info.lng = parseFloat(sourceAddress['dfc-b:longitude']);
-            const productName = sourcePart['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
-            const quantity = sourcePart['dfc-b:hasQuantity']?.['dfc-b:value'];
-            const unit = sourcePart['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
-            info.orderLines.push({ quantity, unit, productName });
-          }
-        });
+      info.orderLines.push(orderLine);
+    } else if (step['dfc-b:delivery']){
+      chipment = step['dfc-b:delivery'];
+      info.type = 'delivery';
+      info.city = chipment['dfc-b:endAt']['dfc-b:city'];
+      info.street = chipment['dfc-b:endAt']['dfc-b:street'];
+      info.lat = parseFloat(chipment['dfc-b:endAt']['dfc-b:latitude']);
+      info.lng = parseFloat(chipment['dfc-b:endAt']['dfc-b:longitude']);
+      info.cityPickup = chipment['dfc-b:startAt']['dfc-b:city'];
+      info.cityPickupLat = parseFloat(chipment['dfc-b:startAt']['dfc-b:latitude']);
+      info.cityPickupLng = parseFloat(chipment['dfc-b:startAt']['dfc-b:longitude']); 
+      info.hostedBy = chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:partOf']['dfc-t:hostedBy']['rdfs:label'];
+      const orderLine = {
+        quantity: chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:hasQuantity']['dfc-b:value'],
+        unit: chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l => l['@language'] == 'fr')?.['@value'],
+        productName: chipment['dfc-b:transports']['dfc-b:constitutes']['dfc-b:fulfills']['dfc-b:concerns']['dfc-b:offers']['dfc-b:references']['dfc-b:name']
       }
-    });
+      info.orderLines.push(orderLine);
+    }
+
     return info;
   }
 
