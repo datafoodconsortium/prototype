@@ -38,6 +38,7 @@
     "@webcomponents/webcomponentsjs": "^1.1.0",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-session": "^1.16.2",

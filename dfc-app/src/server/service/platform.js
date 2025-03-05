@@ -43,7 +43,6 @@ class Platform {
   getOnePlatformBySlug(slug,platformStored) {
     return new Promise(async (resolve, reject) => {
       try {
-        // console.log('getOnePlatformBySlug',slug);
         let platform = this.configPlatforms['id']
 
         if (!platform){
@@ -63,7 +62,6 @@ class Platform {
         }else {
           reject (new Error('Platform not fonded by slug'))
         }
-        // console.log('out',platform[0]);
 
       } catch (e) {
         reject(e);
@@ -74,7 +72,6 @@ class Platform {
   getOnePlatform(id) {
     return new Promise(async (resolve, reject) => {
       try {
-        // console.log('getOnePlatform',id);
         const response = await fetch(id, {
           method: 'GET',
           headers: {
@@ -144,19 +141,14 @@ class Platform {
   initConfigPlatformBySlug(source,platformStored){
     return new Promise(async (resolve, reject) => {
       try {
-        // console.log('source',source);
         try {
           let platform =await this.getOnePlatformBySlug(source.slug,platformStored);
-          // console.log('FINDED',platform);
           this.configPlatforms[source.slug]=platform;
         } catch (e){
-          // console.log('NOT FINDED');
           let newPlaformId = await this.createOnePlatform(source.slug,{
             'rdfs:label':source.name
           });
-          console.log('_____________ newPlaformId',newPlaformId)
           let newPlaform = await this.getOnePlatform(newPlaformId);
-          // console.log('newPlaform',newPlaform);
           this.configPlatforms[source.slug]=newPlaform;
         }
         resolve();
@@ -175,7 +167,6 @@ class Platform {
           '@context':existingPlatform['@context'],
           '@graph':existingPlatform['@graph']||[]
         };
-        // console.log('INIT');
         await this.initConfigPlatformBySlug(
           {slug:'dfc','name':'Data Food Consortium'},
           platformStored

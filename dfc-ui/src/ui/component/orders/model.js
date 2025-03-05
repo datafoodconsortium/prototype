@@ -43,11 +43,9 @@ export default class Orders extends GenericElement {
   }
 
   setDataGrid(data) {
-    console.log('setDataGrid',data);
 
     let counter = 0;
     let dxData = data.map(d => {
-      console.log('order',d);
       counter++;
       return {
         id: counter,
@@ -65,11 +63,8 @@ export default class Orders extends GenericElement {
         enabled: true,
         template: function (container, info) {
             try {
-              console.log('marker1.0');
               let OrderLines=[];
                 OrderLines = info.data.raw['dfc-b:hasPart'].map(d=>{
-                  // console.log('allo');
-                      console.log('in',d)
 
                       let part = {
                         quantity:d['dfc-b:hasQuantity']?.['dfc-b:value'],
@@ -81,7 +76,6 @@ export default class Orders extends GenericElement {
                         type: d['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:hasType']?.['skos:prefLabel']?.find(l=>l['@language']=='fr')?.['@value'],
                         hasAddress: d['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']?.['dfc-b:hasAddress']?.['dfc-b:city'],
                       }
-                      console.log(part);
                       return part;
 
 
@@ -93,7 +87,6 @@ export default class Orders extends GenericElement {
                 title: 'OrderLines',
                 data: OrderLines,
                 template: function (itemData, itemIndex, element) {
-                  console.log(itemData, itemIndex, element);
                   let offersGrid = new DataGrid(element, {
                     "columns": [
                       "quantity",
@@ -113,7 +106,6 @@ export default class Orders extends GenericElement {
 
               const panel =$("<div></div>").dxTabPanel({
                   itemTitleTemplate:  function (data,index,container){
-                    // console.log('template',data,index,container);
                     const title=$(`<span>${data.title}</span>`);
                     container.append(title);
                   },
@@ -122,7 +114,6 @@ export default class Orders extends GenericElement {
 
               container.append(panel);
             } catch (error) {
-              // console.log('error2')
               console.error(error);
             }
         }

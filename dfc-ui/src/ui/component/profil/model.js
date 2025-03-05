@@ -14,7 +14,6 @@ export default class Profil extends GenericElement {
       channel: 'user',
       topic: 'changeOne',
       callback: (data) => {
-        // console.log('screen', data);
         this.setUser(data);
       }
     });
@@ -55,7 +54,6 @@ export default class Profil extends GenericElement {
 
   setUser(user) {
 
-    console.log('user',user);
     this.user = user;
 
     this.elements.email.textContent = user['dfc:email'] || '';

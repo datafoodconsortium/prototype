@@ -6,6 +6,8 @@ import leafletcss from 'leaflet/dist/leaflet.css'; // Importer le CSS de Leaflet
 import dayjs from 'dayjs';
 import 'polyline-encoded';
 import config from '../../../../configuration.js';
+import DataGrid from 'devextreme/ui/data_grid';
+import dxcss from 'devextreme/dist/css/dx.light.css';
 
 export default class Flows extends GenericElement {
   constructor() {
@@ -14,7 +16,6 @@ export default class Flows extends GenericElement {
       channel: 'order',
       topic: 'changeAll',
       callback: (data) => {
-        // console.log('data', data);
         this.rawOrders = data;
         this.setDataOrders(data)
       }
@@ -29,7 +30,6 @@ export default class Flows extends GenericElement {
       }
     }); 
 
-    // console.log('L.Icon.Default.prototype.options', L.Icon.Default.prototype.options);
     // Utiliser les icônes par défaut de Leaflet
     this.sourceIcon = L.icon({
       iconUrl: "assets/Up.png", // Icône par défaut
@@ -50,8 +50,8 @@ export default class Flows extends GenericElement {
     //   this.callOptimizeRouteAPI();
     // });
 
-    // Add event listener for changes in hoursInput
-    this.shadowRoot.querySelector('#hoursInput').addEventListener('input', () => {
+    // Add button click event listener
+    this.shadowRoot.querySelector('#optimizeButton').addEventListener('click', () => {
       this.callOptimizeRouteAPI();
     });
 
@@ -98,6 +98,10 @@ export default class Flows extends GenericElement {
     injectedStyle.appendChild(document.createTextNode(leafletcss.toString()));
     this.shadowRoot.appendChild(injectedStyle);
 
+    let injectedStyle2   = document.createElement('style');
+    injectedStyle2.appendChild(document.createTextNode(dxcss.toString()));
+    this.shadowRoot.appendChild(injectedStyle2);
+
     // Define base layers
     var baseLayers = {
       "Grayscale": grayscale,
@@ -128,7 +132,6 @@ export default class Flows extends GenericElement {
     // Generate the legend
     this.generateLegend();
 
-    // console.log('this.logisticsLayerGroup', this.logisticsLayerGroup);
 
     // Nouveau calque pour les éléments temporaires
     this.tempLayer = L.layerGroup().addTo(this.map);
@@ -136,7 +139,6 @@ export default class Flows extends GenericElement {
 
 
   setDataOrders(data) {
-    // console.log('setData', data);
 
     // Array to store all marker positions
     const allLatLngs = [];
@@ -152,7 +154,6 @@ export default class Flows extends GenericElement {
 
       if (order['dfc-b:selects'] && order['dfc-b:selects']['dfc-b:pickedUpAt']) {
         const shippinOption = order['dfc-b:selects'];
-        console.log('shippinOption', shippinOption);
         startDate = dayjs(shippinOption['dfc-b:startDate']).format('DD/MM/YYYY');
         endDate = dayjs(shippinOption['dfc-b:endDate']).format('DD/MM/YYYY');
         pickupAddress = order['dfc-b:selects']['dfc-b:pickedUpAt']['dfc-b:hasAddress'];
@@ -181,9 +182,7 @@ export default class Flows extends GenericElement {
       }
 
       if (order['dfc-b:hasPart']) {
-        // console.log('order hasPart', order['dfc-b:hasPart']);
         order['dfc-b:hasPart'].forEach(part => {
-          console.log('__part', part);
           if (part!=null &&  part['dfc-b:fulfilledBy'] && part['dfc-b:fulfilledBy']['dfc-b:constitutedBy'] && part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']) {
             const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
             const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
@@ -252,7 +251,7 @@ export default class Flows extends GenericElement {
     }
 
     // Call the optimization API once the data is set
-    this.callOptimizeRouteAPI();
+    // this.callOptimizeRouteAPI();
 
     // Generate the legend dynamically
     this.generateLegend();
@@ -285,42 +284,20 @@ export default class Flows extends GenericElement {
   async callOptimizeRouteAPI() {
     // Clear the platform and route color maps to avoid rendering obsolete data
     this.routeColorMap = {};
-    
-    const semanticGraphData = {
-      "@context":"https://cdn.jsdelivr.net/gh/datafoodconsortium/business-api@main/context.json",
-      "@graph": this.rawOrders
-    }
+
+    const optimisationTimeWindow = this.shadowRoot.querySelector('#hoursInput').value;
 
     this.publish({
       channel: 'order',
-      topic: 'optimize'
+      topic: 'optimize',
+      data: {
+        optimisationTimeWindow
+      }
     }); 
-
-    // console.log('__semanticGraphData', JSON.stringify(semanticGraphData));
-
-    // try {
-    //   const response = await fetch(`http://localhost:3001/optim`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(semanticGraphData)
-    //   });
-    //   // console.log('optim', response);
-    //   const result = await response.json();
-    //   // console.log('API Result:', result);
-    //   this.displayRouteResults(result);
-
-    //   // Generate the legend dynamically after routes are processed
-    //   this.generateLegend();
-    // } catch (error) {
-    //   console.error('Error calling API:', error);
-    // }
 
   }
 
   async setRoutes(data) {
-    console.log('setRoutes', data);
 
     this.displayRouteResults(data);
 
@@ -366,7 +343,6 @@ export default class Flows extends GenericElement {
                     popupAnchor: [1, -34],
                     className: '' // Ensure no default class is applied
                 });
-                console.log('firstStep', firstStep);
 
                 const marker = L.marker([firstStep['dfc-b:geo'][1], firstStep['dfc-b:geo'][0]], { icon: customIcon })
                     .bindPopup(`<b>Route:</b><br>Start: ${new Date(firstStep['dfc-b:arrival'] * 1000).toLocaleString()}<br>End: ${new Date(lastStep['dfc-b:arrival']  * 1000).toLocaleString()}`)
@@ -421,341 +397,246 @@ export default class Flows extends GenericElement {
   }
 
   generateLegend() {
-    const legendContainer = this.shadowRoot.getElementById('legendContainer');
-    legendContainer.innerHTML = ''; // Clear existing legend content
+    // Clear existing items in legend sections
+    this.shadowRoot.querySelector('#platformLegend .legend-items').innerHTML = '';
+    this.shadowRoot.querySelector('#routeLegend .legend-items').innerHTML = '';
 
-    // Create a legend for platforms
-    const platformLegend = document.createElement('div');
-    const platformTitle = document.createElement('h3');
-    platformTitle.textContent = 'Platform';
-    platformLegend.appendChild(platformTitle);
-
+    // Generate Platform Legend
     Object.entries(this.platformColorMap).forEach(([platform, color]) => {
-        const item = document.createElement('div');
-
-        const colorSpan = document.createElement('span');
-        colorSpan.style.backgroundColor = color;
-        colorSpan.style.width = '20px';
-        colorSpan.style.height = '20px';
-        colorSpan.style.display = 'inline-block';
-        item.appendChild(colorSpan);
-
-        const platformText = document.createElement('span');
-        platformText.textContent = ` ${platform}`;
-        item.appendChild(platformText);
-
-        // Create a button to toggle details
-        const toggleButton = document.createElement('button');
-        toggleButton.textContent = 'Show Details';
-        toggleButton.style.marginLeft = '10px';
-
-        // Create a container for details
-        const details = this.getPlatformDetails(platform);
-        details.style.display = 'none'; // Hide details by default
-
-        // Add event listener to toggle button
-        toggleButton.addEventListener('click', () => {
-            if (details.style.display === 'none') {
-                details.style.display = 'block';
-                toggleButton.textContent = 'Hide Details';
-            } else {
-                details.style.display = 'none';
-                toggleButton.textContent = 'Show Details';
-            }
-        });
-
-        // Add click event to fit map bounds on colorSpan and platformText
-        [colorSpan, platformText].forEach(element => {
-            element.addEventListener('click', () => {
-                const allLatLngs = this.getPlatformLatLngs(platform);
-                if (allLatLngs.length > 0) {
-                    const bounds = L.latLngBounds(allLatLngs);
-                    this.map.fitBounds(bounds);
-                }
-            });
-        });
-
-        item.appendChild(toggleButton);
-        item.appendChild(details);
-        platformLegend.appendChild(item);
+      const item = this.createLegendItem(platform, color);
+      this.shadowRoot.querySelector('#platformLegend .legend-items').appendChild(item);
     });
-    legendContainer.appendChild(platformLegend);
 
-    // Create a legend for routes
-    const routeLegend = document.createElement('div');
-    const routeTitle = document.createElement('h3');
-    routeTitle.textContent = 'Route';
-    routeLegend.appendChild(routeTitle);
+    // Show optimization section if we have data
+    const optimizationSection = this.shadowRoot.getElementById('optimizationSection');
+    if (this.rawOrders && this.rawOrders.length > 0) {
+      optimizationSection.style.display = 'block';
+    }
 
+    // Generate Route Legend
     Object.entries(this.routeColorMap).forEach(([route, color]) => {
-        const item = document.createElement('div');
-
-        const colorSpan = document.createElement('span');
-        colorSpan.style.backgroundColor = color;
-        colorSpan.style.width = '20px';
-        colorSpan.style.height = '20px';
-        colorSpan.style.display = 'inline-block';
-        item.appendChild(colorSpan);
-
-        const routeText = document.createElement('span');
-        routeText.textContent = ` Route ${parseInt(route) + 1}`;
-        item.appendChild(routeText);
-
-        // Create a button to toggle route details
-        const toggleButton = document.createElement('button');
-        toggleButton.textContent = 'Show Details';
-        toggleButton.style.marginLeft = '10px';
-
-        // Create a container for route details
-        const stepsDetails = this.getRouteStepsDetails(route);
-        stepsDetails.style.display = 'none'; // Hide details by default
-
-        // Add event listener to toggle button
-        toggleButton.addEventListener('click', () => {
-            if (stepsDetails.style.display === 'none') {
-                stepsDetails.style.display = 'block';
-                toggleButton.textContent = 'Hide Details';
-            } else {
-                stepsDetails.style.display = 'none';
-                toggleButton.textContent = 'Show Details';
-            }
-        });
-
-        // Add click event to fit map bounds on colorSpan and routeText
-        [colorSpan, routeText].forEach(element => {
-            element.addEventListener('click', () => {
-                const allLatLngs = this.getRouteLatLngs(route);
-                if (allLatLngs.length > 0) {
-                    const bounds = L.latLngBounds(allLatLngs);
-                    this.map.fitBounds(bounds);
-                }
-            });
-        });
-
-        item.appendChild(toggleButton);
-        item.appendChild(stepsDetails);
-        routeLegend.appendChild(item);
+      const item = this.createLegendItem(`Route ${parseInt(route) + 1}`, color);
+      this.shadowRoot.querySelector('#routeLegend .legend-items').appendChild(item);
     });
-    legendContainer.appendChild(routeLegend);
   }
 
-  // Helper method to get all LatLngs for a platform
-  getPlatformLatLngs(platform) {
-    const allLatLngs = [];
+  createLegendItem(label, color) {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+
+    const legendContent = document.createElement('div');
+    legendContent.className = 'legend-content';
+
+    const colorSpan = document.createElement('span');
+    colorSpan.style.backgroundColor = color;
+    colorSpan.style.width = '20px';
+    colorSpan.style.height = '20px';
+    colorSpan.style.display = 'inline-block';
+    legendContent.appendChild(colorSpan);
+
+    const labelText = document.createElement('span');
+    labelText.textContent = ` ${label}`;
+    labelText.style.marginLeft = '10px';
+    legendContent.appendChild(labelText);
+
+    const toggleButton = document.createElement('button');
+    toggleButton.textContent = 'Show Details';
+    toggleButton.style.marginLeft = '10px';
+    legendContent.appendChild(toggleButton);
+
+    item.appendChild(legendContent);
+
+    const detailsContainer = document.createElement('div');
+    detailsContainer.style.display = 'none';
+    detailsContainer.style.marginTop = '10px';
+    item.appendChild(detailsContainer);
+
+    toggleButton.addEventListener('click', () => {
+      if (detailsContainer.style.display === 'none') {
+        detailsContainer.style.display = 'block';
+        toggleButton.textContent = 'Hide Details';
+        if (label.startsWith('Route')) {
+          this.createRouteDetailsGrid(detailsContainer, parseInt(label.split(' ')[1]) - 1, toggleButton);
+        } else {
+          this.createPlatformDetailsGrid(detailsContainer, label, toggleButton);
+        }
+      } else {
+        detailsContainer.style.display = 'none';
+        toggleButton.textContent = 'Show Details';
+        detailsContainer.innerHTML = '';
+      }
+    });
+
+    return item;
+  }
+
+  createPlatformDetailsGrid(container, platform, toggleButton) {
+    const gridContainer = document.createElement('div');
+    gridContainer.style.marginTop = '10px';
+
+    const detailsData = [];
+    // Collect all coordinates for the platform
+    const allCoordinates = [];
+
     this.rawOrders.forEach(order => {
         const hostedBy = order['dfc-t:hostedBy']?.['rdfs:label'];
         if (hostedBy === platform) {
             const deliveryAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
             order['dfc-b:hasPart'].forEach(part => {
+                const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
+                const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
+                const unit = part['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
                 const pickupAddress = part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress'];
-                if (pickupAddress && deliveryAddress) {
-                    allLatLngs.push(
-                        [parseFloat(pickupAddress['dfc-b:latitude']), parseFloat(pickupAddress['dfc-b:longitude'])],
-                        [parseFloat(deliveryAddress['dfc-b:latitude']), parseFloat(deliveryAddress['dfc-b:longitude'])]
-                    );
-                }
+
+                const pickupLatLng = [parseFloat(pickupAddress['dfc-b:latitude']), parseFloat(pickupAddress['dfc-b:longitude'])];
+                const deliveryLatLng = [parseFloat(deliveryAddress['dfc-b:latitude']), parseFloat(deliveryAddress['dfc-b:longitude'])];
+                
+                allCoordinates.push(pickupLatLng, deliveryLatLng);
+
+                detailsData.push({
+                    pickup: pickupAddress['dfc-b:city'],
+                    delivery: deliveryAddress['dfc-b:city'],
+                    orderLine: `${quantity} ${unit} - ${productName}`,
+                    pickupLatLng,
+                    deliveryLatLng
+                });
             });
         }
     });
-    return allLatLngs;
-  }
 
-  // Helper method to get all LatLngs for a route
-  getRouteLatLngs(routeIndex) {
-    const allLatLngs = [];
-    const route = this.currentRoutes[routeIndex];
-    if (route && route.details.steps) {
-        route.details.steps.forEach(step => {
-            const locationInfo = this.getLocationInfoByShipmentId(step);
-            if (locationInfo.lat && locationInfo.lng) {
-                allLatLngs.push([locationInfo.lat, locationInfo.lng]);
+    const grid = new DataGrid(gridContainer, {
+        dataSource: detailsData,
+        columns: [
+            { dataField: 'pickup', caption: 'Pickup' },
+            { dataField: 'delivery', caption: 'Delivery' },
+            { dataField: 'orderLine', caption: 'Order Lines' }
+        ],
+        showRowLines: true,
+        showBorders: true,
+        hoverStateEnabled: true,
+        onCellHoverChanged: (e) => {
+            if (e.rowType === 'data') {
+                const data = e.data;
+                if (e.eventType === 'mouseover') {
+                    this.tempLayer.clearLayers();
+                    const markerPickup = L.marker(data.pickupLatLng, { icon: this.sourceIcon });
+                    const markerDelivery = L.marker(data.deliveryLatLng, { icon: this.destinationIcon });
+                    this.tempLayer.addLayer(markerPickup);
+                    this.tempLayer.addLayer(markerDelivery);
+                    e.component.markers = [markerPickup, markerDelivery];
+                } else {
+                    this.tempLayer.clearLayers();
+                    if (e.component.markers) {
+                        e.component.markers.forEach(marker => this.tempLayer.removeLayer(marker));
+                        e.component.markers = null;
+                    }
+                }
             }
-        });
-    }
-    return allLatLngs;
-  }
-
-  getPlatformDetails(platform) {
-    const detailsContainer = document.createElement('div');
-    const detailsTable = document.createElement('table');
-    detailsTable.style.borderCollapse = 'collapse';
-    detailsTable.style.width = '100%';
-
-    const headerRow = document.createElement('tr');
-    ['Pickup', 'Delivery', 'Order Lines'].forEach(headerText => {
-      const th = document.createElement('th');
-      th.style.border = '1px solid black';
-      th.textContent = headerText;
-      headerRow.appendChild(th);
-    });
-    detailsTable.appendChild(headerRow);
-
-    // Array to store all marker positions
-    const allLatLngs = [];
-
-    this.rawOrders.forEach(order => {
-      const hostedBy = order['dfc-t:hostedBy']?.['rdfs:label'];
-      if (hostedBy === platform) {
-        const deliveryAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
-
-        for (const part of order['dfc-b:hasPart']) {
-          const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
-          const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
-          const unit = part['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
-          const pickupAddress = part['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress'];
-
-          const row = document.createElement('tr');
-          row.style.borderBottom = '1px solid black';
-
-          // Collect marker positions
-          if (pickupAddress && deliveryAddress) {
-            const pickupLatLng = [parseFloat(pickupAddress['dfc-b:latitude']), parseFloat(pickupAddress['dfc-b:longitude'])];
-            const deliveryLatLng = [parseFloat(deliveryAddress['dfc-b:latitude']), parseFloat(deliveryAddress['dfc-b:longitude'])];
-            allLatLngs.push(pickupLatLng, deliveryLatLng);
-          }
-
-          row.addEventListener('mouseover', (e) => {
-            if (pickupAddress && deliveryAddress) {
-              const pickupLatLng = [parseFloat(pickupAddress['dfc-b:latitude']), parseFloat(pickupAddress['dfc-b:longitude'])];
-              const deliveryLatLng = [parseFloat(deliveryAddress['dfc-b:latitude']), parseFloat(deliveryAddress['dfc-b:longitude'])];
-
-              // Add markers for pickup and delivery
-              const markerPickup = L.marker(pickupLatLng, { icon: this.sourceIcon });
-              this.tempLayer.addLayer(markerPickup);
-              row.markerPickup = markerPickup;
-
-              const markerDelivery = L.marker(deliveryLatLng, { icon: this.destinationIcon });
-              this.tempLayer.addLayer(markerDelivery);
-              row.markerDelivery = markerDelivery;
-            }
-
-            row.style.backgroundColor = '#f0f0f0';
-          });
-
-          row.addEventListener('mouseout', (e) => {
-            if (row.markerPickup) {
-              this.tempLayer.removeLayer(row.markerPickup);
-              row.markerPickup = null;
-            }
-            if (row.markerDelivery) {
-              this.tempLayer.removeLayer(row.markerDelivery);
-              row.markerDelivery = null;
-            }
-            row.style.backgroundColor = '';
-          });
-
-          const pickupCell = document.createElement('td');
-          pickupCell.textContent = pickupAddress['dfc-b:city'];
-          row.appendChild(pickupCell);
-
-          const deliveryCell = document.createElement('td');
-          deliveryCell.textContent = deliveryAddress['dfc-b:city'];
-          row.appendChild(deliveryCell);
-
-          const orderLineCell = document.createElement('td');
-          orderLineCell.textContent = `${quantity} ${unit} - ${productName}`;
-          row.appendChild(orderLineCell);
-
-          detailsTable.appendChild(row);
         }
-      }
     });
 
-    // Fit the map to the bounds of all markers on table mouseover
-    detailsTable.addEventListener('mouseover', () => {
-      if (allLatLngs.length > 0) {
-        const bounds = L.latLngBounds(allLatLngs);
-        this.map.fitBounds(bounds);
-      }
+    // Add hover events for the entire grid container
+    gridContainer.addEventListener('mouseenter', () => {
+        if (allCoordinates.length > 0) {
+            const bounds = L.latLngBounds(allCoordinates);
+            this.map.fitBounds(bounds, {
+                padding: [10, 10],
+                maxZoom: 15
+            });
+        }
     });
 
-    detailsContainer.appendChild(detailsTable);
-    return detailsContainer;
+    container.appendChild(gridContainer);
   }
 
-  getRouteStepsDetails(routeIndex) {
-    const detailsTable = document.createElement('table');
-    detailsTable.style.borderCollapse = 'collapse';
-    detailsTable.style.width = '100%';
+  createRouteDetailsGrid(container, routeIndex, toggleButton) {
+    const gridContainer = document.createElement('div');
+    container.appendChild(gridContainer);
 
-    const headerRow = document.createElement('tr');
-    ['Type', 'City', 'Order Lines','platform', 'Origin'].forEach(headerText => {
-        const th = document.createElement('th');
-        th.style.border = '1px solid black';
-        th.textContent = headerText;
-        headerRow.appendChild(th);
-    });
-    detailsTable.appendChild(headerRow);
-
+    let detailsData = [];
+    const allCoordinates = [];
+    
     const route = this.currentRoutes[routeIndex];
-    const allLatLngs = []; // Array to store all marker positions
-    // console.log('getRouteStepsDetails route', route);
     if (route && route.details['dfc-b:steps']) {
         route.details['dfc-b:steps'].forEach(step => {
             const locationInfo = this.getLocationInfoByShipmentId(step);
-            const orderLines = locationInfo.orderLines.map(line => `${line.quantity} ${line.unit} - ${line.productName}`).join('<br>');
-            const hostedBy = locationInfo.hostedBy;
-            const row = document.createElement('tr');
-            row.style.borderBottom = '1px solid black';
-
-            [locationInfo.type, locationInfo.city, orderLines,hostedBy, locationInfo.cityPickup].forEach(cellText => {
-                const td = document.createElement('td');
-                td.style.border = '1px solid black';
-                td.textContent = cellText;
-                row.appendChild(td);
-            });
-
-            // Collect marker positions
             if (locationInfo.lat && locationInfo.lng) {
-                allLatLngs.push([locationInfo.lat, locationInfo.lng]);
+                allCoordinates.push([locationInfo.lat, locationInfo.lng]);
             }
-
-            row.addEventListener('mouseover', () => {
-                if (locationInfo.cityPickup) {
-                    const markerPickup = L.marker([locationInfo.cityPickupLat, locationInfo.cityPickupLng], { icon: this.sourceIcon });
-                    this.tempLayer.addLayer(markerPickup);
-                    row.markerPickup = markerPickup; 
-                     
-                    const markerDelivery = L.marker([locationInfo.lat, locationInfo.lng], { icon: this.destinationIcon });
-                    this.tempLayer.addLayer(markerDelivery);
-                    row.markerDelivery = markerDelivery; 
-                } else if (locationInfo.city) {
-                    const markerPickup = L.marker([locationInfo.lat, locationInfo.lng], { icon: this.sourceIcon });
-                    this.tempLayer.addLayer(markerPickup);
-                    row.markerPickup = markerPickup;
-                }
-                row.style.backgroundColor = '#f0f0f0';
+            if (locationInfo.cityPickupLat && locationInfo.cityPickupLng) {
+                allCoordinates.push([locationInfo.cityPickupLat, locationInfo.cityPickupLng]);
+            }
+            
+            detailsData.push({
+                type: locationInfo.type,
+                city: locationInfo.city,
+                orderLines: locationInfo.orderLines.map(line => `${line.quantity} ${line.unit} - ${line.productName}`).join('\n'),
+                hostedBy: locationInfo.hostedBy,
+                origin: locationInfo.cityPickup,
+                lat: locationInfo.lat,
+                lng: locationInfo.lng,
+                cityPickupLat: locationInfo.cityPickupLat,
+                cityPickupLng: locationInfo.cityPickupLng
             });
-
-            row.addEventListener('mouseout', () => {
-                if (row.markerPickup) {
-                    this.tempLayer.removeLayer(row.markerPickup);
-                    row.markerPickup = null;
-                }
-                if (row.markerDelivery) {
-                    this.tempLayer.removeLayer(row.markerDelivery);
-                    row.markerDelivery = null;
-                }
-                row.style.backgroundColor = '';
-            });
-
-            detailsTable.appendChild(row);
         });
     }
+    detailsData = detailsData.filter(step => step.type === 'pickup' || step.type === 'delivery');
 
-    // Fit the map to the bounds of all markers on table mouseover
-    detailsTable.addEventListener('mouseover', () => {
-        if (allLatLngs.length > 0) {
-            const bounds = L.latLngBounds(allLatLngs);
-            this.map.fitBounds(bounds);
+    const grid = new DataGrid(gridContainer, {
+        dataSource: detailsData,
+        columns: [
+            { dataField: 'type', caption: 'Type' },
+            { dataField: 'city', caption: 'City' },
+            { dataField: 'orderLines', caption: 'Order Lines' },
+            { dataField: 'hostedBy', caption: 'Platform' },
+            { dataField: 'origin', caption: 'Origin' }
+        ],
+        showRowLines: true,
+        showBorders: true,
+        hoverStateEnabled: true,
+        onCellHoverChanged: (e) => {
+            if (e.rowType === 'data') {
+                const data = e.data;
+                if (e.eventType === 'mouseover') {
+                    this.tempLayer.clearLayers();
+                    const markers = [];
+
+                    if (data.cityPickupLat != null && data.cityPickupLng != null) {
+                        const markerPickup = L.marker([data.cityPickupLat, data.cityPickupLng], { icon: this.sourceIcon });
+                        markers.push(markerPickup);
+                        this.tempLayer.addLayer(markerPickup);
+                        
+                        const markerDelivery = L.marker([data.lat, data.lng], { icon: this.destinationIcon });
+                        markers.push(markerDelivery);
+                        this.tempLayer.addLayer(markerDelivery);
+                    } else {
+                        const markerDelivery = L.marker([data.lat, data.lng], { icon: this.sourceIcon });
+                        markers.push(markerDelivery);
+                        this.tempLayer.addLayer(markerDelivery);
+                    }
+
+                    e.component.markers = markers;
+                } else {
+                    this.tempLayer.clearLayers();
+                    e.component.markers = null;
+                }
+            }
         }
     });
 
-    return detailsTable;
+    // Add hover events for the entire grid container
+    gridContainer.addEventListener('mouseenter', () => {
+        if (allCoordinates.length > 0) {
+            const bounds = L.latLngBounds(allCoordinates);
+            this.map.fitBounds(bounds, {
+                padding: [10, 10],
+                maxZoom: 15
+            });
+        }
+    });
   }
 
   getLocationInfoByShipmentId(step) {
-    console.log('getLocationInfoByShipmentId step', step);
     // const { id: shipmentId, type } = step;
     let info = {
       city: '',
@@ -807,44 +688,44 @@ export default class Flows extends GenericElement {
     return info;
   }
 
-  // Add a new method to get order line information
-  getOrderLineInfo(location, type) {
-    let info = '';
-    this.rawOrders.forEach(order => {
-      const pickupAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
-      const sourceParts = order['dfc-b:hasPart']?.filter(part => part['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']);
+  // // Add a new method to get order line information
+  // getOrderLineInfo(location, type) {
+  //   let info = '';
+  //   this.rawOrders.forEach(order => {
+  //     const pickupAddress = order['dfc-b:selects']?.['dfc-b:pickedUpAt']?.['dfc-b:hasAddress'];
+  //     const sourceParts = order['dfc-b:hasPart']?.filter(part => part['dfc-b:fulfilledBy']?.['dfc-b:constitutedBy']?.['dfc-b:isStoredIn']);
 
-      if (type === 'pickup' && pickupAddress) {
-        const lat = parseFloat(pickupAddress['dfc-b:latitude']);
-        const lng = parseFloat(pickupAddress['dfc-b:longitude']);
-        if (lat === location[1] && lng === location[0]) {
-          // Add orderLine details
-          order['dfc-b:hasPart'].forEach(part => {
-            const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
-            const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
-            const unit = part['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
-            info += `${quantity} ${unit} - ${productName}<br>`;
-          });
-        }
-      }
+  //     if (type === 'pickup' && pickupAddress) {
+  //       const lat = parseFloat(pickupAddress['dfc-b:latitude']);
+  //       const lng = parseFloat(pickupAddress['dfc-b:longitude']);
+  //       if (lat === location[1] && lng === location[0]) {
+  //         // Add orderLine details
+  //         order['dfc-b:hasPart'].forEach(part => {
+  //           const productName = part['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
+  //           const quantity = part['dfc-b:hasQuantity']?.['dfc-b:value'];
+  //           const unit = part['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
+  //           info += `${quantity} ${unit} - ${productName}<br>`;
+  //         });
+  //       }
+  //     }
 
-      if (type === 'destination' && sourceParts) {
-        sourceParts.forEach(sourcePart => {
-          const sourceAddress = sourcePart['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress'];
-          const lat = parseFloat(sourceAddress['dfc-b:latitude']);
-          const lng = parseFloat(sourceAddress['dfc-b:longitude']);
-          if (lat === location[1] && lng === location[0]) {
-            // Add orderLine details
-            const productName = sourcePart['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
-            const quantity = sourcePart['dfc-b:hasQuantity']?.['dfc-b:value'];
-            const unit = sourcePart['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
-            info += `${quantity} ${unit} - ${productName}<br>`;
-          }
-        });
-      }
-    });
-    return info;
-  }
+  //     if (type === 'destination' && sourceParts) {
+  //       sourceParts.forEach(sourcePart => {
+  //         const sourceAddress = sourcePart['dfc-b:fulfilledBy']['dfc-b:constitutedBy']['dfc-b:isStoredIn']['dfc-b:hasAddress'];
+  //         const lat = parseFloat(sourceAddress['dfc-b:latitude']);
+  //         const lng = parseFloat(sourceAddress['dfc-b:longitude']);
+  //         if (lat === location[1] && lng === location[0]) {
+  //           // Add orderLine details
+  //           const productName = sourcePart['dfc-b:concerns']?.['dfc-b:offers']?.['dfc-b:references']?.['dfc-b:name'];
+  //           const quantity = sourcePart['dfc-b:hasQuantity']?.['dfc-b:value'];
+  //           const unit = sourcePart['dfc-b:hasQuantity']?.['dfc-b:hasUnit']?.['skos:prefLabel']?.find(l => l['@language'] == 'fr')?.['@value'];
+  //           info += `${quantity} ${unit} - ${productName}<br>`;
+  //         }
+  //       });
+  //     }
+  //   });
+  //   return info;
+  // }
 
 
 }

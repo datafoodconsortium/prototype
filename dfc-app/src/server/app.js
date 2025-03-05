@@ -15,7 +15,6 @@ let url = env.CONFIG_URL;
 
 // const mongo_client = require('./mongo_client');
 // const mongoose = require('mongoose');
-// console.log('ENV',env);
 if(url==undefined || url==''){
   url = "https://simonlouvet.github.io/config-private/DFC-Proto/config.json"
 }
@@ -32,7 +31,6 @@ app.use(bodyParser.urlencoded({
 
 async function start() {
   const config = require("../../configuration.js")
-  // console.log('CONFIG',config.sources);
   const middlware_express_oidc = require('./auth/middlware-express-oidc.js');
   // const productAPI = require('./api/product.js');
   const catalogAPI = require('./api/catalogItem.js');
@@ -43,9 +41,6 @@ async function start() {
   const configAPI = require('./api/config.js');
   const {platformServiceSingleton} = require ('./service/platform.js')
  
-  // console.log('CONTEXT',context);
-  // console.log('catalogAPI',catalogAPI);
-  console.log('config',config);
   var opts = {
     resources: [
       'http-get://dfc-middleware:3000/ldp/platform',
@@ -54,9 +49,7 @@ async function start() {
     delay: 1000, // initial delay in ms, default 0
     simultaneous: 1, // limit to 1 connection per resource at a time
   }
-  console.log('befor waitOn');
   await waitOn(opts);
-  console.log('after waitOn');
   await platformServiceSingleton.updatePlatformsFromConfig();
 
   app.use(session({
@@ -81,11 +74,9 @@ async function start() {
 
   const port = process.env.APP_PORT || 8080
   app.listen(port, function(err) {
-    console.log('serveur started at port', port);
   })
   app.use((_err, req, res, next) => {
     if (_err) {
-      console.log('error',_err);
       if (res.statusCode==undefined){
           res.status(500);
       }
@@ -101,11 +92,9 @@ start();
 
 // const configRaw = fs.readFileSync('config.js', 'utf8');
 // const config=JSON.parse(configRaw);
-// console.log('config',config);
 
 
 // fs.readFile('config.json', (err, data) => {
 //   if (err) throw err;
-//   console.log('readFile',data);
 // });
 

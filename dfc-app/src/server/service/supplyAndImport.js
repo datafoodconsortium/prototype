@@ -38,7 +38,6 @@ class SupplyAndImport {
         });
 
         let datas = await response.json();
-        // console.log(datas);
         if(datas['@graph']){
           for(const data of datas['@graph']){
             const responseDelete = await fetch(data['@id'], {
@@ -59,7 +58,6 @@ class SupplyAndImport {
   }
 
   getAllImport(user) {
-    // console.log('ALLLO');
     return new Promise(async (resolve, reject) => {
       try {
         // console.warn('getAllImport');
@@ -99,7 +97,6 @@ class SupplyAndImport {
           }
         });
         let supplies = await response.json();
-        console.log(supplies);
         const out = await jsonld.frame(supplies, {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
@@ -114,7 +111,6 @@ class SupplyAndImport {
           "@type": "dfc-b:Product"
         });
 
-        console.log("out", out);
         resolve(out);
       } catch (e) {
         reject(e);
@@ -169,9 +165,7 @@ class SupplyAndImport {
           },
           "@type": "dfc-b:Product"
         });
-        // console.log('getOneImport',framed);
         const root = framed['@graph']?framed['@graph']:framed['@type']?framed:{}
-        // console.log('root',root);
         const out={
           '@context':framed['@context'],
           ...root
@@ -340,8 +334,6 @@ class SupplyAndImport {
           }
         });
         let supplies = await response.json();
-        // console.log(platformServiceSingleton.DFCPlaform['@id']);
-        console.log('getOneSupply',supplies);
         let framed = await jsonld.frame(supplies, {
           "@context": {
             "dfc": "http://static.datafoodconsortium.org/ontologies/DFC_FullModel.owl#",
@@ -358,9 +350,7 @@ class SupplyAndImport {
             "@id":(await platformServiceSingleton.getOnePlatformBySlug('dfc'))['@id']
           }
         });
-        // console.log('getOneSupply framed',framed);
         // const root = framed['@graph']?framed['@graph'].filter(p=>p['dfc-t:hostedBy']&&p['dfc-t:hostedBy']['rdfs:label'])[0]:{}
-        // // console.log('root',root);
 
         framed={
           '@context':framed['@context'],
@@ -387,7 +377,6 @@ class SupplyAndImport {
           '@context':framed['@context'],
           ...framed['@graph'][0]
         }
-        // console.log('getOneSupply framed 2',framed);
         // const out={
         //   '@context':framed['@context'],
         //   ...root
@@ -407,7 +396,6 @@ class SupplyAndImport {
       try {
 
         let product = await this.getOneSupply(supply['@id']);
-        // console.log('product["dfc-t:hasPivot"]["dfc-t:represent"]',product["dfc-t:hasPivot"]["dfc-t:represent"]);
         let oldRepresent = product["dfc-t:hasPivot"]["dfc-t:represent"].filter(i => {
           if (i["@id"] == product["@id"]) {
             return false;
@@ -416,7 +404,6 @@ class SupplyAndImport {
           }
         });
 
-        // console.log('oldRepresent',oldRepresent);
         oldRepresent.forEach(async r => {
           const responseProductPlatform = await fetch(r['@id'], {
             method: 'Put',
@@ -515,7 +502,6 @@ class SupplyAndImport {
       let importItem = await this.getOneImport(importId);
 
       let supplyItem = await this.getOneSupply(supplyId);
-      // console.log('convertImportIdToSupplyId', importItem, supplyItem);
 
       let newSupply = await this.convertImportToSupply(importItem, supplyItem, user);
       resolve(newSupply);
@@ -523,7 +509,6 @@ class SupplyAndImport {
   }
 
   convertImportToSupply(importToConvert, supply, user) {
-    // console.log('convertImportToSupply',importToConvert,supply);
     return new Promise(async (resolve, reject) => {
       try {
         if (supply == undefined || supply == null) {
@@ -553,7 +538,6 @@ class SupplyAndImport {
               'content-type': 'application/ld+json'
             }
           });
-          // console.log('XXXXXXXXXX PIVOT',responsePivot.headers.get('location'));
 
           const dfcProduct = {
             ...importToConvert,
@@ -594,7 +578,6 @@ class SupplyAndImport {
             }
           });
 
-          // console.log('pivot', responsePivot.headers.get('location'));
           const responsePivotPatch = await fetch(responsePivot.headers.get('location'), {
             method: 'Patch',
             body: JSON.stringify({
@@ -646,7 +629,6 @@ class SupplyAndImport {
         } else {
           // let representationPivot = await representationPivotInstance.findById(supply['dfc-t:hasPivot'])
           // await supply.populate("dfc-t:hasPivot");
-          // console.log('CONVERT',supply,importToConvert);
           let pivot = supply["dfc-t:hasPivot"];
           pivot["dfc-t:represent"].push({ "@id":  importToConvert['@id'], "@type": "@id" });
           const responsePivotPatch = await fetch(pivot['@id'], {
@@ -703,10 +685,7 @@ class SupplyAndImport {
 
   importSource(source, user) {
     return new Promise(async (resolve, reject) => {
-      // console.log(user);
-      // console.log(await platformServiceSingleton.getOnePlatformBySlug('dfc'))
       try {
-        // console.log(user['dfc:importInProgress']);
         if(user['dfc:importInProgress']==true){
           reject(new Error("import in progress. Not possible to process an other"))
         }else {
@@ -771,7 +750,6 @@ class SupplyAndImport {
             'dfc-b:physicalCharacterisctics': supply['dfc-b:physicalCharacterisctics']||supply['dfc:physicalCharacterisctics']
           }))
 
-          // console.log(supplies);
           const response = await fetch('http://dfc-middleware:3000/sparql', {
             method: 'POST',
             body: `
@@ -802,7 +780,6 @@ class SupplyAndImport {
           if (everExistDfcProducts['@graph'] && everExistDfcProducts['@graph'].length > 0) {
             existing = true;
           }
-          // console.log('existing',existing);
           let context = sourceResponseObject['@context'] || sourceResponseObject['@Context']
           let out=[];
           // let promises=[]
@@ -810,7 +787,6 @@ class SupplyAndImport {
             let promises = supplies.map(s=>this.importSupply(s,user,sourceObject,existing));
             out = await Promise.all(promises);
           } catch (e) {
-            console.log(e);
             throw new Error('error during import')
           } finally {
             const responseProgressOff = await fetch(user['@id'], {
@@ -850,9 +826,7 @@ class SupplyAndImport {
 
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('supply',supply);
         let unit = supply['dfc-b:hasUnit']?supply['dfc-b:hasUnit']['@id']||supply['dfc-b:hasUnit']:undefined;
-        // console.log('unit',unit);
         if (unit){
           if (unit.includes('dfc-u:') || unit.includes('http://static.datafoodconsortium.org/data/units.rdf')){
             supply['dfc-b:hasUnit']={
@@ -863,7 +837,6 @@ class SupplyAndImport {
           else{
             const regex = /.*\/(\w*)/gm;
             const unitFragment=regex.exec(unit)[1];
-            // console.log('unitFragment',unitFragment);
             const unitId = `http://static.datafoodconsortium.org/data/units.rdf#${unitFragment}`;
             supply['dfc-b:hasUnit']={
               "@id":unitId,
@@ -871,7 +844,6 @@ class SupplyAndImport {
             }
           }
         }
-        // console.log('supply',supply);
         const responsePost = await fetch('http://dfc-middleware:3000/ldp/product', {
           method: 'POST',
           body: JSON.stringify({

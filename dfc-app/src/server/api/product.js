@@ -27,7 +27,6 @@ module.exports = function(router) {
     }
   })
   router.post('/import/:idImport(*)/convert/:idSupply(*)?', async (req, res, next) => {
-    // console.log('API',req.params);
     let idImport = req.params.idImport;
     let idSupply = req.params.idSupply;
     if (req.user == undefined) {

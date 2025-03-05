@@ -10,7 +10,6 @@ export default class Router extends GenericElement {
     this.router = new Navigo(root, useHash, hash);
 
     this.router.on('/:screen*', (params, query) => {
-      // console.log('params', params);
       if (params.screen == undefined) {
         this.firstRoute = true;
       }
@@ -36,7 +35,6 @@ export default class Router extends GenericElement {
     //   this.router.navigate('/' + this.getAttribute('default'));
     // }
 
-    //console.log(this.getAttribute('default'));
   }
   attributeChangedCallback(attrName, oldVal, newVal) {
     super.attributeChangedCallback(attrName, oldVal, newVal);

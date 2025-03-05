@@ -111,7 +111,7 @@ export default class Catalog extends GenericElement {
       channel: 'order',
       topic: 'optimize',
       callback: (data) => {
-        this.optimizeOrders();
+        this.optimizeOrders(data);
       }
     });
   }
@@ -122,7 +122,6 @@ export default class Catalog extends GenericElement {
       method: 'POST'
     };
     this.util.ajaxCall(url, option).then(data => {
-      console.log('resolve ajaxCall', data);
       this.publish({
         channel: 'main',
         topic: 'navigate',
@@ -133,13 +132,11 @@ export default class Catalog extends GenericElement {
 
   importOne(source,name) {
     // let sourceObject = config.sources.filter(so => so.name == source)[0];
-    // console.log('importOne',sourceObject);
     let url = `${url_server}/data/core/catalog/importSource?source=${source}`;
     let option = {
       method: 'POST'
     };
     this.util.ajaxCall(url, option).then(data => {
-      // console.log('resolve ajaxCall', data);
       alert(name + ' import is completed')
     }).catch(e=>{
       alert(name + ' import has failed')
@@ -153,7 +150,6 @@ export default class Catalog extends GenericElement {
       method: 'POST'
     };
     this.util.ajaxCall(url, option).then(data => {
-      // console.log('import converti', data);
       this.publish({
         channel: 'import',
         topic: 'convert.done',
@@ -164,7 +160,6 @@ export default class Catalog extends GenericElement {
 
   exportToSource(sourceSlug, items) {
     let url = `${url_server}/data/core/catalog/exportSource`;
-    console.log('EXPORT',sourceSlug, items);
     let option = {
       method: 'POST',
       body: JSON.stringify({
@@ -173,7 +168,6 @@ export default class Catalog extends GenericElement {
       })
     };
     this.util.ajaxCall(url, option).then(data => {
-      // console.log('import converti', data);
       this.publish({
         channel: 'source',
         topic: 'export.done',
@@ -186,7 +180,6 @@ export default class Catalog extends GenericElement {
   }
 
   async getSources() {
-    // console.log('getSources',this.util);
     let config = await this.util.getConfig();
     this.publish({
       channel: 'source',
@@ -211,12 +204,9 @@ export default class Catalog extends GenericElement {
         // }
         return {...record}
       })
-      console.log('newRecords',newRecords);
       this.catalogs = newRecords;
       this.catalogs.sort((a, b) => {
-        // console.log(a['dfc:description'],'---',b['dfc:description']);
         let dif = a['dfc-b:references']['dfc-b:description'].localeCompare(b['dfc-b:references']['dfc-b:description']);
-        // console.log(dif);
         return dif;
       });
 
@@ -233,7 +223,6 @@ export default class Catalog extends GenericElement {
     let url = `${url_server}/data/core/catalog/import/${id}`;
     this.util.ajaxCall(url).then(data => {
       this.selectedImport = data.body;
-      // console.log('loadOneImport', this.selectedImport);
       this.publish({
         channel: 'import',
         topic: 'changeOne',
@@ -249,17 +238,14 @@ export default class Catalog extends GenericElement {
     this.catalogs = [];
     this.catalogsTree = [];
     this.util.ajaxCall(url).then(data => {
-      // console.log(data);
       if(data.body['@graph']){
         let newRecords = (data.body['@graph']?data.body['@graph']:[data.body]).map(record => {
           return {...record}
         })
-        // console.log('newRecords',newRecords);
 
         this.catalogs = newRecords;
 
 
-        // console.log('this.catalogs',this.catalogs);
         this.publish({
           channel: 'supply',
           topic: 'changeAll',
@@ -280,7 +266,6 @@ export default class Catalog extends GenericElement {
     let url = `${url_server}/data/core/catalog/reconciled/${id}`;
     this.util.ajaxCall(url).then(data => {
       this.selectedSupply = data.body;
-      // console.log('loadOneSupply',this.selectedSupply);
       this.publish({
         channel: 'supply',
         topic: 'changeOne',
@@ -304,11 +289,13 @@ export default class Catalog extends GenericElement {
     })
   }
 
-  optimizeOrders() {
+  optimizeOrders(data) {
+
     let url = `${url_server}/data/core/order/optimize`;
-    console.log('optimizeOrders',url);
-    this.util.ajaxCall(url).then(data => {
-      console.log('optimizeOrders',data);
+    this.util.ajaxCall(url, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }).then(data => {
       this.routes = data.body;
       this.publish({
         channel: 'route',
@@ -319,7 +306,6 @@ export default class Catalog extends GenericElement {
   }
 
   unlinkSupply(supply, importItem) {
-    console.log('supply',supply);
     supply["dfc-t:hasPivot"]["dfc-t:represent"] = supply["dfc-t:hasPivot"]["dfc-t:represent"].filter(r => r['@id'] != importItem['@id']);
     let url = `${url_server}/data/core/catalog/reconciled/`;
     let option = {
@@ -328,7 +314,6 @@ export default class Catalog extends GenericElement {
     };
     this.util.ajaxCall(url, option).then(data => {
       this.selectedSupply = data.body;
-      // console.log('loadOneSupply',this.selectedSupply);
       this.publish({
         channel: 'supply',
         topic: 'changeOne',
@@ -343,11 +328,8 @@ export default class Catalog extends GenericElement {
       method: 'POST',
       body: JSON.stringify(supply)
     };
-    console.log('---------------- SEND UPDATE',supply);
     this.util.ajaxCall(url, option).then(data => {
       this.selectedSupply = data.body;
-      // console.log('loadOneSupply',this.selectedSupply);
-      console.log('---------------- WELL UPDATE',this.selectedSupply);
       this.publish({
         channel: 'supply',
         topic: 'changeOne',
@@ -361,16 +343,13 @@ export default class Catalog extends GenericElement {
   }
 
   refreshSupply(supply) {
-    console.log('refreshSupply');
     let url = `${url_server}/data/core/catalog/reconciled/${supply['@id']}/refresh`;
     let option = {
       method: 'POST',
     };
     this.util.ajaxCall(url, option).then(data => {
-      console.log('refreshSupply ajax',data);
       if(data.body['@id'] || data.body['@graph']){
         this.selectedSupply = data.body;
-        // console.log('ALLO',data.body);
         this.publish({
           channel: 'supply',
           topic: 'changeOne',

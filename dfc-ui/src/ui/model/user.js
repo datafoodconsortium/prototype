@@ -57,7 +57,6 @@ export default class User extends GenericElement {
     }
 
   updateUser(data){
-    console.log('this.profil.user',this.profil.user);
     let url = `${url_server}/data/core/user/${encodeURIComponent(this.profil.user['@id'])}`;
     let option = {
       method: 'PUT',
@@ -81,7 +80,6 @@ export default class User extends GenericElement {
     };
     this.util.ajaxCall(url, option).then(data => {
       this.profil.user=data.body;
-      // console.log('loadOneSupply',this.selectedSupply);
       this.publish({
         channel: 'user',
         topic: 'changeOne',
@@ -92,9 +90,7 @@ export default class User extends GenericElement {
 
   logout(){
     let token = localStorage.getItem('token');
-    // console.log('token',token);
     localStorage.removeItem('token');
-    // console.log(window.location.href);
 
     let redirectUrl = `${url_server}/login/auth/logout?redirectUri=${encodeURIComponent(window.location.href)}&token=${encodeURIComponent('JWT' + ' '+token)}`;
     // fetch(redirectUrl)

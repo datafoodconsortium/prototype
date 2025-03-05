@@ -14,7 +14,6 @@ export default class ImportCatalog extends GenericElement {
   connectedCallback() {
     super.connectedCallback();
     this.shadowRoot.getElementById('import-button').addEventListener('click', e => {
-      console.log('CLIC');
       let sourceSelect = this.shadowRoot.getElementById("source-select");
       var optionSelected = sourceSelect.options[sourceSelect.selectedIndex];
       const sourceSelected = this.sources.filter(s => s.name == optionSelected.value)[0];

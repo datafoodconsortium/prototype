@@ -66,7 +66,6 @@ export default class Home extends GenericElement {
     //   ];
     //
     // const widget = this.shadowRoot.querySelector('#widget');
-    // // console.log("widget",widget);
     //
     //
     // new TreeList(this.shadowRoot.getElementById("widget"), {
@@ -122,7 +121,6 @@ window.customElements.define('x-home', Home);
 //
 //   connectedCallback() {
 //     super.connectedCallback();
-//     console.log('connectedCallback MENU');
 //   }
 //
 //   disconnectedCallback() {

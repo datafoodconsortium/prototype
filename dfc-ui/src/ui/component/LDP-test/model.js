@@ -29,7 +29,6 @@ export default class LDP_test extends GenericElement {
       channel: 'testAPI',
       topic: 'testApiHeaderResponse',
       callback: (data) => {
-        // console.log('testApiHeaderResponse',data);
         this.setResult(data);
       }
     });
@@ -54,7 +53,6 @@ export default class LDP_test extends GenericElement {
       //   context,
       //   queryEngine
       // };
-      // // console.log('param',param);
       // const path = new PathFactory({
       //   context,
       //   queryEngine
@@ -68,12 +66,10 @@ export default class LDP_test extends GenericElement {
       //
       // (async document => {
       //   for await (const subject of document.subjects)
-      //   console.log(`subject ${subject}`);
       // })(proxy);
       //
       // (async subject => {
       //   for await (const property of subject.properties)
-      //   console.log(`property ${property}`);
       // })(proxy);
 
     })
@@ -88,7 +84,6 @@ export default class LDP_test extends GenericElement {
     })
   }
   setResult(result) {
-    console.log('result', result);
     this.elements.result.value = JSON.stringify(result.body);
     this.elements.header.value = result.headers;
   }

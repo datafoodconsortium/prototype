@@ -18,7 +18,6 @@ export default class ItemSupply extends GenericElement {
 
     this.dxGridDom = this.shadowRoot.querySelector('#dxGrid');
     this.dxGridOffersDom = this.shadowRoot.querySelector('#dxGridOffers');
-    console.log("this.dxGridOffersDom",this.dxGridOffersDom);
     this.elements = {
       name: this.shadowRoot.querySelector('[name="name"]'),
       description: this.shadowRoot.querySelector('[name="description"]'),
@@ -37,7 +36,6 @@ export default class ItemSupply extends GenericElement {
       channel: 'supply',
       topic: 'changeOne',
       callback: (data) => {
-        // console.log('supply changeOne',data);
         this.setData(data)
       }
     });
@@ -124,10 +122,8 @@ export default class ItemSupply extends GenericElement {
     // this.shadowRoot.appendChild(injectedStyle3);
 
     let regex = /\#\/x-item-supply\/(.+)\/?/ig;
-    // console.log('document.location.hash',document.location.hash);
     let regExec = regex.exec(document.location.hash);
     let id;
-    // console.log('regExec',regExec);
     if (regExec != null) {
       id = regExec[1];
     }
@@ -157,7 +153,6 @@ export default class ItemSupply extends GenericElement {
   }
 
   setDataGrid(data) {
-    // console.log('data received Tree', data);
     // let counter = 0;
     // let dataEasyUi = data.map(d => {
     //   counter++;
@@ -179,7 +174,6 @@ export default class ItemSupply extends GenericElement {
     //     '@id': d['@id']
     //   }
     // })
-    // // console.log('gridDom', this.gridDom, dataEasyUi);
     // this.gridDom.datagrid('loadData', dataEasyUi);
 
     let counter = 0;
@@ -210,7 +204,6 @@ export default class ItemSupply extends GenericElement {
         masterDetail: {
           enabled: true,
           template: function (container, info) {
-              console.log('info',info);
               let dataOffers = info.data.raw['dfc-b:offeredThrough'].map(d=>({
                 price:d['dfc-b:hasPrice']?.['dfc-b:value'],
                 stockLimitation:d['dfc-b:stockLimitation'],
@@ -225,7 +218,6 @@ export default class ItemSupply extends GenericElement {
                 title: 'Offers',
                 data: dataOffers,
                 template: function (itemData, itemIndex, element) {
-                  console.log(itemData, itemIndex, element);
                   let offersGrid = new DataGrid(element, {
                     "columns": [
                       "description",
@@ -240,7 +232,6 @@ export default class ItemSupply extends GenericElement {
 
               const panel =$("<div></div>").dxTabPanel({
                   itemTitleTemplate:  function (data,index,container){
-                    // console.log('template',data,index,container);
                     const title=$(`<span>${data.title}</span>`);
                     container.append(title);
                   },
@@ -279,14 +270,12 @@ export default class ItemSupply extends GenericElement {
                   // cssClass: "button-dx",
                   // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
                   template: function (element, data) {
-                    // console.log('ALLO TEMPLATE',data, element);
                     const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/delete-link.png"/></div>`)
                     // const item = $(`<div>Unconsolidate</div>`)
                     element.append(item);
                     // return "edit template"
                   },
                   onClick: (e)=>{
-                      console.log(e);
                       const raw = e.row.data.raw;
                       this.selectedImport=raw;
                       this.unlink();
@@ -297,7 +286,6 @@ export default class ItemSupply extends GenericElement {
                   // cssClass: "button-dx",
                   // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
                   template: function (element, data) {
-                    // console.log('ALLO TEMPLATE',data, element);
                     const item = $(`<div class="button-dx"><image src="https://img.icons8.com/plumpy/32/000000/reorder.png"/></div>`)
                     // const item = $(`<div>referer</div>`)
                     element.append(item);
@@ -343,7 +331,6 @@ export default class ItemSupply extends GenericElement {
   }
 
   setData(data) {
-    console.log(data);
     let type = data['dfc-b:references']&&data['dfc-b:references']['dfc-b:hasType'];
     if(type&&!Array.isArray(type)){
       type=[type];
@@ -361,7 +348,6 @@ export default class ItemSupply extends GenericElement {
     // this.elements.totalTheoriticalStock.textContent = data['dfc-b:references']['dfc-b:totalTheoriticalStock'];
     // this.elements.sku.textContent = data['dfc-b:sku'];
     // const represents = Array.isArray(data['dfc-t:hasPivot']['dfc-t:represent'])?data['dfc-b:references']:[data['dfc-b:references']]
-    // console.log(data['dfc-t:hasPivot']['dfc-t:represent']);
     let represent= data['dfc-t:hasPivot']['dfc-t:represent'];
     represent=Array.isArray(represent)?represent:[represent];
     represent= represent.filter(r=>r['@id']!=data['@id'])
@@ -375,7 +361,6 @@ export default class ItemSupply extends GenericElement {
     //   stockLimitation:o['dfc-b:stockLimitation'],
     //   description:o['dfc-b:offeres']['dfc-b:description']
     // }))
-    // console.log('offers',offers);
 
 
     // this.dxGridOffers = new DataGrid(this.dxGridOffersDom, {
@@ -405,9 +390,6 @@ export default class ItemSupply extends GenericElement {
   referer(){
       if(this.selectedImport!=undefined){
         const {'@id':idReference,'@context':contextReference,'dfc-t:hasPivot':pivotReference,'dfc-t:hostedBy':hostedReference,...cleanReferences} = this.selectedImport['dfc-b:references'];
-        // console.log("cleanReferences",cleanReferences);
-        // console.log("this.item['dfc-b:references']",this.item['dfc-b:references']);
-        // console.log({
         //   ...this.item['dfc-b:references'],
         //   ...cleanReferences
         // });
@@ -416,7 +398,6 @@ export default class ItemSupply extends GenericElement {
         const {'@id':id,'@context':context,'dfc-t:hasPivot':pivot,'dfc-t:hostedBy':hosted,...cleanItem} = this.selectedImport;
 
 
-        // console.log("this.item['dfc-b:references']",this.item['dfc-b:references']);
         this.item={
           ...this.item,
           ...cleanItem,
@@ -425,7 +406,6 @@ export default class ItemSupply extends GenericElement {
             ...cleanReferences
           }
         };
-        // console.log('final item', this.item);
         // this.item['dfc-b:sku']=this.selectedImport['dfc-b:sku'];
         // this.item['dfc-b:stockLimitation']=this.selectedImport['dfc-b:stockLimitation'];
 

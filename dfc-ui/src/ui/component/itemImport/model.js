@@ -148,10 +148,8 @@ export default class ItemImport extends GenericElement {
     // this.shadowRoot.appendChild(injectedStyle3);
 
     let regex = /\#\/x-item-import\/(.+)\/?/ig;
-    // console.log('document.location.hash',document.location.hash);
     let regExec = regex.exec(document.location.hash);
     let id;
-    // console.log('regExec',regExec);
     if (regExec != null) {
       id = regExec[1];
     }
@@ -192,7 +190,6 @@ export default class ItemImport extends GenericElement {
     // let counter = 0;
     // let dataEasyUi = data.map(d => {
     //   counter++;
-    //   // console.log(d);
     //   let type = d['dfc-b:references']&&d['dfc-b:references']['dfc-b:hasType'];
     //   if(type&&!Array.isArray(type)){
     //     type=[type];
@@ -255,7 +252,6 @@ export default class ItemImport extends GenericElement {
 
     const dxDataChildren =[];
     dxData.forEach((d, i) => {
-      console.log(d);
       if (d.children){
         let children = d.children;
         if(!Array.isArray(children)){
@@ -356,7 +352,6 @@ export default class ItemImport extends GenericElement {
   }
 
   setData(data) {
-    console.log('setData',data);
     this.item = data
     this.elements.description.textContent = data['dfc-b:references']['dfc-b:description'];
     this.elements.name.textContent = data['dfc-b:references']['dfc-b:name'];
@@ -373,7 +368,6 @@ export default class ItemImport extends GenericElement {
 
   consolidate(newSupply) {
     let supplyId;
-    // console.log('this.selectedSupply',newSupply,this.selectedSupply);
     if(newSupply!==true){
       if (this.selectedSupply.DFCid != undefined) {
         supplyId = this.selectedSupply.DFCid;
@@ -382,7 +376,6 @@ export default class ItemImport extends GenericElement {
       }
     }
 
-    // console.log('consolidate',this.item['@id'],supplyId);
     this.publish({
       channel: 'import',
       topic: 'convert',

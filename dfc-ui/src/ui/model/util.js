@@ -7,13 +7,10 @@ export default class Util {
   }
   ajaxCall(url, option) {
     option = option || {};
-    // console.log('ajaxCall', url, option);
     return new Promise((resolve, reject) => {
       let token = localStorage.getItem('token');
 
-      console.log('token',token);
 
-      // console.log('ALLLO',token);
       if (token != undefined && token != 'undefined') {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", 'JWT' + ' ' + token);
@@ -34,7 +31,6 @@ export default class Util {
             topic: 'hideLoader'
           });
           if (response.ok) {
-            // console.log('OK!',response);
             let headers = {};
             let headerString = response.status.toString();
 
@@ -43,7 +39,6 @@ export default class Util {
               headerString = headerString.concat(String.fromCharCode(10))
               headerString = headerString.concat(name + ": " + value)
 
-              // console.log(name + ": " + value);
             });
             let body = await response.json();
             resolve({
@@ -52,7 +47,6 @@ export default class Util {
             })
             // return response.json();
           } else {
-            console.log('error', response);
             let errorMessage;
             try {
               let error = await response.json();

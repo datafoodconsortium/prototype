@@ -15,7 +15,6 @@ export default class Menu extends GenericElement {
       channel: 'main',
       topic: 'screen',
       callback: (data) => {
-        // console.log('supply changeOne',data);
         this.changeMenu(data)
       }
     });
@@ -23,7 +22,6 @@ export default class Menu extends GenericElement {
       channel: 'user',
       topic: 'changeOne',
       callback: (data) => {
-        // console.log('screen', data);
         this.setUser(data);
       }
     });
@@ -67,7 +65,6 @@ export default class Menu extends GenericElement {
   }
 
   setUser(user) {
-    // console.log('user',user);
     this.elements.userRole.textContent = user['dfc:role'];
     if (user['dfc:role']=='logistician'){
       this.elements.importCatalogMenu.classList.add('hide');

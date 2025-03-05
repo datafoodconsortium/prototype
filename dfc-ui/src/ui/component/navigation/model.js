@@ -30,7 +30,6 @@ export default class Navigation extends GenericElement {
       channel: 'main',
       topic: 'screen',
       callback: (data) => {
-        console.log('screen', data);
         this.loadComponent(data);
       }
     });
@@ -46,14 +45,12 @@ export default class Navigation extends GenericElement {
       channel: 'ui',
       topic: 'hideLoader',
       callback: () => {
-        console.log('hideLoader');
         this.elements.loader.classList.add('hide')
       }
     });
   }
 
   loadComponent(comp) {
-    console.log(comp);
     let screen = this.shadowRoot.querySelector('#screen');
     let component = document.createElement(comp);
     component.setAttribute("style", "flex:1");
@@ -87,26 +84,21 @@ export default class Navigation extends GenericElement {
         }
       });
       let urlToken = params.filter(r => r.key == 'token')[0];
-      // console.log('ALLO TOKEN ',urlToken);
 
       if (urlToken != undefined) {
-        // console.log('urlToken', urlToken.value);
         localStorage.setItem('token', urlToken.value);
         let cleanurl = window.location.origin + window.location.pathname + window.location.hash;
         window.location = cleanurl;
-        // console.log('location',window.location,window.origin.host+window.location.pathname+window.location.hash);
         // this.shadowRoot.getElementById('appLink').click();
       } else {
 
       }
     }
-    console.log('urlToken', urlToken);
     if (urlToken == undefined) {
       let token = localStorage.getItem('token');
 
       if (token != undefined && token != 'undefined') {
 
-        // console.log('existing token');
 
         // localStorage.removeItem('token');
         // document.getElementById('oidcLink').click();
@@ -131,7 +123,6 @@ export default class Navigation extends GenericElement {
         if (response.status == 200) {
           let jsonResponse = await response.json();
 
-          console.log('response', jsonResponse);
 
           this.publish({
             channel: 'profil',
@@ -153,7 +144,6 @@ export default class Navigation extends GenericElement {
 
         }
       } catch (e) {
-        console.log('Request failed', e)
       } finally {
 
       }

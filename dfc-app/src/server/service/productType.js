@@ -89,7 +89,6 @@ class ProductType {
           `
         });
         let productRaw = await response.json();
-        // console.log('productRaw',productRaw);
         let product;
         if (productRaw['@id']){
           product=productRaw;
@@ -158,24 +157,16 @@ class ProductType {
 
         // const typesResponse = await fetch('http://static.datafoodconsortium.org/data/productTypes.json');
         // const types= (await typesResponse.json())['@graph'];
-        // // console.log('types',types);
         //
         // for (let productTypeConf of types){
-        //   console.log('productTypeConf',productTypeConf);
         //   let frLabel = productTypeConf['description'].find(l=>l['@language']==='fr')['@value'];
         //   if(frLabel){
         //     productTypeConf['rdfs:label']=frLabel
         //   }
-        //   // console.log(productTypeConf);
         //   try {
-        //     // console.log(productTypeConf['@id']);
         //     let productType =await this.getOneById(productTypeConf['@id']);
-        //     // console.log('exist type');
-        //     // console.log('productType',unit);
         //   } catch (e){
-        //     // console.log(e);
         //     await this.createOne(productTypeConf);
-        //     // console.log('create type');
         //   }
         // }
 

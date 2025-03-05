@@ -33,9 +33,7 @@ export default class GenericElement extends HTMLElement {
   }
 
   appendView(view,shadowRootActiv){
-    // console.log('shadowRootActivBefore',shadowRootActiv);
     shadowRootActiv=shadowRootActiv==undefined?true:shadowRootActiv;
-    // console.log('shadowRootActiv',shadowRootActiv);
     if (shadowRootActiv==true){
       this.attachShadow({
         mode: 'open'
@@ -43,10 +41,8 @@ export default class GenericElement extends HTMLElement {
       this.shadowRoot.innerHTML = view;
     }else{
       this.innerHTML = view;
-      // console.log('innerHTML',this.innerHTML);
     }
 
-    // console.log('OK');
   }
 
   appendPropagatedStyle(injectedStyle){

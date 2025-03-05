@@ -58,7 +58,6 @@ export default class CatalogImport extends GenericElement {
 
   setDataGrid(data) {
     // let catalogList =this.shadowRoot.getElementById('catalogList');
-    console.log('data received', data);
 
     let counter = 0;
     const dxData = data.map(d => {
@@ -115,13 +114,11 @@ export default class CatalogImport extends GenericElement {
                   // cssClass: "button-dx",
                   // icon : "https://img.icons8.com/windows/32/000000/edit--v1.png",
                   template: function (element, data) {
-                    // console.log('ALLO TEMPLATE',data, element);
                     const item = $(`<div class="button-dx"><image src="https://img.icons8.com/windows/32/000000/link--v1.png"/></div>`)
                     element.append(item);
                     // return "edit template"
                   },
                   onClick: (e)=>{
-                      console.log(e);
                       this.publish({
                         channel: 'main',
                         topic: 'navigate',

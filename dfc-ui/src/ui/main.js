@@ -5,4 +5,3 @@ import testAPI from './model/testAPI.js';
 import user from './model/user.js';
 
 
-console.log(`url server: ${JSON.stringify(url_server)}`)

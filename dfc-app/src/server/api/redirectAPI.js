@@ -11,7 +11,6 @@ module.exports = function(router) {
   router.get('/redirectAPI', async (req, res, next) => {
 
     try {
-      console.log(req.query.url);
       if(req.query.url){
         request({
           url: req.query.url,
@@ -21,7 +20,6 @@ module.exports = function(router) {
           }
         }, (err, result, body) => {
           if (err == undefined) {
-            console.log('result',result.statusCode);
             res.json(result.body);
           }
         })

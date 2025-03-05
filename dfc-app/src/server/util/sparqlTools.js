@@ -4,7 +4,6 @@ const jsonld = require('jsonld');
 const fetch = require('node-fetch');
 var urljoin = require('url-join');
 const isObject = require("fix-esm").require('isobject')
-// console.log('isObject',isObject);
 const DataFactory = require('@rdfjs/data-model');
 const {
   literal,
@@ -25,16 +24,11 @@ class SparqlCrud {
   }
 
   simplify(resource){
-    // console.log('resource',resource);
     if(Array.isArray(resource)){
-      // console.log('simplify array');
       return resource.map(r=>this.simplify(r));
     } else if (resource && isObject(resource)) {
-      // console.log('simplify object');
       let clonedResource = {...resource};
-      // console.log('clonedResource',clonedResource);
       for (let key of Object.keys(clonedResource)){
-        // console.log('key',key,clonedResource[key]);
         if(clonedResource[key] && clonedResource[key]["@id"]){
           clonedResource[key]=clonedResource[key]["@id"];
         }else {
@@ -48,22 +42,17 @@ class SparqlCrud {
   }
 
   async insert(resource) {
-    // console.log('sparqlTool insert resource');
-    // console.log('resource',resource);
-    // console.log('-----------------------');
     resource['@context'] = {
       ...this.config.context,
       ...resource['@context']
     }
 
     const simplifiedRessource= this.simplify(resource)
-    // console.log('simplifiedRessource',simplifiedRessource);
 
     const rdf = await jsonld.toRDF(simplifiedRessource, {
       format: 'application/n-quads'
     });
 
-    // console.log('sparqlTool insert',resource);
     const response = await fetch(urljoin('http://dfc-fuseki:3030/', 'localData', 'update'), {
       body: `INSERT DATA { ${rdf} }`,
       method: 'POST',
@@ -73,14 +62,9 @@ class SparqlCrud {
       }
     });
 
-    // console.log('response',response);
     const data = await response.text();
-    // console.log('data',data);
-    // console.log('sparqlTool getOne cause by insert');
-    console.log("resource['@id']",resource['@id'])
     const getOneObject = await this.getOne(resource['@id'])
 
-    // console.log('getOneObject',getOneObject);
 
     return getOneObject;
   };
@@ -124,13 +108,11 @@ class SparqlCrud {
 
     // await navigator.init(id);
     const data = await navigator.resolveById(id);
-    // console.log('data',data);
 
     return data;
   }
 
   async remove(id) {
-    console.log('REMOVE',id);
     const query = `
       DELETE
       WHERE {
@@ -138,7 +120,6 @@ class SparqlCrud {
       }
     `
 
-    console.log('query',query);
     const response = await fetch(urljoin('http://dfc-fuseki:3030/', 'localData', 'update'), {
       body: query,
       method: 'POST',
@@ -148,21 +129,17 @@ class SparqlCrud {
       }
     });
 
-    // console.log(response.status);
     const raw = await response.text();
-    // console.log('raw',raw);
 
   }
 
   async removeTriples(id, triples) {
-    console.log('removeTriples',id);
     const navigator = new LDPNavigator_SparqlAndFetch_Factory({
       context: this.config.context,
     }).make();
     let where = '';
     let triplesString = triples.forEach((t, i) => {
       const expand = navigator.unPrefix(t);
-      // console.log('unprefix', t, expand);
       where += `<${id}> <${expand}> ?o${i} .
       `
     });
@@ -174,7 +151,6 @@ class SparqlCrud {
       }
     `
 
-    console.log('query', query);
     const response = await fetch(urljoin('http://dfc-fuseki:3030/', 'localData', 'update'), {
       body: query,
       method: 'POST',
@@ -243,7 +219,6 @@ class SparqlCrud {
     });
     const query = generator.stringify(sparqljsQuery);
 
-    // console.log('query',query);
 
     const response = await fetch(urljoin('http://dfc-fuseki:3030/', 'localData', 'query'), {
       body: query,
@@ -255,11 +230,8 @@ class SparqlCrud {
       }
     });
 
-    // console.log('response getOne',response);
     const data = await response.json();
-    // console.log('data getOne',data);
     const item = await jsonld.compact(data, this.config.context)
-    // console.log('items',items);
     return item;
   }
 

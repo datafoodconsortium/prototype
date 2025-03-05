@@ -11,7 +11,6 @@ class UserService {
     return new Promise(async (resolve, reject) => {
       try {
         let user = await userModel.model.findOne(id);
-        // console.log('products', products);
         resolve(user);
       } catch (e) {
         reject(e);
@@ -20,7 +19,6 @@ class UserService {
   }
 
   async connectUser(login, accessToken, idToken) {
-    // console.log('CONNECT');
     return new Promise(async (resolve, reject) => {
       try {
         const query = `
@@ -46,17 +44,14 @@ class UserService {
         });
         let user = await response.json();
         user = await jsonld.compact(user, { '@context': config.contextBody });
-        // console.log('user2',user);
 
         if (accessToken || idToken) {
           if (!(user['@id'] || user['@graph'])) {
             if (this.UserCreationByConnect === true) {
-              // console.log('DELAY UserCreationByConnect');
               user = await this.connectUser(login, accessToken);
               user = await jsonld.compact(user, { '@context': config.contextBody });
             } else {
               this.UserCreationByConnect = true;
-              // console.log('____CREATE ONE USER',login,accessToken,idToken);
               user = await this.createOneUser({
                 "@context": {
                   "dfc": "https://github.com/datafoodconsortium/ontology/releases/latest/download/DFC_FullModel.owl#",
@@ -83,7 +78,6 @@ class UserService {
               'ontosec:idToken': idToken || user['idToken'],
             }
             user = await this.updateOneUser(data);
-            console.log('user3',user);
             user = await jsonld.compact(user, { '@context': config.contextBody });
           }
         } else {
@@ -139,12 +133,10 @@ class UserService {
             delete oldUserSimpleContext[key];
           }
         }
-        // console.log('oldUserSimpleContext',oldUserSimpleContext);
 
         let oldUserWithPrefix = await jsonld.compact(userOld, { '@context': oldUserSimpleContext });
         oldUserWithPrefix = await jsonld.compact(oldUserWithPrefix, { '@context': config.contextBody });
 
-        // console.log('oldUserWithPrefix',oldUserWithPrefix);
 
         // Apply the same treatment to user as for oldUser
         let userSimpleContext = {};
@@ -169,18 +161,15 @@ class UserService {
           }
         }
 
-        // console.log('userSimpleContext',userSimpleContext);
 
         let userWithPrefix = await jsonld.compact(user, { '@context': userSimpleContext});
  
         userWithPrefix = await jsonld.compact(userWithPrefix, { '@context': config.contextBody });
-        // console.log('userWithPrefix2', userWithPrefix);
 
         delete userWithPrefix['@id'];
 
         const newUser = {...oldUserWithPrefix, ...userWithPrefix};
 
-        // console.log('newUser',newUser);
         const response = await fetch(newUser['@id'], {
           method: 'PUT',
           body: JSON.stringify(newUser),
@@ -191,7 +180,6 @@ class UserService {
         });
         let updatedUser = await fetch(newUser['@id'],{headers: { 'accept': 'application/ld+json' }}).then(response => response.json())
         updatedUser = await jsonld.compact(updatedUser, { '@context': config.contextBody });
-        console.log('updatedUser',updatedUser);
         resolve(updatedUser); 
         // resolve(userOld);
       } catch (e) {
@@ -256,7 +244,6 @@ class UserService {
         if (user['ontosec:idToken']) {
           data['ontosec:idToken'] = user['ontosec:idToken'];
         }
-        // console.log('____createOneUser',data);
 
         const response = await fetch('http://dfc-middleware:3000/ldp/user', {
           method: 'POST',
@@ -275,8 +262,6 @@ class UserService {
           }
         });
         const newUser = await response2.json();
-        console.log('____newUser',newUser);
-        // console.log('response', response.headers.get('location'));
         resolve(newUser)
         // let newUser = await userModel.model.create(user)
         // resolve(newUser);

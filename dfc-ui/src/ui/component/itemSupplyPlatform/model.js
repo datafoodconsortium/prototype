@@ -45,7 +45,6 @@ export default class ItemSupplyPlatform extends GenericElement {
       channel: 'supply',
       topic: 'changeOne',
       callback: (data) => {
-        // console.log('supply changeOne',data);
         this.setData(data)
       }
     });
@@ -54,7 +53,6 @@ export default class ItemSupplyPlatform extends GenericElement {
       channel: 'user',
       topic: 'changeOne',
       callback: (data) => {
-        // console.log('screen', data);
         this.setUser(data);
       }
     });
@@ -82,10 +80,8 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.shadowRoot.appendChild(injectedStyle4);
 
     let regex = /\#\/x-item-supply-platform\/(.+)\/?/ig;
-    // console.log('document.location.hash',document.location.hash);
     let regExec = regex.exec(document.location.hash);
     let id;
-    // console.log('regExec',regExec);
     if (regExec != null) {
       id = regExec[1];
     }
@@ -106,7 +102,6 @@ export default class ItemSupplyPlatform extends GenericElement {
   }
 
   setData(data) {
-    console.log(data);
     this.item = data
 
     // array nutrientCharacteristics
@@ -114,19 +109,16 @@ export default class ItemSupplyPlatform extends GenericElement {
     if (nutrients && !Array.isArray(nutrients)) {
       nutrients = [nutrients];
     }
-    //console.log("nutrients : ",nutrients);
     // array physicalCharacteristics
     let physicalCharacteristics = data['dfc-b:references'] && data['dfc-b:references']['dfc-b:hasPhysicalCharacteristic'];
     if (physicalCharacteristics && !Array.isArray(physicalCharacteristics)) {
       physicalCharacteristics = [physicalCharacteristics];
     }
-    //console.log("physicalCharacteristics : ",physicalCharacteristics);
     // array allergenCharacteristics
     let allergens = data['dfc-b:references'] && data['dfc-b:references']['dfc-b:hasAllergenCharacteristic'];
     if (allergens && !Array.isArray(allergens)) {
       allergens = [allergens];
     }
-    //console.log("allergens : ",allergens);    
 
     this.elements.sku.value = data['dfc-b:sku'];
     this.elements.stockLimitation.value = data['dfc-b:stockLimitation'];
@@ -145,7 +137,6 @@ export default class ItemSupplyPlatform extends GenericElement {
     this.elements.unit.textContent = data['dfc-b:references']['dfc-b:hasQuantity'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit'] && data['dfc-b:references']['dfc-b:hasQuantity']['dfc-b:hasUnit']['skos:prefLabel'].find(l => l['@language'] == 'fr')['@value'];
     this.elements.id_supply.textContent = data['dfc-b:references']['@id'];
 
-    console.log('---------------- BEFORE setDataGrid');
 
     // DataGrid for the allergens, the nutrients and physical characteristics
     this.setDataGrid(this.dxGridNutrients, this.dxGridDomNutrients, nutrients);
@@ -229,14 +220,11 @@ export default class ItemSupplyPlatform extends GenericElement {
   }
 
   setUser(user) {
-    console.log('setUser', user);
     this.token = user.token;
   }
 
   update() {
 
-    // console.log(this.elements.description.value);
-    console.log('this.item', this.item);
     const updated = {
       ...(this.item),
       ...{
@@ -250,7 +238,6 @@ export default class ItemSupplyPlatform extends GenericElement {
         }
       }
     }
-    // console.log(updated);
     this.publish({
       channel: 'supply',
       topic: 'update',
@@ -287,8 +274,6 @@ export default class ItemSupplyPlatform extends GenericElement {
 
   refresh() {
 
-    // console.log(this.elements.description.value);
-    console.log('this.item', this.item);
     // const updated ={...(this.item),...{
     //   'dfc-b:stockLimitation':this.elements.stockLimitation.value,
     //   'dfc-b:sku':this.elements.sku.value,
@@ -296,7 +281,6 @@ export default class ItemSupplyPlatform extends GenericElement {
     //     'dfc-b:description':this.elements.description.value
     //   }}
     // }}
-    // console.log(updated);
     this.publish({
       channel: 'supply',
       topic: 'refresh',

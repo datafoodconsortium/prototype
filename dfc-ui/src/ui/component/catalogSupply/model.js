@@ -101,7 +101,6 @@ export default class CatalogSupply extends GenericElement {
                   onClick: (e)=>{
                     const slug = e.row.data.slug
                     const items = this.dxTreeGrid.getSelectedRowsData().map(s=>s.raw);
-                    console.log(slug,items);
                     this.publish({
                       channel: 'source',
                       topic: 'export',
@@ -147,7 +146,6 @@ export default class CatalogSupply extends GenericElement {
 
 
   setDataGrid(data) {
-    console.log('setDataGrid',data);
 
     let counter = 0;
     let dxData = data.map(d => {
@@ -174,7 +172,6 @@ export default class CatalogSupply extends GenericElement {
 
     const dxDataChildren =[];
     dxData.forEach((d, i) => {
-      console.log(d);
       if (d.children){
         let children = d.children;
         if(!Array.isArray(children)){

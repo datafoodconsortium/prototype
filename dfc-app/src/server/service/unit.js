@@ -155,13 +155,10 @@ class Unit {
   updateUnitsFromConfig() {
     return new Promise(async (resolve, reject) => {
       try {
-        // console.log('config',config.data);
         for (let unitConf of config.data.units){
           try {
             let unit =await this.getOneUnitById(unitConf['@id']);
-            // console.log('UNIT',unit);
           } catch (e){
-            // console.log(e);
             await this.createOneUnit(unitConf)
           }
         }

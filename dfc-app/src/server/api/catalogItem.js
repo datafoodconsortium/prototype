@@ -37,7 +37,6 @@ module.exports = async function(router) {
 
 
   router.post('/catalog/import/:idImport(*)/convert/:idReconciled(*)?', async (req, res, next) => {
-    // console.log('API',req.params);
     let idImport = req.params.idImport;
     let idReconciled = req.params.idReconciled;
     if (req.user == undefined) {
@@ -74,12 +73,12 @@ module.exports = async function(router) {
 
   })
 
-  router.get('/order/optimize', async (req, res, next) => {
+  router.post('/order/optimize', async (req, res, next) => {
     if (req.user == undefined) {
       res.statusCode = 500;
       next(new Error('user not defined'))
     } else {
-      let out = await catalogItem_supply_offer.optimizeOrders(req.user);
+      let out = await catalogItem_supply_offer.optimizeOrders(req.user,req.body);
       // let out ={};
       res.json(out)
     }
@@ -102,7 +101,6 @@ module.exports = async function(router) {
   })
 
   router.post('/catalog/reconciled/:idImport(*)/refresh', async (req, res, next) => {
-    // console.log('API',req.params);
     try {
       let idImport = req.params.idImport;
       // let idReconciled = req.params.idReconciled;
@@ -119,8 +117,6 @@ module.exports = async function(router) {
   })
 
   router.post('/catalog/importSource', async (req, res, next) => {
-    // console.log('IMPORT',req)
-    // console.log('USER',req.user);
     let source = decodeURI(req.query.source);
     if (req.user == undefined) {
       next(new Error('user not defined'))
@@ -136,15 +132,11 @@ module.exports = async function(router) {
   })
 
   router.post('/catalog/exportSource', async (req, res, next) => {
-    // console.log('IMPORT',req)
-    // console.log('USER',req.user);
     if (req.user == undefined) {
       next(new Error('user not defined'))
     } else {
       try {
-        // console.log(req.body);
         let out = await catalogItem_supply_offer.exportAllToSource(req.body.sourceSlug,req.body.data, req.user);
-        // console.log('END API');
         res.json({});
       } catch (e) {
         res.statusCode = 500;

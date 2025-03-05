@@ -11,16 +11,13 @@ const {UserService,singletonUserService}=require("../service/user.js")
 let addOidcLesCommunsPassportToApp = async function(router) {
 
   let config = require("../../../configuration.js")
-  // console.log('------------config',config);
 
   let lesCommunsIssuer = await Issuer.discover(config.OIDC.lesCommuns.issuer);
-  //console.log('Les Communs Discovered issuer %s', JSON.stringify(lesCommunsIssuer));
   const client = new lesCommunsIssuer.Client({
     client_id: config.OIDC.lesCommuns.client_id, // Data Food Consoritum in Hex
     client_secret: config.OIDC.lesCommuns.client_secret,
     redirect_uri: config.OIDC.lesCommuns.redirect_uri
   }); // => Client
-  // console.log('client',client);
   const params = {
     // ... any authorization params
     // client_id defaults to client.client_id
@@ -34,26 +31,13 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     client,
     params
   }, (tokenset, userinfo, done) => {
-    // console.log('____PASSPORT');
-    // console.log('OIDC CallBack success');
-    // console.log('tokenset', tokenset);
-    // console.log('userinfo', userinfo);
-    // console.log('claims', tokenset.claims());
-    // console.log('tokenset',tokenset);
     userinfo.accesstoken = tokenset.access_token;
     userinfo.idtoken = tokenset.id_token;
-    // console.log('userinfo',userinfo);
           // var components = userinfo.accesstoken.split('.');
-          // console.log(components);
           // var header = JSON.parse(base64url.decode(components[0]));
           // var payload = JSON.parse(base64url.decode(components[1]));
           // var signature = components[2];
           // var decodedSignature = base64url.decode(components[2])
-          // console.log('header', header);
-          // console.log('payload', payload);
-          // console.log('resource_access', payload.resource_access);
-          // console.log('signature', signature);
-          // console.log('decoded signature', decodedSignature);
 
     // User.findOne({
     //   id: tokenset.claims().sub
@@ -75,13 +59,11 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     let referer = req.headers.referer;
     req.session.referer = referer;
     if (req.query.app_referer != undefined && req.query.app_referer != '' && req.query.app_referer != null) {
-      // console.log('req.query.app_referer',req.query.app_referer);
       // referer=referer+'#'+req.query.app_referer;
       req.session.app_referer = req.query.app_referer
     }
 
 
-    // console.log('auth headers', req.session.referer, req.session.app_referer);
     next()
   });
 
@@ -94,10 +76,7 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     session: false
   }), async (req, res) => {
 
-    console.log('/auth/cb',res.req.user);
-    // console.log('req.session.referer',req.session.referer);
 
-    // console.log('res.req.user',res.req.user);
 
     await singletonUserService.connectUser(res.req.user.preferred_username,res.req.user.accesstoken,res.req.user.idtoken);
 
@@ -105,7 +84,6 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     if (req.session.app_referer != undefined) {
       redirect_url = redirect_url + '#' + req.session.app_referer
     }
-    // console.log('callback referer', req.session.referer, req.session.app_referer)
     res.redirect(redirect_url);
   });
 
@@ -119,21 +97,15 @@ let addOidcLesCommunsPassportToApp = async function(router) {
   });
 
   router.get('/auth/logout', middlware_express_oidc, async function(req, res, next) {
-    // console.log(req.query.redirectUri);
-    console.log('____LOGOUT');
-    // console.log('req.user idToken',req.user['ontosec:idToken']);
     let user = req.user
-    // console.log('user',user);
 
     req.logout(); // Passport logout
 
-    // console.log('config.OIDC.lesCommuns.client_id',config.OIDC.lesCommuns.client_id);
 
     let options = {
         post_logout_redirect_uri:req.query.redirectUri,
     }
 
-    // console.log('user',user);
 
     if(user['ontosec:idToken']!=undefined){
       options.id_token_hint=user['ontosec:idToken']
@@ -145,7 +117,6 @@ let addOidcLesCommunsPassportToApp = async function(router) {
     //   client_id:config.OIDC.lesCommuns.client_id
     // })
 
-    // console.log('urlRedirect',urlRedirect);
 
     res.redirect(client.endSessionUrl(options));
 

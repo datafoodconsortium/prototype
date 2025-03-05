@@ -17,7 +17,6 @@ export default class OIDC_test extends GenericElement {
       channel: 'testAPI',
       topic: 'testApiHeaderResponse',
       callback: (data) => {
-        // console.log('testApiHeaderResponse',data);
         this.setResult(data);
       }
     });
@@ -27,7 +26,6 @@ export default class OIDC_test extends GenericElement {
 
     this.elements.urlTest.addEventListener('click', e => {
       let url = this.elements.urlInput.value;
-      // console.log(url);
       this.publish({
         channel: 'testAPI',
         topic: 'testApiHeaderCall',
