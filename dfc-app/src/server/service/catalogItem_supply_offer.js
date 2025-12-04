@@ -317,7 +317,7 @@ class CatalogService {
 
         let items = await response.json();
 
-        
+
 
         items = await jsonld.compact(items, { '@context': this.context })
 
@@ -409,7 +409,7 @@ class CatalogService {
         ];
 
 
-        const dereferencedImportItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema, {flat:false});
+        const dereferencedImportItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema, { flat: false });
         // const jsonldDereferencedImportItems = {
         //   "@context": items['@context'],
         //   "@graph": dereferencedImportItems
@@ -425,7 +425,7 @@ class CatalogService {
 
   }
 
-  optimizeOrders(user,options = {}) {
+  optimizeOrders(user, options = {}) {
     return new Promise(async (resolve, reject) => {
       try {
         const {
@@ -489,7 +489,7 @@ class CatalogService {
         await ldpNavigator.init(items);
         const importItemsRaw = await ldpNavigator.filterInMemory({});
         let importItems = [];
-        const dereferencePartToSupplieProduct=[
+        const dereferencePartToSupplieProduct = [
           {
             p: 'dfc-b:concerns',
             n: [
@@ -557,14 +557,14 @@ class CatalogService {
         }
         ];
 
-        const flatImportItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema, {flat:true});
-        const isOpeningDuring = 
-          {
-            "@type": "dfc-b:IsOpeningDuring",
-            "dfc-b:start": (new Date()).toISOString(),
-            "dfc-b:end": dayjs().add(optimisationTimeWindow,'hour').toISOString()
-          }
-        
+        const flatImportItems = await ldpNavigator.dereference(importItemsRaw, dereferenceSchema, { flat: true });
+        const isOpeningDuring =
+        {
+          "@type": "dfc-b:IsOpeningDuring",
+          "dfc-b:start": (new Date()).toISOString(),
+          "dfc-b:end": dayjs().add(optimisationTimeWindow, 'hour').toISOString()
+        }
+
 
 
         for (let item of flatImportItems) {
@@ -574,24 +574,40 @@ class CatalogService {
         }
 
 
-        
+
         const jsonldFlatImportItems = {
           "@context": items['@context'],
           "@graph": flatImportItems
         }
 
-        const urlOptim = config.verso.apiMiddleware+'/optim';
+        const urlOptim = config.verso.apiMiddleware + '/optim';
 
 
-        const responseOptimized = await fetch(urlOptim, {  
+        console.log('__call verso');
+
+        const requestBody = JSON.stringify(jsonldFlatImportItems);
+        const responseOptimized = await fetch(urlOptim, {
           method: 'POST',
-          body: JSON.stringify(jsonldFlatImportItems),
+          body: requestBody,
           headers: {
             'Content-Type': 'application/json'
-          } 
+          }
         });
+
+        if (!responseOptimized.ok) {
+          const errorBody = await responseOptimized.text();
+
+          // Generate curl command for debugging
+          const curlCommand = `curl -X POST "${urlOptim}" \\\n  -H "Content-Type: application/json" \\\n  -d '${requestBody}'`;
+          console.error('__error - Verso middleware returned status', responseOptimized.status);
+          console.error('__error - Response body:', errorBody);
+          console.error('__error - Curl command to reproduce:\n', curlCommand);
+
+          throw new Error(`Verso middleware returned ${responseOptimized.status}: ${errorBody}`);
+        }
+
         const responseOptimizedJson = await responseOptimized.json();
-        const ldpNavigatorOut = new LDPNavigator({  
+        const ldpNavigatorOut = new LDPNavigator({
           forceArray: ['dfc-b:hasPart']
         });
         await ldpNavigatorOut.init(responseOptimizedJson);
@@ -599,7 +615,7 @@ class CatalogService {
 
         const routesRoot = await jsonld.frame(responseOptimizedJson, {
           "@context": responseOptimizedJson['@context'],
-          "@type": "dfc-b:Route", 
+          "@type": "dfc-b:Route",
           "dfc-b:steps": {
             "@embed": "@never"
           },
@@ -609,18 +625,18 @@ class CatalogService {
         });
 
         let routes;
-        if(routesRoot['@graph']){
+        if (routesRoot['@graph']) {
           routes = routesRoot['@graph'];
-        }else{
+        } else {
           const {
-            "@context": contextOfRoutesRoot, 
+            "@context": contextOfRoutesRoot,
             ...routesRootWithoutContext
-          } = routesRoot; 
+          } = routesRoot;
           routes = routesRootWithoutContext;
         }
 
 
-        const dereferencePartWhithOfferAndSuppliedProduct=[
+        const dereferencePartWhithOfferAndSuppliedProduct = [
           ...dereferencePartToSupplieProduct,
           {
             p: 'dfc-b:partOf',
@@ -638,18 +654,18 @@ class CatalogService {
               p: 'dfc-b:transports',
               n: [{
                 p: 'dfc-b:constitutes',
-                n :[
+                n: [
                   {
                     p: 'dfc-b:fulfills',
                     n: dereferencePartWhithOfferAndSuppliedProduct
                   }
                 ]
-              },{
+              }, {
                 p: 'dfc-b:isStoredIn',
               }]
             }]
           }]
-        },{
+        }, {
           p: 'dfc-b:steps',
           n: [{
             p: 'dfc-b:pickup',
@@ -657,16 +673,16 @@ class CatalogService {
               p: 'dfc-b:transports',
               n: [{
                 p: 'dfc-b:constitutes',
-                n :[
+                n: [
                   {
                     p: 'dfc-b:fulfills',
                     n: dereferencePartWhithOfferAndSuppliedProduct
                   }
                 ]
-              },{
+              }, {
                 p: 'dfc-b:isStoredIn',
               }]
-            }]  
+            }]
           },
           {
             p: 'dfc-b:delivery',
@@ -674,22 +690,22 @@ class CatalogService {
               p: 'dfc-b:transports',
               n: [{
                 p: 'dfc-b:constitutes',
-                n :[
+                n: [
                   {
                     p: 'dfc-b:fulfills',
                     n: dereferencePartWhithOfferAndSuppliedProduct
                   }
                 ]
-              },{
+              }, {
                 p: 'dfc-b:isStoredIn',
               }]
             }]
           }
-        ]
-        }]);  
+          ]
+        }]);
 
         // const optimizedGraph = await ldpNavigatorOut.filterInMemory({});
-       
+
 
 
 

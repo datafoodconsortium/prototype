@@ -6,7 +6,7 @@ const CatalogItem_Supply_Offer = require('./../service/catalogItem_supply_offer.
 const Entreprise = require('./../service/entreprise.js');
 
 
-module.exports = async function(router) {
+module.exports = async function (router) {
   // this.config = require('./../../configuration.js');
   // Get workspaces
   let catalogItem_supply_offer = await CatalogItem_Supply_Offer.getInstance();
@@ -78,11 +78,15 @@ module.exports = async function(router) {
       res.statusCode = 500;
       next(new Error('user not defined'))
     } else {
-      let out = await catalogItem_supply_offer.optimizeOrders(req.user,req.body);
-      // let out ={};
-      res.json(out)
+      try {
+        let out = await catalogItem_supply_offer.optimizeOrders(req.user, req.body);
+        // let out ={};
+        res.json(out)
+      } catch (e) {
+        res.statusCode = 500;
+        next(e);
+      }
     }
-
   })
 
   router.post('/catalog/reconciled', async (req, res, next) => {
@@ -136,7 +140,7 @@ module.exports = async function(router) {
       next(new Error('user not defined'))
     } else {
       try {
-        let out = await catalogItem_supply_offer.exportAllToSource(req.body.sourceSlug,req.body.data, req.user);
+        let out = await catalogItem_supply_offer.exportAllToSource(req.body.sourceSlug, req.body.data, req.user);
         res.json({});
       } catch (e) {
         res.statusCode = 500;
@@ -192,7 +196,7 @@ module.exports = async function(router) {
       next(new Error('user not defined'))
     } else {
       try {
-        let out = await catalogItem_supply_offer.impactOneLinked(req.body,req.user);
+        let out = await catalogItem_supply_offer.impactOneLinked(req.body, req.user);
         res.json(out);
       } catch (e) {
         res.statusCode = 500;
